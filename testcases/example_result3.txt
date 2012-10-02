@@ -1,0 +1,4 @@
+mirA22:        3' AAAAAAAAAAAAAAAAAAAAAA 5'
+                  $$$$$$$$$$$$$$$$$$$$$$ 
+dnaA22:  5' CCCCCCAAAAAAAAAAAAAAAAAAAAAACCCCCC 3'
+         

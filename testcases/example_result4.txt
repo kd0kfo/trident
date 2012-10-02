@@ -1,0 +1,4 @@
+mirG22:        3' GGGGGGGGGGGGGGGGGGGGGG 5'
+                  $$$$$$$$$$$$$$$$$$$$$$ 
+dnaG22:  5' CCCCCCGGGGGGGGGGGGGGGGGGGGGGCCCCCC 3'
+         

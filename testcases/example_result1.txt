@@ -1,0 +1,4 @@
+                         mir98:              3' UUGUUAUGUUGAAUGAUGGAGU 5'
+                                                $$$$$$$$$$$$$$$$$$$$$$ 
+mir98idealizedpurinestrand3to5:  5' tcatcgatcgtcAAGAAAAGAAGAAAGAAGGAGAtcatcgatcgtc 3'
+                                 3' agtagctagcagTTCTTTTCTTCTTTCTTCCTCTagtagctagcag 5'
