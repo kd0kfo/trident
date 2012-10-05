@@ -44,7 +44,7 @@ double sequence_energy(const hit_struct* hit)
   full_assert(hit->alignment[0] != NULL && hit->alignment[2] != NULL,"ERROR: alignment sequence is a NULL pointer.\n");
   
   qlength = strlen(hit->alignment[0]);
-  rlength = strlen(hit->alignment[1]);
+  rlength = strlen(hit->alignment[2]);
   full_assert(qlength == rlength,"ERROR: the query and reference segments are not the correct lengths.\nSizes\nQuery segment: %lu\nRef Segment: %lu\n",qlength,rlength);
   
   i = 0;
