@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "version.h"
 #include "trident.h"
 
 /* Version and GPL information*/
@@ -92,7 +93,7 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 		}
 		if (!strcmp(argv[i],"--revision")){
 		    extern const char revision_string[];
-		    printf("%s",revision_string);
+		    printf("%s",build_git_sha);
 		    exit(0);		    
 		  }
 		if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h")

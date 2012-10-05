@@ -54,7 +54,7 @@ am_trident_OBJECTS = trident-trident.$(OBJEXT) \
 	trident-seqio.$(OBJEXT) trident-swat.$(OBJEXT) \
 	trident-pairs.$(OBJEXT) trident-thermo.$(OBJEXT) \
 	trident-utils.$(OBJEXT) trident-ExpString.$(OBJEXT) \
-	trident-revision_string.$(OBJEXT)
+	trident-version.$(OBJEXT)
 trident_OBJECTS = $(am_trident_OBJECTS)
 trident_LDADD = $(LDADD)
 trident_DEPENDENCIES = ../RNAlib/libRNA.a
@@ -170,7 +170,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-trident_SOURCES = trident.c output.c scan.c seqio.c swat.c pairs.c thermo.c utils.c ExpString.c revision_string.c
+trident_SOURCES = trident.c output.c scan.c seqio.c swat.c pairs.c thermo.c utils.c ExpString.c version.c
 trident_CFLAGS = -I../RNAlib/ -I../RNAlib/H
 noinst_HEADERS = trident.h
 LDADD = ../RNAlib/libRNA.a
@@ -258,13 +258,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-ExpString.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-output.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-pairs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-revision_string.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-scan.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-seqio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-swat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-thermo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-trident.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trident-version.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -406,19 +406,19 @@ trident-ExpString.obj: ExpString.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -c -o trident-ExpString.obj `if test -f 'ExpString.c'; then $(CYGPATH_W) 'ExpString.c'; else $(CYGPATH_W) '$(srcdir)/ExpString.c'; fi`
 
-trident-revision_string.o: revision_string.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -MT trident-revision_string.o -MD -MP -MF $(DEPDIR)/trident-revision_string.Tpo -c -o trident-revision_string.o `test -f 'revision_string.c' || echo '$(srcdir)/'`revision_string.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/trident-revision_string.Tpo $(DEPDIR)/trident-revision_string.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='revision_string.c' object='trident-revision_string.o' libtool=no @AMDEPBACKSLASH@
+trident-version.o: version.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -MT trident-version.o -MD -MP -MF $(DEPDIR)/trident-version.Tpo -c -o trident-version.o `test -f 'version.c' || echo '$(srcdir)/'`version.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/trident-version.Tpo $(DEPDIR)/trident-version.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='version.c' object='trident-version.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -c -o trident-revision_string.o `test -f 'revision_string.c' || echo '$(srcdir)/'`revision_string.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -c -o trident-version.o `test -f 'version.c' || echo '$(srcdir)/'`version.c
 
-trident-revision_string.obj: revision_string.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -MT trident-revision_string.obj -MD -MP -MF $(DEPDIR)/trident-revision_string.Tpo -c -o trident-revision_string.obj `if test -f 'revision_string.c'; then $(CYGPATH_W) 'revision_string.c'; else $(CYGPATH_W) '$(srcdir)/revision_string.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/trident-revision_string.Tpo $(DEPDIR)/trident-revision_string.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='revision_string.c' object='trident-revision_string.obj' libtool=no @AMDEPBACKSLASH@
+trident-version.obj: version.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -MT trident-version.obj -MD -MP -MF $(DEPDIR)/trident-version.Tpo -c -o trident-version.obj `if test -f 'version.c'; then $(CYGPATH_W) 'version.c'; else $(CYGPATH_W) '$(srcdir)/version.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/trident-version.Tpo $(DEPDIR)/trident-version.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='version.c' object='trident-version.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -c -o trident-revision_string.obj `if test -f 'revision_string.c'; then $(CYGPATH_W) 'revision_string.c'; else $(CYGPATH_W) '$(srcdir)/revision_string.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(trident_CFLAGS) $(CFLAGS) -c -o trident-version.obj `if test -f 'version.c'; then $(CYGPATH_W) 'version.c'; else $(CYGPATH_W) '$(srcdir)/version.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -618,6 +618,12 @@ uninstall-am: uninstall-binPROGRAMS
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-binPROGRAMS
 
+
+version.c: 
+	git rev-parse HEAD | awk ' BEGIN {print "#include \"version.h\""} {print "const char * build_git_sha = \"" $$0"\";"} END {}' > version.c
+	date | awk 'BEGIN {} {print "const char * build_git_time = \""$$0"\";"} END {} ' >> version.c
+
+.PHONY: version.c
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
