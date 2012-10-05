@@ -143,6 +143,31 @@ void compliment(char *reference_sequence,size_t reference_length)
     }
 }
 
+void convert_u_to_t(char *reference_sequence,size_t reference_length)
+{
+  int index;
+
+  if(reference_sequence == NULL)
+    return;
+  
+  for(index = 0;index < reference_length;index++,reference_sequence++)
+    {
+      switch(*reference_sequence)
+	{
+	case 'u': 
+	  *reference_sequence = 't';
+	  break;
+	case 'U':
+	  *reference_sequence = 'T';
+	  break;
+	case 0:
+	  return;// End of sequence
+	default:
+	  break;
+	}
+    }
+}
+
 
 void reason_exit_vargs(va_list args, const char *format)
 {

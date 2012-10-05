@@ -274,12 +274,14 @@ void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int ref
 	  hit->rest[0], hit->alignment[0], hit->rest[3], hit->rest[2],
 	  hit->alignment[1], hit->rest[5]);
 
+#if 1  // should be removed???
   if(current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN)
     {
       compliment(hit->rest[1]);
       compliment(hit->rest[4]);
       compliment(hit->alignment[2]);
     }
+#endif
   
   fprintf(fpout, "   Ref:      %c' %s%s%s %c'\n",left_label,hit->rest[1], hit->alignment[2], hit->rest[4],right_label);
   if(current_match_type == MATCH_DIRECT_REVERSE_HOOGSTEEN || current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN)
@@ -360,19 +362,27 @@ void printhit(char* query_id, int query_length, int reference_length, char* refe
 	  if(current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN
 	     || current_match_type == MATCH_INDIRECT_HOOGSTEEN)
 	    {
-	      compliment(hit->rest[1]);
-	      compliment(hit->rest[4]);
-	      compliment(hit->alignment[2]);
+	      compliment(hit->rest[1],reference_length);
+	      compliment(hit->rest[4],reference_length);
+	      compliment(hit->alignment[2],reference_length);
 	    }
+	  else if (current_match_type == MATCH_DIRECT_REVERSE_HOOGSTEEN
+	     || current_match_type == MATCH_DIRECT_HOOGSTEEN)
+	    {
+	      convert_u_to_t(hit->rest[1],reference_length);
+	      convert_u_to_t(hit->rest[4],reference_length);
+	      convert_u_to_t(hit->alignment[2],reference_length);
+	    }
+
 		
 	  fprintf(fpout,",%s%s%s", hit->rest[1], hit->alignment[2], hit->rest[4]);
 
 	  if(current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN
 	     || current_match_type == MATCH_INDIRECT_HOOGSTEEN)
 	    {
-	      compliment(hit->rest[1]);
-	      compliment(hit->rest[4]);
-	      compliment(hit->alignment[2]);
+	      compliment(hit->rest[1],reference_length);
+	      compliment(hit->rest[4],reference_length);
+	      compliment(hit->alignment[2],reference_length);
 	    }
 
 	  if(is_parallel)
