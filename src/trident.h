@@ -4,6 +4,8 @@
 // *_REVERSE_HOOGSTEEN are purine match types
 // *_HOOGSTEEN are pyrimidine match types
 enum {MATCH_MIRANDA=0,MATCH_DIRECT_REVERSE_HOOGSTEEN,MATCH_INDIRECT_REVERSE_HOOGSTEEN, MATCH_DIRECT_HOOGSTEEN, MATCH_INDIRECT_HOOGSTEEN, NUM_MATCH_TYPES};
+static char* match_type_name[] = {"Miranda","Direct Reverse Hoogsteen","Indirect Reverse Hoogsteen","Direct Hoogsteen","Indirect Hoogsteen","Unknown"};
+
 
 // Size of base-sized arrays (thus globally defined)
 #define NUM_SCORED_BASES 5

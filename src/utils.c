@@ -184,12 +184,13 @@ void scaninfo_print(const char *format, ...)
   
 }
 
-static char* match_type_name[] = {"Miranda","Direct Reverse Hoogsteen","Indirect Reverse Hoogsteen","Unknown"};
 const char* str_match_type(int index)
 {
+  extern char* match_type_name[];
+
   if(index < 0 || index >= NUM_MATCH_TYPES)
     return match_type_name[NUM_MATCH_TYPES];
-  
+
   return match_type_name[index];
 }
 
