@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 
 from distutils.core import setup, Extension
- 
-mod_core = Extension('core', sources = ['trident.py.c','../thermo.c'], include_dirs=['..',"."], define_macros=[("USE_PYTHON","1"),("HAVE_CONFIG_H","1")])
+
+extension_sources = ['trident.py.c']
+for i in ["output.c", "scan.c", "seqio.c", "swat.c", "pairs.c", "thermo.c", "utils.c", "ExpString.c", "version.c"]:
+    extension_sources.append("../%s" % i)
+
+for i in ["fold_vars.c", "energy_par.c", "utils.c", "fold.c", "params.c"]:
+    extension_sources.append("../../RNAlib/%s" % i)
+
+mod_core = Extension('core', sources = extension_sources, include_dirs=['..','../..',".","../../RNAlib","../../RNAlib/H"], define_macros=[("USE_PYTHON","1"),("HAVE_CONFIG_H","1")])
 
 setup (name ='trident',
        version = '0.3',

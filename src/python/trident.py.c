@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-#include "../config.h"
+#include "config.h"
 #endif
 
 #include <Python.h>
@@ -9,48 +9,14 @@
 
 #include "trident.h"
 
-/**
- * Returns NULL upon error
- */
-char* get_aligment_segment(const char *sequence)
-{
-  size_t idx,length;
-  size_t start,end;
-  char *retval = NULL;
-  
-  if(sequence == NULL)
-    return NULL;
-  
-  idx = 0;
-  length = strlen(sequence);
-  for(;idx < length;idx++)
-    if(sequence[idx] >= 'A' && sequence[idx] <= 'Z')
-      break;
-  start = idx;
-  
-  idx = length;
-  for(;idx != 0;idx--)
-    if(sequence[idx - 1] >= 'A' && sequence[idx] <= 'Z')
-      break;
-  end = idx;
-
-
-  if(end < start)
-    return NULL;// MALFORMED STRING
-
-  retval = calloc(end - start +2,sizeof(char));
-  
-  strncpy(retval,sequence+start,end-start+1);
-  return retval;
-}
-
 static PyObject *
 pytrident_sequence_energy(PyObject *self, PyObject *args)
 {
   hit_struct hit;
   char *query_seq,*ref_seq;
   size_t idx;
-  double energy;
+  double energy = 42.0;
+  extern double sequence_energy(const hit_struct* hit);
 
   idx = 0;
   for(;idx < 6;idx++)
@@ -58,8 +24,8 @@ pytrident_sequence_energy(PyObject *self, PyObject *args)
   for(;idx < 3;idx++)
     hit.alignment[idx] = NULL;
   
-  if(!PyArg_Parse(args,"(ss)",&query_seq, &ref_seq))
-    return PyErr_Format(PyExc_TypeError,"Invalid Argument. Need 2 sequences.");
+  if(!PyArg_Parse(args,"(ssi)",&query_seq, &ref_seq,&current_match_type))
+    return PyErr_Format(PyExc_TypeError,"Invalid Argument. Need 2 sequences and a match type.");
 
   if(query_seq == NULL || ref_seq == NULL)
     return PyErr_SetFromErrno(PyExc_IOError);
@@ -83,13 +49,12 @@ pytrident_sequence_energy(PyObject *self, PyObject *args)
 #endif
   
   energy = sequence_energy(&hit);
-  
 
 #if 0 // if alloc'ing above
   free(hit->aligment[0]);
   free(hit->aligment[2]);
 #endif
-  return Py_BuildValue("d",energy);
+  return Py_BuildValue("f",energy);
 }
 
 static PyMethodDef trident_methods[] = {
@@ -97,7 +62,7 @@ static PyMethodDef trident_methods[] = {
     {NULL, NULL, 0, NULL} /* Sentinel */
 };
 
-#if 0// TODO: Adapt for python 3
+#if PY_MAJOR_VERSION >= 3
 static PyModuleDef tridentmodule = {
    PyModuleDef_HEAD_INIT,
    "trident", /* name of module */
@@ -109,7 +74,27 @@ or -1 if the module keeps state in global variables. */
 #endif
 
 PyMODINIT_FUNC
-inittrident(void)
+PyInit_core(void)
 {
-  (void) Py_InitModule("trident",trident_methods);
+#if PY_MAJOR_VERSION >= 3
+  PyObject* module = PyModule_Create(&tridentmodule);
+#else
+  PyObject* module = Py_InitModule("core",trident_methods);
+#endif
+  if(module == NULL)
+    return module;
+
+  initialize_bases();  
+
+  PyModule_AddIntConstant(module,"MATCH_MIRANDA",MATCH_MIRANDA);
+  PyModule_AddIntConstant(module,"MATCH_DIRECT_REVERSE_HOOGSTEEN",MATCH_DIRECT_REVERSE_HOOGSTEEN);
+  PyModule_AddIntConstant(module,"MATCH_INDIRECT_REVERSE_HOOGSTEEN",MATCH_INDIRECT_REVERSE_HOOGSTEEN);
+  PyModule_AddIntConstant(module,"MATCH_DIRECT_HOOGSTEEN",MATCH_DIRECT_HOOGSTEEN);
+  PyModule_AddIntConstant(module,"MATCH_INDIRECT_HOOGSTEEN",MATCH_INDIRECT_HOOGSTEEN);
+
+  return module;
 }
+
+#if PY_MAJOR_VERSION == 2
+PyMODINIT_FUNC initcore(){PyInit_core();}
+#endif

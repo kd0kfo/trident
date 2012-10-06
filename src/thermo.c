@@ -46,7 +46,8 @@ double sequence_energy(const hit_struct* hit)
   qlength = strlen(hit->alignment[0]);
   rlength = strlen(hit->alignment[2]);
   full_assert(qlength == rlength,"ERROR: the query and reference segments are not the correct lengths.\nSizes\nQuery segment: %lu\nRef Segment: %lu\n",qlength,rlength);
-  
+
+
   i = 0;
   for(;i<qlength;i++)
     {
@@ -66,10 +67,9 @@ double sequence_energy(const hit_struct* hit)
 	  if(bases[base_i] == 1 || bases[base_i] == 2)
 	    continue;
 	}
-
       energy += pair_energy_mat[bases[base_i]][bases[base_j]];
     }
-  
+
   return energy;
 
 }
