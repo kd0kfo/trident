@@ -10,6 +10,32 @@
 #include "trident.h"
 
 static PyObject *
+pytrident_compliment(PyObject *self, PyObject *args)
+{
+  extern void compliment(char *reference_sequence,size_t reference_length);
+  char *seq, *new_seq;
+  PyObject *retval = Py_None;
+
+  if(!PyArg_Parse(args,"(s)",&seq) || seq == NULL)
+    return PyErr_Format(PyExc_TypeError,"Invalid Argument. Need 1 sequence");
+
+  new_seq = calloc(strlen(seq),sizeof(char)+1);
+  if(new_seq == NULL)
+    return PyErr_Format(PyExc_MemoryError,"Could not allocate memory for sequence compliment.");
+
+  strcpy(new_seq, seq);
+
+  compliment(new_seq,strlen(new_seq));
+
+  retval = Py_BuildValue("s",new_seq);
+
+  free(new_seq);
+  
+  return retval;
+
+}
+
+static PyObject *
 pytrident_sequence_energy(PyObject *self, PyObject *args)
 {
   hit_struct hit;
@@ -59,6 +85,7 @@ pytrident_sequence_energy(PyObject *self, PyObject *args)
 
 static PyMethodDef trident_methods[] = {
   {"sequence_energy", pytrident_sequence_energy, METH_VARARGS,"Takes a microrna and dna sequence and calculates the energy."},
+  {"compliment", pytrident_compliment, METH_VARARGS, "Takes a sequence and returns the compliment."},
     {NULL, NULL, 0, NULL} /* Sentinel */
 };
 
