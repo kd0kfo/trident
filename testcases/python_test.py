@@ -16,7 +16,7 @@ class TestSequenceEnergy(unittest.TestCase):
             ref_seq = self.ref_seqs[i]
             energy = self.energies[i]
             match_type = self.match_types[i]
-            self.assertTrue(trident.core.sequence_energy(query_seq,ref_seq,match_type) - energy < abs(1e-18))
+            self.assertTrue(abs(trident.core.sequence_energy(query_seq,ref_seq,match_type) - energy) < 1e-12)
 
 #>mir1,mir1idealizedpurinestrand3to5,240.00,-249.51,2 21,13 34,20,75.00%,75.00%,uAUGUAUGAAGAAAUGUAAGGu, $ $ $ $$$$$$$ $ $$$$ ,aAAGAAAGAAGAAAAGAAAGGa,antiparallel,direct,purine
 #>mir1,mir1idealizedpurinestrand3to5,156.00,-185.88,3 21,14 35,19,63.16%,63.16%,uAUGUAUGAAGAAAUGUAAGgu, $ $ $ $$$ $ $ $ $$$  ,tAGGAAAGAAAAGAAGAAAGaa,parallel,direct,purine
