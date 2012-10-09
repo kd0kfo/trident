@@ -90,9 +90,8 @@ int main (int argc, char* argv[]) {
 
 	/* Set Default Parameter Values*/
 
-	/** \brief The 5' sequence length to be weighted  except for the last residue*/
-	length_5p_for_weighting = 8;
-	scale = 4.0;			/** The 5' miRNA scaling parameter*/
+	length_5p_for_weighting = 8; /* The 5' sequence length to be weighted  except for the last residue */
+	scale = 4.0;			/* The 5' miRNA scaling parameter */
 	strict = 0;			/* Strict seed model on/off*/
 	debug = 0;			/* Debugging mode on/off*/
 	key_value_pairs = 0;

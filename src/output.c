@@ -1,3 +1,8 @@
+/*! \file output.c
+ *     \brief Handles output print and command line parsing
+ *         
+ */
+
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,6 +57,10 @@ void print_usage() {
 	printf("\t\'file2\' is a FASTA file containing\n\t one strand of the dsDNA sequence(s)\n\t to be scanned.\n\n");
 }
 
+/** 
+ * Function to print program command line options
+ *
+ */
 void print_options() {
 	char* inttobool[2][3];
 	char* inttoboolr[2][3];
@@ -93,6 +102,10 @@ void print_options() {
 	printf("\n\n");
 }
 
+/** 
+ * Function to parse command line options
+ *
+ */
 int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 		char* fileout, char* pairs_file) {
 	int i = 0;
@@ -230,6 +243,10 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 	return 1;
 }
 
+/** 
+ * Function to print parameters
+ *
+ */
 void print_parameters(char* filename1, char* filename2, FILE* fpout) {
 	if (outfile) {
 		print_banner(fpout);
@@ -243,10 +260,14 @@ void print_parameters(char* filename1, char* filename2, FILE* fpout) {
 bool coordinates_reversed(int is_parallel)
 {
   return (is_parallel && current_match_type == MATCH_DIRECT_REVERSE_HOOGSTEEN)
-      || (!is_parallel && current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN)    || (is_parallel && current_match_type == MATCH_DIRECT_HOOGSTEEN)
+	|| (!is_parallel && current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN)    || (is_parallel && current_match_type == MATCH_DIRECT_HOOGSTEEN)
     || (!is_parallel && current_match_type == MATCH_INDIRECT_HOOGSTEEN);
 }
 
+/** 
+ * Function to print hit structure
+ *
+ */
 void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int reference_length, int alignment_length, double identity, double similarity, int is_parallel)
 {
   int ref_start, ref_end;
@@ -258,7 +279,7 @@ void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int ref
       return;
     }
   char left_label, right_label;
-
+  
   if(is_parallel)
     {
       // Labels for the Reference strand
@@ -270,7 +291,7 @@ void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int ref
       left_label = '5';
       right_label = '3';
     }
-
+  
   ref_start = hit->ref_start + 1;
   ref_end = hit->ref_end + 1;
   if(coordinates_reversed(is_parallel))
@@ -279,14 +300,14 @@ void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int ref
       ref_end = reference_length - ref_start + 1;
       ref_start = reference_length - temp + 1;
     }
-
-  fprintf(fpout, "\n   Forward:\tScore: %f  Q:%d to %d  R:%s%d to %d%s Align Len (%d) (%3.2f%%) (%3.2f%%)\n\n",
-	  hit->score, (query_length - hit->query_end + 1),
-	  (query_length - hit->query_start),
-	  ((current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN) ? " c(" : ""),ref_start, ref_end, ((current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN) ? ")" : "") , alignment_length, identity, similarity);
+  
+  fprintf(fpout, "\n   Forward:\tScore: %f  Q:%d to %d  R:%s%d to %d%s Align Len (%d) (%3.2f%%) (%3.2f%%)\n\n", 
+		  hit->score, (query_length - hit->query_end + 1),
+		  (query_length - hit->query_start),
+		  ((current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN) ? " c(" : ""),ref_start, ref_end, ((current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN) ? ")" : "") , alignment_length, identity, similarity);
   fprintf(fpout, "   Query:    3' %s%s%s 5'\n                %s%s%s\n",
-	  hit->rest[0], hit->alignment[0], hit->rest[3], hit->rest[2],
-	  hit->alignment[1], hit->rest[5]);
+		  hit->rest[0], hit->alignment[0], hit->rest[3], hit->rest[2],
+		  hit->alignment[1], hit->rest[5]);
 
   if(current_match_type == MATCH_INDIRECT_REVERSE_HOOGSTEEN)
     {
@@ -310,6 +331,12 @@ void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int ref
     }
 
 }
+
+
+/** 
+ * Function to print hit
+ *
+ */
 
 void printhit(char* query_id, int query_length, int reference_length, char* reference_id, hit_struct* hit, double energy, int keyval_mode, int is_parallel, FILE* fpout) {
 	double similarity = 0;
