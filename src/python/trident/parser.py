@@ -41,7 +41,10 @@ def score_str_to_dict(line):
             from sys import stderr
             stderr.write("Missing sequence offset.\nSequence: %s" % line)
             return None
-        offset = int(tokens[2])
+        if tokens[2].isdigit():
+            offset = int(tokens[2])
+        else:
+            offset = 0
     else:
         offset = 0
 
