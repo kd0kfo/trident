@@ -38,16 +38,31 @@ void initialize_representations()
   alignment_match_representations[MATCH_INDIRECT_HOOGSTEEN] = ';';
 }
 
+/**
+ * Defines globals to be initialized
+ *
+ */
 void initialize_globals() {
   initialize_representations();
-	initialize_bases(); /* Prepare the generic base lookup array*/
-	initialize_seqio_buffers();
+  initialize_bases(); /* Prepare the generic base lookup array*/
+  initialize_seqio_buffers();
 }
+
+/**
+ * Defines globals to be destroyed
+ *
+ */
 
 void destroy_globals() {
 	destroy_seqio_buffers();
 }
 
+/**
+ * Defines the match types that are used by default
+ *
+ * 
+ *
+ */
 void setup_match_types()
 {
   memset(global_match_types,false,NUM_MATCH_TYPES*sizeof(int));
@@ -74,8 +89,10 @@ int main (int argc, char* argv[]) {
 	setup_match_types();
 
 	/* Set Default Parameter Values*/
-	length_5p_for_weighting = 8;	/* The 5' sequence length to be weighed  except for the last residue*/
-	scale = 4.0;			/* The 5' miRNA scaling parameter*/
+
+	/** \brief The 5' sequence length to be weighted  except for the last residue*/
+	length_5p_for_weighting = 8;
+	scale = 4.0;			/** The 5' miRNA scaling parameter*/
 	strict = 0;			/* Strict seed model on/off*/
 	debug = 0;			/* Debugging mode on/off*/
 	key_value_pairs = 0;
