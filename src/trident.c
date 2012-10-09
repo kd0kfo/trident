@@ -1,3 +1,8 @@
+/*! \file trident.c
+ *     \brief Main trident source
+ *         
+ *     This program is designed to find Hoogsteen like interactions between double stranded DNA and single stranded RNA.
+ *             */
 
 #include <config.h>
 #include <stdio.h>
@@ -11,6 +16,19 @@
 
 #include "trident.h"
 
+/**
+ * Defines the character representations of the nucleotide base pairing types 
+ *
+ * Traditional Watson-Crick base pairings are represented by |
+ * 
+ * Hoogsteen type pairings are represented by by either $ if a direct hit or ; if an indirect hit
+ *
+ * 
+ * Direct is defined as a hit found on the strand provided
+ * 
+ * Indirect is defined as a hit found on the complement of the strand provided
+ *
+ */
 void initialize_representations()
 {
   alignment_match_representations[MATCH_MIRANDA] = '|';
