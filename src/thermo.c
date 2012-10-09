@@ -53,6 +53,7 @@ double sequence_energy(const hit_struct* hit)
     {
       base_i = hit->alignment[0][i];
       base_j = hit->alignment[2][i];
+
       if(bases[base_i] > 3 || bases[base_j] > 3)// (c,g,a,ut) = (0,1,2,3)
 	continue;
 

@@ -35,6 +35,42 @@ pytrident_compliment(PyObject *self, PyObject *args)
 
 }
 
+
+/**
+ * Returns NULL upon error
+ */
+char* get_aligment_segment(const char *sequence)
+{
+  size_t idx,length;
+  size_t start,end;
+  char *retval = NULL;
+  
+  if(sequence == NULL)
+    return NULL;
+  
+  idx = 0;
+  length = strlen(sequence);
+  for(;idx < length;idx++)
+    if(sequence[idx] >= 'A' && sequence[idx] <= 'Z')
+      break;
+  start = idx;
+  
+  idx = length;
+  for(;idx != 0;idx--)
+    if(sequence[idx - 1] >= 'A' && sequence[idx-1] <= 'Z')
+      break;
+  end = idx-1;
+
+
+  if(end < start)
+    return NULL;// MALFORMED STRING
+
+  retval = calloc(end - start +2,sizeof(char));
+  
+  strncpy(retval,sequence+start,end-start+1);
+  return retval;
+}
+
 static PyObject *
 pytrident_sequence_energy(PyObject *self, PyObject *args)
 {
@@ -57,17 +93,17 @@ pytrident_sequence_energy(PyObject *self, PyObject *args)
     return PyErr_SetFromErrno(PyExc_IOError);
 
   // Get Alignment part of Segment
-#if 0 // Is this necessary?!?
+#if 1 // Is this necessary?!?
   hit.alignment[0] = get_aligment_segment(query_seq);
   if(hit.alignment[0] == NULL)
     {
-      return PyError_Format(PyExc_TypeError,"Invalid Query Sequence.");
+      return PyErr_Format(PyExc_TypeError,"Invalid Query Sequence.");
     }
-  hit.alignment[2] = get_aligment_segment(query_seq);
+  hit.alignment[2] = get_aligment_segment(ref_seq);
   if(hit.alignment[2] == NULL)
     {
       free(hit.alignment[0]);
-      return PyError_Format(PyExc_TypeError,"Invalid Reference Sequence.");
+      return PyErr_Format(PyExc_TypeError,"Invalid Reference Sequence.");
     }
 #else
   hit.alignment[0] = query_seq;
@@ -76,9 +112,9 @@ pytrident_sequence_energy(PyObject *self, PyObject *args)
   
   energy = sequence_energy(&hit);
 
-#if 0 // if alloc'ing above
-  free(hit->aligment[0]);
-  free(hit->aligment[2]);
+#if 1 // if alloc'ing above
+  free(hit.alignment[0]);
+  free(hit.alignment[2]);
 #endif
   return Py_BuildValue("f",energy);
 }

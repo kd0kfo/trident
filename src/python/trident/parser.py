@@ -17,15 +17,7 @@ def parser_usage():
     print("Usage: %s <filename>" % sys.argv[0])
     print("Parses the output of trident")
 
-def parse_file(file):
-    """
-    Prints score information to stdout.
-
-    Parameters: File Object
-    """
-    
-    score = None
-    line = file.readline().strip()
+def score_str_to_dict(line):
     if len(line) == 0:
         return None
     if line[0] == '>': 
@@ -69,7 +61,18 @@ def parse_file(file):
 
     score['query_start'] = int(tokens[0])
     score['query_end'] = int(tokens[1])
-    return score # End of parse_file
+    return score # End of score_str_to_dict
+
+def parse_file(file):
+    """
+    Prints score information to stdout.
+
+    Parameters: File Object
+    """
+    
+    score = None
+    line = file.readline().strip()
+    return score_str_to_dict(line)    
 
 def str_score(score):
     retval = ""
