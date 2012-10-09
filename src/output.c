@@ -7,7 +7,10 @@
 
 #include "trident.h"
 
-/* Version and GPL information*/
+/** 
+ * Function to print ASCII banner and version
+ *
+ */
 void print_banner(FILE* fpout) {
   fprintf(fpout, "\n");
   fprintf(fpout, "   \\ ,-*-.   ,-*-. ,-*-.   ,-*-. ,-*-.   ,    \n");
@@ -24,14 +27,25 @@ void print_banner(FILE* fpout) {
   fprintf(fpout, "\n\n");
 }
 
+/** 
+ * Function to print license
+ *
+ */
 void print_license(FILE* fpout) {
 	fprintf(fpout, "\n\n");
 }
 
+/** 
+ * Function to print small license
+ *
+ */
 void print_small_license(FILE* fpout) {
-
 }
 
+/** 
+ * Function to print program usage
+ *
+ */
 void print_usage() {
 	printf("Usage:\t%s fi1e1 file2 [options..]\n", PACKAGE);
 	printf("\nWhere:\t\'file1\' is a FASTA file\n\t with the microRNA sequence(s)\n\n");

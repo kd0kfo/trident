@@ -172,7 +172,10 @@ int main (int argc, char* argv[]) {
 	return 0;
 }
 
-
+/**
+ * Function to fill the base pairing matrix 
+ *
+ */
 #include "H/pair_mat.h"
 void fill_BP_pair()
 {
