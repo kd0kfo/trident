@@ -21,10 +21,12 @@ double vfold(char* sequence) {
 	return e1;
 }
 
-/* Pairwise energy matrix
+/** Defines the pairwise energy matrix
  * Energy between base pairs in a sequence
  * Columns and rows correspond to C G A U X
- * Thus a G<-->G pair has -10 kcal of energy.
+ * Columns are DNA
+ * Rows are microRNA
+ * Thus a G<-->G pair has -26.93 kcal of energy.
  */
 double pair_energy_mat[NUM_SCORED_BASES][NUM_SCORED_BASES] = { 
   /*         C     G      A     T   X   */

@@ -2,7 +2,7 @@
  *     \brief Main trident source
  *         
  *     This program is designed to find Hoogsteen like interactions between double stranded DNA and single stranded RNA.
- *             */
+ */
 
 #include <config.h>
 #include <stdio.h>
