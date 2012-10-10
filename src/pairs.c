@@ -1,3 +1,5 @@
+/*! \file pairs.c
+ */
 
 #include <config.h>
 #include <stdio.h>
@@ -6,7 +8,9 @@
 #include <math.h>
 #include "trident.h"
 
-/* Load in a flat-file containing miRNA / UTR pairs to scan*/
+/** 
+ * Loads in a flat-file containing target pairs to scan
+ */
 int readinpairs(FILE* fp , pair_struct** pairs) {
 	char BUFFER[400];
 	int n_pairs = 0;

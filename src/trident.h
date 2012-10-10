@@ -1,17 +1,32 @@
+/*! \file trident.h
+ * \brief Trident header file 
+ */
+
+
 #include <stdio.h>
 
-// Match Types
-// *_REVERSE_HOOGSTEEN are purine match types
-// *_HOOGSTEEN are pyrimidine match types
-enum {MATCH_MIRANDA=0,MATCH_DIRECT_REVERSE_HOOGSTEEN,MATCH_INDIRECT_REVERSE_HOOGSTEEN, MATCH_DIRECT_HOOGSTEEN, MATCH_INDIRECT_HOOGSTEEN, NUM_MATCH_TYPES};
+//! 
+/*! Match Types */
+/*! _REVERSE_HOOGSTEEN are purine match types */
+/*! _HOOGSTEEN are pyrimidine match types */
+enum {MATCH_MIRANDA=0,
+	  MATCH_DIRECT_REVERSE_HOOGSTEEN,
+	  MATCH_INDIRECT_REVERSE_HOOGSTEEN, 
+	  MATCH_DIRECT_HOOGSTEEN, 
+	  MATCH_INDIRECT_HOOGSTEEN, 
+	  NUM_MATCH_TYPES};
+
 static char* match_type_name[] = {"Miranda","Direct Reverse Hoogsteen","Indirect Reverse Hoogsteen","Direct Hoogsteen","Indirect Hoogsteen","Unknown"};
 
-
-// Size of base-sized arrays (thus globally defined)
+/*! Size of base-sized arrays (thus globally defined) */
 #define NUM_SCORED_BASES 5
-/* Master list of Nucleotide Bases
- * Converts ASCII to a base index (0,1,2,3,4,INT_MAX) = (c,g,a,u=t,place holders, all other characters 
- * See initialize_bases() in swat.c
+
+/** List of Nucleotide Bases
+ *
+ *  Converts ASCII to a base index (0,1,2,3,4,INT_MAX) = (c,g,a,u=t,place holders, all other characters 
+ *
+ *  See initialize_bases() in swat.c
+ *
  */
 int bases[256];
 
@@ -21,11 +36,12 @@ int strict;
 int debug;
 double gap_open;
 double gap_extend;
-double score_threshold;
-double energy_threshold;
+double score_threshold;/*!< Defines the threshold for hit scores, hits with score values greater than this will be reported */
+double energy_threshold;/*!< Defines the threshold for hit energies, hits with energy values less than this will be reported */
 int length_5p_for_weighting;
 int length_3p_for_weighting;
 int key_value_pairs;
+/*! If true, energy values are not calculated for hits */
 int no_energy;
 int outfile;
 int truncated;

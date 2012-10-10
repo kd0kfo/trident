@@ -1,3 +1,7 @@
+/*! \file scan.c
+ *     \brief Handles scanning for input sequences
+ *         
+ */
 
 
 #include <config.h>
@@ -22,7 +26,22 @@ typedef struct HitSummaryT
 } HitSummary;
 
 const int INITIAL_STRING_SIZE = 64;
-
+/**
+ * Does the alignment between reference and query sequence
+ *
+ * \param best
+ * \param track
+ * \param a_nt_nt
+ * \param b_gap_nt
+ * \param c_nt_gap
+ * \param nt_nt_score
+ * \param query_length
+ * \param reference_length
+ * \param verbose
+ * \param hit_summary
+ * \param query_id
+ *
+ */
 double do_alignment(int** best, int*** track, int** a_nt_nt, int** b_gap_nt, int** c_nt_gap, int** nt_nt_score,
 		    char* query_sequence, char* reference_sequence, score_struct* scores,
 		    int query_length, int reference_length, int verbose,
@@ -186,7 +205,9 @@ double do_alignment(int** best, int*** track, int** a_nt_nt, int** b_gap_nt, int
   return scan_score;
 }
 
-/* Load Sequences and Set-up the Alignment Run*/
+/**
+ * Loads sequences and sets up the alignment run for finding targets
+ */
 int find_targets(FILE* query_fp, FILE* fpout, pair_struct* pairs, int total_pairs, char* filename) {
   FILE* reference_fp = 0;
   int** best;			/* Best score of all three states (nt-nt, nt-gap, gap-nt*/
