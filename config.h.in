@@ -98,6 +98,9 @@
 /* only for gcc */
 #undef UNUSED
 
+/* rusage Mode: Will report resource usage. */
+#undef USE_RUSAGE
+
 /* Version number of package */
 #undef VERSION
 

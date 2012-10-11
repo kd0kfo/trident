@@ -4,6 +4,10 @@
  *     This program is designed to find Hoogsteen like interactions between double stranded DNA and single stranded RNA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,8 +15,10 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <sys/time.h>
-#include <sys/resource.h>
 
+#ifdef USE_RUSAGE
+#include <sys/resource.h>
+#endif
 
 #include "trident.h"
 
@@ -146,6 +152,7 @@ int main (int argc, char* argv[]) {
 	}
 	find_targets(query_fp, fpout, pairs, total_pairs, filename2);
 
+#ifdef USE_RUSAGE
 	if(rusage_output)
 	  {
 	    struct rusage ru;
@@ -162,7 +169,8 @@ int main (int argc, char* argv[]) {
 		
 	      }
 	  }
-	
+#endif // RUSAGE
+
 	destroy_globals();
 	if (outfile) fclose(fpout);
 	if (scaninfo_file != stdout && scaninfo_file != stderr && scaninfo_file != NULL)

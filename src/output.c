@@ -3,7 +3,10 @@
  *         
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -213,6 +216,10 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 			  }
 			if (strncmp(argv[i], "-rusage", 7) == 0)
 			  {
+			    #ifndef USE_RUSAGE
+			    fprintf(stderr,"ERROR: Not compiled with rusage tools\n");
+			    exit(1);
+			    #endif
 			    rusage_output = 1;
 			    continue;
 			  }

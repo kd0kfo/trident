@@ -85,13 +85,13 @@
 #define PACKAGE_NAME "Trident"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Trident 0.3"
+#define PACKAGE_STRING "Trident 0.3.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "trident"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.3"
+#define PACKAGE_VERSION "0.3.1"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -99,8 +99,11 @@
 /* only for gcc */
 #define UNUSED __attribute__ ((unused))
 
+/* rusage Mode: Will report resource usage. */
+/* #undef USE_RUSAGE */
+
 /* Version number of package */
-#define VERSION "0.3"
+#define VERSION "0.3.1"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
