@@ -17,6 +17,21 @@ int cmpscores(const void* p1, const void* p2) {
 	/* secondary key: earlier end in reference */
 	if (s1->reference_trace_end > s2->reference_trace_end) return 1;
 	if (s1->reference_trace_end < s2->reference_trace_end) return -1;
+	
+	/**
+	 * drc: Added extra sort keys
+	 * We found that there could be score_structs with the same score
+	 * and reference_trace_end that had different query_trace_end values.
+	 * When arrays of scores were sorted later using qsort, different
+	 * implementations, i.e. linux gcc versus cygwin gcc, would place these
+	 * score structs in different places in the array.
+	 */
+	if (s1->query_trace_end > s2->query_trace_end) return 1;
+	if (s1->query_trace_end < s2->query_trace_end) return -1;
+	
+	if (s1->path > s2->path) return 1;
+	if (s1->path < s2->path) return -1;
+	
 	return 0;
 }
 
