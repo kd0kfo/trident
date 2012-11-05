@@ -96,7 +96,7 @@ int skip_leading_space(FILE* fp) {
 void read_fasta_name_into_buffer(FILE* fp, ExpString *name_buf) {
 	int cbuf = fgetc(fp);
 	if (cbuf != '>') {
-		fprintf(stderr, "Error: illegal format in sequence file (record does not start with '>')\n");
+	  fprintf(stderr, "Error: illegal format in sequence file (record does not start with '>', instead have %c (0x%x)\n",(char) cbuf,cbuf);
 		exit(1);
 	}
 	clear_ExpString(name_buf);
