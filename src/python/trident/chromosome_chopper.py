@@ -123,7 +123,8 @@ def chopper(filename,prefix,chunk_size,overwrite = True):
         seq_offset += len(line.strip())
         counter += 1
 
-    outfile.close()
+    if outfile:
+        outfile.close()
 
     return file_counter-1
 
