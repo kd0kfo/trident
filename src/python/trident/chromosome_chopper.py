@@ -40,7 +40,7 @@ def create_header(old_header,chunksize,seq_size):
         m = re.findall(r"chromosome\s*(\w*)",old_header)
         if len(m) == 0:
             error_out("Missing chromosome label")
-            header += m[0] + "|"
+        header += m[0] + "|"
     elif old_header.find("mitochondrion"):
         species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*mitochondrion",old_header)
         header += "mitochondrion|";
