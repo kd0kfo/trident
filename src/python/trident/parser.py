@@ -74,7 +74,10 @@ def parse_file(file):
     """
     
     score = None
-    line = file.readline().strip()
+    line = file.readline()
+    if not line:# EOF
+        raise StopIteration
+    line = line.strip()
     return score_str_to_dict(line)    
 
 def str_score(score):
@@ -99,11 +102,13 @@ class Parser:
         return self
 
     def next(self):
+        """
+        next function for Parser as an iterator.
+        
+        Note: If there is an empty line in the file, None is returned.
+        """
         retval = parse_file(self.file)
-        if retval == None or len(retval) == 0:
-            raise StopIteration
         return retval
-
 
 
 def main():
