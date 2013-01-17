@@ -9,6 +9,7 @@ This may run as a standalone script or as a module, trident.parser
 import sys, os 
 
 score_keys = ['query_id','reference_id','score','energy','query_coords','ref_coords','length','identity','similarity','query_seq','match_seq','reference_seq','orientation','match_type', 'base_type','query_start', 'query_end', 'ref_start', 'ref_end']
+reference_keys = ["chromosome","chunk","seg_offset","seq_size","chunk_size","iso_date","assembly","species"]
 
 def parser_usage():
     """
@@ -17,6 +18,16 @@ def parser_usage():
     print("Usage: %s <filename>" % sys.argv[0])
     print("Parses the output of trident")
 
+def score_dict_to_str(score):
+    """
+    Takes a score dict and returns a score string. For human friendly formatting, use str_score
+    """
+    printed_keys = score_keys[:]
+    for i in ['query_start', 'query_end', 'ref_start', 'ref_end']:
+        printed_keys.remove(i)
+    return ">" + ",".join([score[i] for i in printed_keys])
+    
+    
 def score_str_to_dict(line):
     if len(line) == 0:
         return None
