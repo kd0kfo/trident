@@ -8,7 +8,11 @@ This may run as a standalone script or as a module, trident.parser
 
 import sys, os 
 
+# Keys to score lines, which begin with the '>' character and are delimited by commas
+# Pig column field: (query_id:chararray,ref_id:chararray,score:int,energy:double,query_coord:chararray,ref_coords:chararray,length:int,identity:chararray,similarity:chararray,query_seq:chararray,match_seq:chararray,ref_seq:chararray,orientation:chararray,match_type:chararray,base_type:chararray)
 score_keys = ['query_id','reference_id','score','energy','query_coords','ref_coords','length','identity','similarity','query_seq','match_seq','reference_seq','orientation','match_type', 'base_type','query_start', 'query_end', 'ref_start', 'ref_end']
+
+# Keys to the reference sequence description, which is delimited by the '|' character
 reference_keys = ["chromosome","chunk","seg_offset","seq_size","chunk_size","iso_date","assembly","species"]
 
 def parser_usage():
