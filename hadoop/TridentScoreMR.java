@@ -40,7 +40,7 @@ public class TridentScoreMR extends Configured implements Tool{
 	public static Path get_output_path(String path)
 	{
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String time_stamp = sdf.format(date); 
 		
 		return new Path(path + ".score_count." + time_stamp);
