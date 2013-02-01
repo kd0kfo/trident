@@ -1,0 +1,4 @@
+BUILD_CMD="javac -Xlint:unchecked -classpath $HADOOP_INSTALL/hadoop-core-1.1.1.jar -d hadoop/ hadoop/*.java hadoop/TridentHadoop/*.java"
+JAR_CMD="jar -cvf TridentScoreMR.jar -C hadoop/ ."
+
+${BUILD_CMD} && ${JAR_CMD}
