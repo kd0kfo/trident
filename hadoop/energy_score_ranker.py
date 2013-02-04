@@ -125,14 +125,12 @@ for f in [outfile,top_quartile]:
     f.write("\n")
 
 q = 0.25
-q_counter = 0
 for key in sorted(ordered_ranks.iterkeys()):
     for rank in ordered_ranks[key]:
         curr_frac = rank.better_freq/total_hits
         outstring = "%s\t%f\n" % (rank,curr_frac)
-        if q_counter < q:
+        if curr_frac < q:
             top_quartile.write(outstring)
-        q_counter += curr_frac
         outfile.write(outstring)
     
 
