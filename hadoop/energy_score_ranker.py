@@ -6,25 +6,23 @@ from math import ceil
 
 rank_format_string = "%f\t%f\t%f\t%d\t%d"
 def get_header():
-    return "Energy\tScore\tFrequency\tBetter_Count\tRank"
+    return "Energy\tScore\tFrequency\tBetter_Frequency\tBetter_Count\tBetter_Fraction"
 
 class Rank():
     def __init__(self,energy,score,freq):
         self.energy = energy
         self.score = score
         self.freq = freq
-        self.sum = 0
-        self.rank = 0
+        self.better_freq = 0
+        self.better_count = 0
 
     def __str__(self):
-        return rank_format_string % (self.energy, self.score, self.freq, self.sum, self.rank)
+        return rank_format_string % (self.energy, self.score, self.freq, self.better_freq, self.better_count)
     
     def __lt__(self,rhs):
-        if self.energy > rhs.energy:
+        if self.energy >= rhs.energy:
             return True
-        if self.energy == rhs.energy:
-            return self.score < rhs.score
-        return False
+        return self.score < rhs.score
 
     def __eq__(self,rhs):
         return self.energy == rhs.energy and self.score == rhs.score
@@ -106,29 +104,35 @@ for i in range(0,num_ranks):
     total_hits += ranks[i].freq
     ranks[i].sum = 0
     curr_rank = num_ranks-i
-    ranks[i].rank = curr_rank
     for j in range(i+1,num_ranks):
-        ranks[i].sum += ranks[j].freq
+        if ranks[i].score >= ranks[j].score:
+            continue
+        ranks[i].better_freq += ranks[j].freq
+        ranks[i].better_count += 1
     if show_intermediate:
         print(ranks[i])
-    if curr_rank in ordered_ranks:
-        ordered_ranks[curr_rank].append(ranks[i])
+
+for rank in ranks:
+    if rank.better_count in ordered_ranks:
+        ordered_ranks[rank.better_count].append(rank)
     else:
-        ordered_ranks[curr_rank] = [ranks[i]]
+        ordered_ranks[rank.better_count] = [rank]
 
 outfile = open(in_filename + ".ordered","w")
 top_quartile = open("top_25-percent.dat","w")
 for f in [outfile,top_quartile]:
     f.write(get_header())
     f.write("\n")
-q = ceil(len(ranks)*0.25)
+
+q = 0.25
 q_counter = 0
 for key in sorted(ordered_ranks.iterkeys()):
     for rank in ordered_ranks[key]:
-        outstring = "%s\n" % rank
+        curr_frac = rank.better_freq/total_hits
+        outstring = "%s\t%f\n" % (rank,curr_frac)
         if q_counter < q:
             top_quartile.write(outstring)
-        q_counter += rank.rank
+        q_counter += curr_frac
         outfile.write(outstring)
     
 
