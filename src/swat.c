@@ -335,7 +335,7 @@ void build_matrix(int** best, int*** track, int** a_nt_nt, int** b_gap_nt, int**
 			scaninfo_print("B(%d, %d, %c%c) = %d\n",i,j,sequence1[i-1],sequence2[j-1],b_gap_nt[i][j]);
 			scaninfo_print("C(%d, %d, %c%c) = %d\n",i,j,sequence1[i-1],sequence2[j-1],c_nt_gap[i][j]);
 			scaninfo_print("best(%d, %d) = %d\n",i,j,best[i][j]);
-			if (best[i][j] >= score_threshold) {
+			if (good_score(best[i][j])) {
 				/* reject alignments ending with an unaligned reference base */
 			  scaninfo_print("Score[%d] = %d\n",good_count,best[i][j]);
 				if (track[0][i][j] != 2) {

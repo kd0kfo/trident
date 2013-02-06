@@ -26,6 +26,24 @@ typedef struct HitSummaryT
 } HitSummary;
 
 const int INITIAL_STRING_SIZE = 64;
+
+
+/**
+ * Determines whether a score lies within thresholds.
+ *
+ * \param score
+ */
+int good_score(int score)
+{
+	if(score < score_threshold)
+		return 0;
+	if(score_ceiling == 0)
+		return 1;
+	if(score <= score_ceiling)
+		return 1;
+	return 0;
+}
+
 /**
  * Does the alignment between reference and query sequence
  *
@@ -84,18 +102,18 @@ double do_alignment(int** best, int*** track, int** a_nt_nt, int** b_gap_nt, int
     good_call = 1;
     clear_hit(hit, query_length, reference_length);
     hit_score = scores[i].score;
-    if (hit_score >= score_threshold) {
-      if (debug) {
-	fprintf(fpout, "[%d] score i j path ->> %d %d %d %d\n", i, scores[i].score,
-		scores[i].query_trace_end, scores[i].reference_trace_end, scores[i].path);
-	fflush(fpout);
-      }
+    if (good_score(hit_score)) {
+    	if (debug) {
+    		fprintf(fpout, "[%d] score i j path ->> %d %d %d %d\n", i, scores[i].score,
+    				scores[i].query_trace_end, scores[i].reference_trace_end, scores[i].path);
+    		fflush(fpout);
+    	}
       traceback(best, track, query_sequence, reference_sequence, scores[i].query_trace_end, scores[i].reference_trace_end, hit, hit_score);
       good_call = testfor_overlap(good_ones_starts_j, good_ones_ends_j, &good_ones_count,
 				  hit->ref_start, hit->ref_end);
       if (good_call == 1) {
-	good_ones_starts_j[good_ones_count] = hit->ref_start;
-	good_ones_ends_j[good_ones_count] = hit->ref_end;
+      	good_ones_starts_j[good_ones_count] = hit->ref_start;
+      	good_ones_ends_j[good_ones_count] = hit->ref_end;
       }
       /*miRNA alignment, convert un-aligned nt to lowercase, aligned nt to uppercase
        * hit->rest[0, 1, 2] = The 5' unaligned regions in the query, alignment and ref
