@@ -44,11 +44,10 @@ def str2rank(line):
 
 def find_file():
     from glob import glob
-    files = glob("*.score_count.ordered")
+    files = glob("*.score_count")
     if not files:
         return None
     return files[0]
-
 
 short_opts = "si"
 long_opts = ["intermediate","search","no_header"]
@@ -94,17 +93,33 @@ for line in file:
     val = str2rank(line)
     ranks.append(val)
 
-if show_intermediate:
-    print(get_header())
 ranks = sorted(ranks)
 num_ranks = len(ranks)
+
+from progressbar import ProgressBar, Percentage, Bar
+progress_length = (num_ranks*num_ranks - num_ranks +1)/2
+progress_counter = 0
+progress_bar = ProgressBar(widgets = [Percentage(), Bar()], maxval=progress_length).start()
+
+def update_progress():
+    global progress_counter
+    progress_counter += 1
+    try:
+        progress_bar.update(progress_counter)
+    except ValueError:
+        pass
+
+if show_intermediate:
+    print(get_header())
 total_hits = 0
 ordered_ranks = {}
+print("Counting ranks")
 for i in range(0,num_ranks):
     total_hits += ranks[i].freq
     ranks[i].sum = 0
     curr_rank = num_ranks-i
     for j in range(i+1,num_ranks):
+        update_progress()
         if ranks[i].score >= ranks[j].score:
             continue
         ranks[i].better_freq += ranks[j].freq
@@ -112,6 +127,8 @@ for i in range(0,num_ranks):
     if show_intermediate:
         print(ranks[i])
 
+print("")# reset line return after progress bar
+print("Reducing Ranks")
 for rank in ranks:
     if rank.better_count in ordered_ranks:
         ordered_ranks[rank.better_count].append(rank)
@@ -125,6 +142,7 @@ for f in [outfile,top_quartile]:
     f.write("\n")
 
 q = 0.25
+print("Generating Output")
 for key in sorted(ordered_ranks.iterkeys()):
     for rank in ordered_ranks[key]:
         curr_frac = rank.better_freq/total_hits
@@ -135,4 +153,3 @@ for key in sorted(ordered_ranks.iterkeys()):
     
 
 file.close()
-
