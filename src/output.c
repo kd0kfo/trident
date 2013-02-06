@@ -82,6 +82,7 @@ void print_options() {
 	printf(" --license\tDisplay license information\n");
 	printf("\nCore algorithm parameters:\n");
 	printf(" -sc S\t\tSet score threshold to S\t\t[DEFAULT: %3.1f]\n", score_threshold);
+	printf(" -ceil S\t\tSet upper limit to score equal to S\t\t[DEFAULT: off]");
 	printf(" -en -E\t\tSet energy threshold to -E kcal/mol\t[DEFAULT: %3.1f]\n", energy_threshold);
 	printf(" -scale Z\tSet scaling parameter to Z\t\t[DEFAULT: %3.1f]\n", scale);
 	printf(" -strict\tDemand strict 5' seed pairing\t\t[DEFAULT: %s]\n", (char*)inttobool[strict]);
@@ -192,6 +193,11 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 				score_threshold = atoi(argv[i + 1]);
 				i++;
 				continue;
+			}
+			if(!strcmp(argv[i], "-ceil") && argc > i +1) {
+				score_ceiling = atoi(argv[i+1]);
+				i++;
+			  continue;
 			}
 			if (!strcmp(argv[i], "-trim") && argc > i + 1) {
 				truncated = atoi(argv[i + 1]);

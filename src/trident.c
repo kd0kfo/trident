@@ -104,6 +104,7 @@ int main (int argc, char* argv[]) {
 	gap_open = -9.0;		/* Gap-open Penalty*/
 	gap_extend = -4.0;		/* Gap-extend Penalty*/
 	score_threshold = 140.0;	/* SW Score Threshold for reporting hits*/
+	score_ceiling = 0; /* Default upper limit to score. If zero, this is not used. */
 	energy_threshold = 1.0;		/* Energy Threshold (DG) for reporting hits*/
 	verbosity = 1;	                /* Verbose mode on/off*/
 	brief_output = 0; 	                /* Brief output off by default */

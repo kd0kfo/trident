@@ -37,6 +37,7 @@ int debug;
 double gap_open;
 double gap_extend;
 double score_threshold;/*!< Defines the threshold for hit scores, hits with score values greater than this will be reported */
+double score_ceiling;
 double energy_threshold;/*!< Defines the threshold for hit energies, hits with energy values less than this will be reported */
 int length_5p_for_weighting;
 int length_3p_for_weighting;
