@@ -50,22 +50,3 @@ def extract_gene(f, output, start, length):
                 amount_to_write = length
             output.write("%s\n" % curr_seg[0:amount_to_write])
 
-if __name__ == "__main__":
-    from sys import argv,stdout
-    
-    output = stdout
-    if len(argv) < 4:
-        printf("Usage: gene_extractor <input> <start loc> <length> [output]")
-        exit(1)
-        
-    if len(argv) >= 5:
-        output = open(argv[4],"w")
-            
-    infile = open(argv[1],"r")
-    start_loc = int(argv[2])
-    length = int(argv[3])
-            
-    for line in infile:
-        if line.strip()[0] == ">":
-            break
-    extract_gene(infile,output,start_loc,length)

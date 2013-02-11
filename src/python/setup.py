@@ -18,5 +18,6 @@ setup (name ='trident',
        description = 'Utility functions for analyzing microrna binding to DNA',
        author_email='David.Coss@stjude.org',
        packages = ['trident'],
+       scripts = ['scripts/gene_extractor'],
        ext_package = 'trident',
        ext_modules = [mod_core])
