@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+"""
+Loads a sequence and does a search with the supplied sequence. Lowercase letters are substituted as wildchards and a Regular Expression search is done.
+"""
+
+from Bio import SeqIO
+import re
+from sys import argv,stdout
+from getopt import getopt
+
+ # getopt
+short_opts = "r"
+long_opts = ["revcomp"]
+(opts, args) = getopt(argv[1:],short_opts,long_opts)
+
+should_revcomp = False
+for (opt,optarg) in opts:
+    while opt[0] == "-":
+        opt = opt[1:]
+    if opt in ["r","revcomp"]:
+        should_revcomp = True
+    else:
+        print("Unknown flag: %s" % opt)
+        exit(1)
+        
+if len(args) != 2:
+    print("Usage: regex_search [-r] <input file> <sequence>")
+    print("Option:")
+    print("-r, --revcomp\tReverse Complement before searching")
+    exit(1)
+
+infile = open(args[0],"r")
+
+search_seq = ""
+for i in args[1]:
+    if i.islower():
+        search_seq += "."
+    else:
+        search_seq += i
+
+for rec in SeqIO.parse(infile,"fasta"):
+    if should_revcomp:
+        rec.seq = rec.seq.reverse_complement()
+
+    print(re.findall(search_seq,str(rec.seq)))
