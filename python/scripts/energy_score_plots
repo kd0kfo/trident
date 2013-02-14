@@ -9,7 +9,7 @@ short_opts = "s:t:"
 long_opts = ["scale=","title="]
 
 def print_usage():
-    print("Usage: energy_score_plots.py [-s INT] <input file>")
+    print("Usage: energy_score_plots.py [-s INT] [-t TITLE] <input file>")
 
 def reduce_array(arr, sort_col, freq_col):
     unique_keys = np.unique(arr[:,sort_col])
