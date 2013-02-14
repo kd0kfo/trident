@@ -15,3 +15,11 @@
 *.lai
 *.la
 *.a
+
+# Java Stuff to ignore
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
