@@ -4,6 +4,16 @@ from sys import argv
 from getopt import getopt
 from math import ceil
 
+def print_usage():
+    print("Usage: energy_score_ranker [options] <FILE>")
+    print("Usage: energy_score_ranker [options] -s ")
+    print("Options:")
+    print("-i, --intermediate\tPrints intermediate data in the sorting to standard output.")
+    print("    --no_header\t\tOmits print the header line for the output.")
+    print("-o, --output FILE\tSpecifiy the output file. Default: INPUTFILE.ordered")
+    print("-s, --search\t\tSearches the directory tree for the first file with the suffix \".score_count\"")
+    
+
 rank_format_string = "%f\t%f\t%f\t%d\t%d"
 def get_header():
     return "Energy\tScore\tFrequency\tBetter_Frequency\tBetter_Count\tBetter_Fraction"
@@ -49,23 +59,29 @@ def find_file():
         return None
     return files[0]
 
-short_opts = "si"
-long_opts = ["intermediate","search","no_header"]
+short_opts = "hio:s"
+long_opts = ["help","intermediate","no_header","output=","search"]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
 should_search = False
 have_header = True
 show_intermediate = False
+out_filename = None
 for (opt,optarg) in opts:
     while opt[0] == "-":
         opt = opt[1:]
-    if opt in ["s","search"]:
-        should_search = True
+    if opt in ["h","help"]:
+        print_usage()
+        exit(0)
     elif opt in ["i","intermediate"]:
         show_intermediate = True
     elif opt == "no_header":
         have_header = True
+    elif opt in ["o","output"]:
+        out_filename = optarg
+    elif opt in ["s","search"]:
+        should_search = True
     else:
         print("Unknown flag: %s" % opt)
         exit(1)
@@ -79,10 +95,12 @@ if should_search:
     file = open(filename,"r")
 else:
     if len(args) < 1:
-        print("Usage: energy_score_ranker.py <FILE>")
+        print_usage()
         exit(1)
     file = open(args[0],"r")
 in_filename = file.name
+if not out_filename:
+    out_filename = in_filename + ".ordered"
 
 if have_header:
     file.readline() # skip header
@@ -135,7 +153,7 @@ for rank in ranks:
     else:
         ordered_ranks[rank.better_count] = [rank]
 
-outfile = open(in_filename + ".ordered","w")
+outfile = open(out_filename,"w")
 top_quartile = open("top_25-percent.dat","w")
 for f in [outfile,top_quartile]:
     f.write(get_header())
