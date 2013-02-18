@@ -7,14 +7,15 @@ from progressbar import ProgressBar,Percentage,Bar
 
 def print_usage():
     print("Usage: energy_score_combiner.py [-o FILE] FILE1 FILE2 FILE3 ...")
-    print("")
     print("Combines multiple frequency files")
+    print("Options:")
+    print("-o, --output FILE\tWrites the output to the specified file.")
 
 # defaults
 output = stdout
 
-short_opts = "o:"
-long_opts = ["output"]
+short_opts = "ho:"
+long_opts = ["help","output"]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -27,6 +28,9 @@ for (opt,optarg) in opts:
         opt = opt[1:]
     if opt in ["o","output"]:
         output = open(optarg,"w")
+    elif opt in ["h","help"]:
+        print_usage()
+        exit(0)
     else:
         print("Unknown flag: %s" % opt)
         print_usage()
