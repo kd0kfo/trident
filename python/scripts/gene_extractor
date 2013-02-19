@@ -21,7 +21,7 @@ def sanity_check(start_loc,end_loc,buffer,header):
     if start_loc < buffer:
         stderr.write("WARNGING: Starting location (%d) is to low for buffer size. Truncating buffer on starting side by %d.\n" % (start_loc, buffer-start_loc))
     
-    if header[0]:
+    if header[0] != '>':
         stderr.write("WARNING: header does not begin with a '>' character.\n")
         
     return True
