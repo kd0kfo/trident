@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
-from sys import argv
+from sys import argv,stdout
 from getopt import getopt
 from math import ceil
+import numpy as np
+from array_tools import head
+
 
 def print_usage():
     print("Usage: energy_score_ranker [options] <FILE>")
@@ -14,28 +17,12 @@ def print_usage():
     print("-s, --search\t\tSearches the directory tree for the first file with the suffix \".score_count\"")
     
 
-rank_format_string = "%f\t%f\t%f\t%d\t%d"
+rank_format_string = "%f\t%f\t%d\t%d\t%d"
+def rank2str(rank_row):
+    return rank_format_string % (rank_row[0], rank_row[1], int(rank_row[2]), int(rank_row[3]), int(rank_row[4]))
+
 def get_header():
     return "Energy\tScore\tFrequency\tBetter_Frequency\tBetter_Count\tBetter_Fraction"
-
-class Rank():
-    def __init__(self,energy,score,freq):
-        self.energy = energy
-        self.score = score
-        self.freq = freq
-        self.better_freq = 0
-        self.better_count = 0
-
-    def __str__(self):
-        return rank_format_string % (self.energy, self.score, self.freq, self.better_freq, self.better_count)
-    
-    def __lt__(self,rhs):
-        if self.energy >= rhs.energy:
-            return True
-        return self.score < rhs.score
-
-    def __eq__(self,rhs):
-        return self.energy == rhs.energy and self.score == rhs.score
 
 def str2rank(line):
     tokens = line.split("\t")
@@ -50,7 +37,7 @@ def str2rank(line):
         print("Line: %s" % line)
         exit(1)
     
-    return Rank(float(tokens[0]),float(tokens[1]),freq)
+    return [float(tokens[0]),float(tokens[1]),freq]
 
 def find_file():
     from glob import glob
@@ -60,12 +47,12 @@ def find_file():
     return files[0]
 
 short_opts = "hio:s"
-long_opts = ["help","intermediate","no_header","output=","search"]
+long_opts = ["help","intermediate","header","output=","search"]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
 should_search = False
-have_header = True
+have_header = False
 show_intermediate = False
 out_filename = None
 for (opt,optarg) in opts:
@@ -76,7 +63,7 @@ for (opt,optarg) in opts:
         exit(0)
     elif opt in ["i","intermediate"]:
         show_intermediate = True
-    elif opt == "no_header":
+    elif opt == "header":
         have_header = True
     elif opt in ["o","output"]:
         out_filename = optarg
@@ -110,8 +97,9 @@ for line in file:
     line = line.strip()
     val = str2rank(line)
     ranks.append(val)
+file.close()
 
-ranks = sorted(ranks)
+ranks = np.array(ranks)
 num_ranks = len(ranks)
 
 from progressbar import ProgressBar, Percentage, Bar
@@ -127,31 +115,27 @@ def update_progress():
     except ValueError:
         pass
 
-if show_intermediate:
-    print(get_header())
 total_hits = 0
-ordered_ranks = {}
+better_stats = np.zeros((ranks.shape[0],ranks.shape[1]+3))# Cols: Better Frequency, Better Count, Better Fraction
+better_stats[:ranks.shape[0],:ranks.shape[1]] = ranks
+better_col_offset = ranks.shape[1]
+
 print("Counting ranks")
-for i in range(0,num_ranks):
-    total_hits += ranks[i].freq
-    ranks[i].sum = 0
-    curr_rank = num_ranks-i
-    for j in range(i+1,num_ranks):
-        update_progress()
-        if ranks[i].score >= ranks[j].score:
-            continue
-        ranks[i].better_freq += ranks[j].freq
-        ranks[i].better_count += 1
-    if show_intermediate:
-        print(ranks[i])
+for i in xrange(num_ranks):
+    total_hits += ranks[i,2]# Frequency
+    curr_energy = ranks[i,0]
+    curr_score = ranks[i,1]
+    better_list = ranks[np.logical_and(ranks[:,0] < curr_energy, ranks[:,1] > curr_score)]
+    better_stats[i,better_col_offset] += np.sum(better_list[:,2])# Total frequency of hits better than this one.
+    better_stats[i,better_col_offset+1] += better_list.shape[0]# Count of hits better than this one.
+    update_progress()
 
 print("")# reset line return after progress bar
-print("Reducing Ranks")
-for rank in ranks:
-    if rank.better_count in ordered_ranks:
-        ordered_ranks[rank.better_count].append(rank)
-    else:
-        ordered_ranks[rank.better_count] = [rank]
+
+if show_intermediate:
+    print(get_header())
+    for i in xrange(num_ranks):
+        print(rank2str(better_stats[i,:]))
 
 outfile = open(out_filename,"w")
 top_quartile = open("top_25-percent.dat","w")
@@ -161,13 +145,12 @@ for f in [outfile,top_quartile]:
 
 q = 0.25
 print("Generating Output")
-for key in sorted(ordered_ranks.iterkeys()):
-    for rank in ordered_ranks[key]:
-        curr_frac = rank.better_freq/total_hits
-        outstring = "%s\t%f\n" % (rank,curr_frac)
-        if curr_frac < q:
-            top_quartile.write(outstring)
-        outfile.write(outstring)
-    
+sort_indices = np.argsort(better_stats[:,better_col_offset+1])# Sort by better count. Will put best at "top" (i.e. smaller row index)
+for i in xrange(num_ranks):
+    curr_row = better_stats[sort_indices[i],:]# get row
+    curr_frac = curr_row[better_col_offset]/total_hits
+    outstring = "%s\t%f\n" % (rank2str(curr_row),curr_frac)
+    if curr_frac < q:
+        top_quartile.write(outstring)
+    outfile.write(outstring)
 
-file.close()
