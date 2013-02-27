@@ -101,7 +101,7 @@ ranks = np.array(ranks)
 num_ranks = len(ranks)
 
 from progressbar import ProgressBar, Percentage, Bar
-progress_length = (num_ranks*num_ranks - num_ranks +1)/2
+progress_length = num_ranks
 progress_counter = 0
 progress_bar = ProgressBar(widgets = [Percentage(), Bar()], maxval=progress_length).start()
 
