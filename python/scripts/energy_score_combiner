@@ -41,8 +41,12 @@ hit_map = {}
 progress_bar = None
 progress_bar_counter = 0 
 for filename in args:
-    keys = np.genfromtxt(filename,delimiter="\t",usecols=0,dtype=str)
-    vals = np.genfromtxt(filename,delimiter="\t",usecols=1,dtype=int)
+    data = np.genfromtxt(filename,delimiter="\t",usecols=[0,1],dtype=str) # one read
+    keys = data[:,0]
+    vals = np.zeros(len(data),dtype=int)
+    for i in xrange(len(data)):
+        vals[i] = int(data[i,1])
+    del(data) # free some memory
     unique_keys = np.unique(keys)
     
     if output != stdout:
