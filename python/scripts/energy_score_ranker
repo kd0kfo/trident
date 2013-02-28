@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-from sys import argv,stdout
+from sys import argv
 from getopt import getopt
-from math import ceil
 import numpy as np
 
 def print_usage():
@@ -12,6 +11,7 @@ def print_usage():
     print("-i, --intermediate\tPrints intermediate data in the sorting to standard output.")
     print("    --no_header\t\tOmits print the header line for the output.")
     print("-o, --output FILE\tSpecifiy the output file. Default: INPUTFILE.ordered")
+    print("    --scale INT\tDivide all frequencies by the provided integer. Default: 1")
     print("-s, --search\t\tSearches the directory tree for the first file with the suffix \".score_count\"")
     
 
@@ -45,7 +45,7 @@ def find_file():
     return files[0]
 
 short_opts = "hio:s"
-long_opts = ["help","intermediate","header","output=","search"]
+long_opts = ["help","intermediate","header","output=","scale=","search"]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -53,6 +53,7 @@ should_search = False
 have_header = False
 show_intermediate = False
 out_filename = None
+scale_factor = 1
 for (opt,optarg) in opts:
     while opt[0] == "-":
         opt = opt[1:]
@@ -67,37 +68,41 @@ for (opt,optarg) in opts:
         out_filename = optarg
     elif opt in ["s","search"]:
         should_search = True
+    elif opt == "scale":
+        scale_factor = int(optarg)
     else:
         print("Unknown flag: %s" % opt)
         exit(1)
 
-file = None    
+infile = None    
 if should_search:
     filename = find_file()
     if not filename:
         print("Could not find score_count file")
         exit(1)
-    file = open(filename,"r")
+    infile = open(filename,"r")
 else:
     if len(args) < 1:
         print_usage()
         exit(1)
-    file = open(args[0],"r")
+    infile = open(args[0],"r")
 in_filename = file.name
 if not out_filename:
     out_filename = in_filename + ".ordered"
 
 if have_header:
-    file.readline() # skip header
+    infile.readline() # skip header
 
 ranks = []
-for line in file:
+for line in infile:
     line = line.strip()
     val = str2rank(line)
     ranks.append(val)
-file.close()
+infile.close()
 
 ranks = np.array(ranks)
+if scale_factor != 1:
+    ranks[:,2] /= scale_factor
 num_ranks = len(ranks)
 
 from progressbar import ProgressBar, Percentage, Bar
