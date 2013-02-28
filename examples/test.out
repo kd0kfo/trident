@@ -1,0 +1,109 @@
+
+   \ ,-*-.   ,-*-. ,-*-.   ,-*-. ,-*-.   ,    
+    X | | \ / | | X | | \ / | | X | | \ /   
+   / \| | |X| | |/ \| | |X| | |/ \| | |X|   
+      `-!-' `-!-'   `-!-' `-!-'   `-!-' `-     
+
+   Trident 0.4.2 microRNA dsDNA triplex algorithm
+
+                ,-*-.         ,-*-.            
+               / | | \       / | | \         
+         | | |/       \| | |/       \| |     
+         `-!-'         `-!-'         `-!       
+
+
+Query Filename: 	mir1.fasta
+Reference Filename:	mir1idealizedpurinestrand5to3.fasta
+Read Sequence:mir1 (22 nt)
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+   Forward:	Score: 156.000000  Q:3 to 21  R:12 to 33 Align Len (19) (63.16%) (63.16%)
+
+   Query:    3' uAUGUAUGAAGAAAUGUAAGgu 5'
+                 $ $ $ $$$ $ $ $ $$$  
+   Ref:      5' tAGGAAAGAAAAGAAGAAAGaa 3'
+             3' aTCCTTTCTTTTCTTCTTTCtt 5'
+
+   Energy:  -185.880000 kCal/Mol
+
+Scores for this hit:
+>mir1,mir1idealizedpurinestrand5to3,156.00,-185.88,3 21,12 33,19,63.16%,63.16%,uAUGUAUGAAGAAAUGUAAGgu, $ $ $ $$$ $ $ $ $$$  ,tAGGAAAGAAAAGAAGAAAGaa,antiparallel,direct,purine
+Score for this Scan:
+Seq1,Seq2,Tot Score,Tot Energy,Max Score,Max Energy,Strand,Len1,Len2,Positions
+>>mir1	mir1idealizedpurinestrand5to3	156.00	-185.88	156.00	-185.88	1	22	46	 12
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+   Forward:	Score: 240.000000  Q:2 to 21  R:13 to 34 Align Len (20) (75.00%) (75.00%)
+
+   Query:    3' uAUGUAUGAAGAAAUGUAAGGu 5'
+                 $ $ $ $$$$$$$ $ $$$$ 
+   Ref:      3' aAAGAAAGAAGAAAAGAAAGGa 5'
+             5' tTTCTTTCTTCTTTTCTTTCCt 3'
+
+   Energy:  -249.510000 kCal/Mol
+
+Scores for this hit:
+>mir1,mir1idealizedpurinestrand5to3,240.00,-249.51,2 21,13 34,20,75.00%,75.00%,uAUGUAUGAAGAAAUGUAAGGu, $ $ $ $$$$$$$ $ $$$$ ,aAAGAAAGAAGAAAAGAAAGGa,parallel,direct,purine
+Score for this Scan:
+Seq1,Seq2,Tot Score,Tot Energy,Max Score,Max Energy,Strand,Len1,Len2,Positions
+>>mir1	mir1idealizedpurinestrand5to3	240.00	-249.51	240.00	-249.51	2	22	46	 13
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Scan Complete
+
