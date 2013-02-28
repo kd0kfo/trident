@@ -3,6 +3,7 @@
 from sys import argv,stdout,stdin
 from getopt import getopt,GetoptError
 import trident.parser
+import numpy as np
 
 HELP_WARNING = "For help, run energy_score_mapper --help"
 def print_usage():
@@ -40,6 +41,6 @@ for (opt,optarg) in opts:
         
 parser = trident.parser.Parser(infile)
 for hit in parser:
-    energy = float(hit['energy'])
+    energy = np.round(float(hit['energy']),decimals=1)
     score = hit['score']
-    outfile.write("%0.1f:%s\t1\n" % (energy,score))
+    outfile.write("%s:%s\t1\n" % (energy,score))
