@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 
 def validate_file(infile):
+    """
+    Crawls an input file and validates the energy based on the sequence.
+    
+    Uses the trident.core python extension
+    
+    @param infile: File to be validated
+    @type infile: file
+    @return: No return value 
+    """
     from trident import parser, core
     from trident.core import sequence_energy,compliment
     import tempfile

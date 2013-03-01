@@ -16,6 +16,15 @@ def error_out(msg):
 
 def chopper(filename,chunk_size,specific_species = None):
     """
+    Takes a microrna fasta file and splits it into smaller files.
+    
+    @param filename: Name of file to be split
+    @type filename: str
+    @param chunk_size: Maximum number of micrornas per new file
+    @type chunk_size: int
+    @param specific_species:  Optional name of a species to look for when extracting microrna. If this is not None, all other microrna will be ignored. Default: None
+    @type specific_species: str
+    @return: Number of files written
     """
     file = open(filename,"r")
     output_file = None

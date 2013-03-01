@@ -21,7 +21,7 @@ def outfile_exists(prefix,file_counter):
     Indictates wither or not the file that would be created already exists.
 
     @param prefix: File prefix
-    @type prefix: String
+    @type prefix: str
     @param file_counter: Index of file being created
     @type file_counter: int
     @return: bool
@@ -33,6 +33,17 @@ def open_outfile(prefix,file_counter):
     return open(create_outfile_name(prefix,file_counter) ,"w")
 
 def create_header(old_header,chunksize,seq_size):
+    """
+    Creates a fasta header line that contains information about the chromosome segment.
+    
+    @param old_header: Original header from chromosome.
+    @type old_header: str
+    @param chunksize: Size of segment
+    @type chunksize: int
+    @param seq_size: Total size of sequence
+    @type seq_size: int
+    @return: Header string
+    """
     import datetime
     header = ">chr"
     if old_header.find("chromosome") != -1:
@@ -70,8 +81,15 @@ def chopper(filename,prefix,chunk_size,overwrite = True):
     where index is a zero-indexed value listing its position in the
     original file.
 
+    @param filename: Name of file to segment
+    @type filename: str
+    @param prefix: File name prefix for segments.
+    @type prefix: str
+    @param chunk_size: Size of segments
+    @type chunk_size: int  
     @param overwrite: Indicates whether files should be overwritten. If False, the files are left unmodified.
     @type overwrite: bool
+    @return: Number of files produced
     """
     file = open(filename,"r")
 

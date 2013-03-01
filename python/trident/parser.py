@@ -33,6 +33,16 @@ def score_dict_to_str(score):
     
     
 def score_str_to_dict(line):
+    """
+    Converts a trident score line to a dict mapping the score data type to its value. 
+    Keys are contained in the trident.parser.score_keys list.
+    
+    @see: score_keys
+    @see: reference_keys
+    @param line: Score line
+    @type line: str
+    @return: Score data as a dict
+    """
     if len(line) == 0:
         return None
     if line[0] == '>': 
@@ -83,9 +93,12 @@ def score_str_to_dict(line):
 
 def parse_file(file):
     """
-    Prints score information to stdout.
-
-    Parameters: File Object
+    Reads the next line in the file and converts it to a Trident Score Dict using score_str_to_dict
+    
+    @see: score_str_to_dict
+    @param file: File Object
+    @type file: file
+    @return: Score dict
     """
     
     score = None
@@ -96,6 +109,14 @@ def parse_file(file):
     return score_str_to_dict(line)    
 
 def str_score(score):
+    """
+    Creates a human readable score string. Each data type has its own line with the format:
+    DATA TYPE: DATA VALUE
+    
+    @param score: Score to be rendered to a string
+    @type score: dict
+    @return: str
+    """
     retval = ""
     for name in sorted(score.iterkeys()):
         val = score[name]
@@ -110,7 +131,18 @@ def str_score(score):
     return retval
 
 class Parser:
+    """
+    Iterable Trident Output Parser.
+    
+    Takes a file object as in its constructor and can iterate through scores in the file.
+    """
     def __init__(self,file):
+        """
+        Parser constructor.
+        
+        @param file: Score file.
+        @type file: file
+        """
         self.file = file
     
     def __iter__(self):
@@ -120,7 +152,7 @@ class Parser:
         """
         next function for Parser as an iterator.
         
-        Note: If there is an empty line in the file, None is returned.
+        @return: Next score in the file being parsed. If there is an empty line in the file, None is returned.
         """
         retval = parse_file(self.file)
         return retval
