@@ -15,6 +15,9 @@ score_keys = ['query_id','reference_id','score','energy','query_coords','ref_coo
 # Keys to the reference sequence description, which is delimited by the '|' character
 reference_keys = ["chromosome","chunk","seg_offset","seq_size","chunk_size","iso_date","assembly","species"]
 
+class BrokenLine(Exception):
+    pass
+
 def parser_usage():
     """
     Display usage of trident
@@ -87,8 +90,6 @@ def parse_file(file):
 
     Parameters: File Object
     """
-    
-    score = None
     line = file.readline()
     if not line:# EOF
         raise StopIteration
