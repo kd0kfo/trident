@@ -35,6 +35,8 @@ def score_dict_to_str(score):
     
     
 def score_str_to_dict(line):
+    from sys import stderr
+    
     if len(line) == 0:
         return None
     if line[0] == '>': 
@@ -46,7 +48,6 @@ def score_str_to_dict(line):
     line = line.strip()
     tokens = line.split(',')
     if len(tokens) != len(score_keys) - 4: # 4: 2x(query_coords) + 2x(ref_coords)
-        from sys import stderr
         stderr.write("Invalid score line: \"%s\"\n" % line)
         return None
             
@@ -55,7 +56,6 @@ def score_str_to_dict(line):
     if "|" in ref_id:
         tokens = ref_id.split('|')
         if len(tokens) < 3:
-            from sys import stderr
             stderr.write("Missing sequence offset.\nSequence: %s" % line)
             return None
         if tokens[2].isdigit():
@@ -67,7 +67,6 @@ def score_str_to_dict(line):
 
     tokens = score['ref_coords'].split(' ')
     if len(tokens) < 2:
-        from sys import stderr
         stderr.write("Broken reference coordinates.\n")
         return None
     
@@ -75,7 +74,6 @@ def score_str_to_dict(line):
     score['ref_end'] = int(tokens[1]) + offset
     tokens = score['query_coords'].split(' ')
     if len(tokens) < 2:
-        from sys import stderr
         stderr.write("Broken query coordinates.\n")
         return None
 
