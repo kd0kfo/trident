@@ -9,7 +9,8 @@ HELP_WARNING = "For help, run energy_score_mapper --help"
 def print_usage():
     print("Usage: energy_score_mapper [-o output] [-i input]")
     print("Options:")
-    print("    --hadoop\tIndicates that the process is part of a Hadoop Streaming Run. Will use Standard Error to increment hadoop counters if necessary.")
+    print("    --hadoop\tIndicates that the process is part of a Hadoop Streaming Run. ")
+    print("            \tWill use Standard Error to increment hadoop counters if necessary.")
     print("-i, --input\tSpecify input file. Default: Standard Input")
     print("-o, --output\tSpecify output file. Default: Standard Output")
     
@@ -45,6 +46,15 @@ for (opt,optarg) in opts:
         
 parser = trident.parser.Parser(infile)
 for hit in parser:
+    if not hit:
+        if is_hadoop:
+            from sys import stderr
+            stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
+            continue
+        else:
+            from trident.parser import BrokenLine
+            raise BrokenLine("Broken line while parsing score file: %s" % parser.file.name)
+        
     energy = np.round(float(hit['energy']),decimals=1)
     score = hit['score']
     outfile.write("%s:%s\t1\n" % (energy,score))
