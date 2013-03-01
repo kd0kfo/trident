@@ -110,8 +110,8 @@ def str_score(score):
     return retval
 
 class Parser:
-    def __init__(self,file):
-        self.file = file
+    def __init__(self,infile):
+        self.file = infile
     
     def __iter__(self):
         return self
@@ -130,8 +130,6 @@ def main():
     from getopt import getopt
     from sys import argv
 
-    verbose = False
-    
     (optlist,args) = getopt(argv[1:],'v',['version'])
     
     for (opt,val) in optlist:
@@ -154,8 +152,8 @@ def main():
         parser_usage()
         exit(1)
 
-    with open(filename,'r') as file:
-        p = Parser(file)
+    with open(filename,'r') as infile:
+        p = Parser(infile)
         for score in p:
             print(str_score(score))
 
