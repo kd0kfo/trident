@@ -47,12 +47,25 @@ hit_map = {}
 progress_bar = None
 progress_bar_counter = 0 
 for filename in args:
-    data = np.genfromtxt(filename,delimiter="\t",usecols=[0,1],dtype=str) # one read
-    keys = data[:,0]
-    vals = np.zeros(len(data),dtype=int)
-    for i in xrange(len(data)):
-        vals[i] = int(data[i,1])
-    del(data) # free some memory
+    file_keys = []
+    file_vals = []
+    with open(filename,"r") as infile:
+        for line in infile:
+            line = line.strip()
+            if not line:
+                continue # empty line
+            (key,val) = line.split("\t")
+            file_keys.append(key)
+            file_vals.append(int(val))
+    if not file_keys and not file_vals:
+        continue # Empty file. Continue
+    if not file_keys or not file_vals:
+        raise Exception("Mismatch between number of keys and frequency values")
+    keys = np.array(file_keys,dtype=str)
+    vals = np.array(file_vals,dtype=int)
+    file_keys = None # Free up memory.
+    file_vals = None # Free up memory.
+    
     unique_keys = np.unique(keys)
     
     if output != stdout and not be_quiet:
