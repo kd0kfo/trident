@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+Combines multiple Energy-Score frequency files, aggregating redundant pairs.
+"""
 
 from sys import stdout,argv
 from getopt import getopt

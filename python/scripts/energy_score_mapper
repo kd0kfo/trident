@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+"""
+Parses a Trident output file and produces a tab-delimited list of Energy-Score pairs.
+
+The energy-score pair is the first column and the second column simply contains a one.
+Example:
+-123.4:42.0    1
+would be produced for a score line that indicated -123.4 kcal and a heuristic score of 42.
+
+This may be used as the Map step in a Hadoop Streaming run.
+"""
 
 from sys import argv,stdout,stdin
 from getopt import getopt,GetoptError

@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""
+Produces Energy and Score frequency plots.
+
+Uses numpy and matplotlib.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt

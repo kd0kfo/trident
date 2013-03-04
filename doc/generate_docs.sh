@@ -5,7 +5,7 @@ doxygen Doxyfile
 
 echo
 echo Document Trident Python Class
-epydoc -o python_api --name trident ../src/python/trident
+epydoc -o python_api --name trident ../python/trident
 
 echo
 echo Running Javadoc on Hadoop code
