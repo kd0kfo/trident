@@ -90,9 +90,9 @@ else:
         print_usage()
         exit(1)
     infile = open(args[0],"r")
-in_filename = file.name
+in_filename = infile.name
 if not out_filename:
-    out_filename = in_filename + ".ordered"
+    out_filename = str(in_filename) + ".ordered"
 
 if have_header:
     infile.readline() # skip header
