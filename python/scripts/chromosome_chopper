@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+"""
+Breaks up chromosome files into arbitrarily smaller sizes
+
+Requires an input sequence, an output file prefix and a 
+chunk size (number of 70-character lines).
+"""
+
+def error_out(msg):
+    print(msg)
+    exit(1)
+
+def main():
+    from sys import argv
+    from trident.chromosome_chopper import chopper
+    
+    if len(argv) < 4:
+        error_out("Usage: %s <filename> <output prefix> <chunk size>" % argv[0])
+
+    filename = argv[1]
+    prefix = argv[2]
+    chunk_size = int(argv[3])
+    if chunk_size < 2:
+        error_out("Invalid size. Must be a positive integer")
+        chunk_size -= 1 # decrement for use with mod
+
+    num_files = chopper(filename,prefix,chunk_size)
+    print("Divided %s into %d segments" % (filename, num_files))
+
+
+if __name__ == "__main__":
+    main()

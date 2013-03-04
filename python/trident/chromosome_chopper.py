@@ -6,13 +6,7 @@ Requires an input sequence, an output file prefix and a
 chunk size (number of 70-character lines).
 """
 
-from sys import argv
-import re
 
-
-def error_out(msg):
-    print(msg)
-    exit(1)
 def create_outfile_name(prefix,file_counter):
     return "%s-%d" % (prefix,file_counter)
 
@@ -45,12 +39,15 @@ def create_header(old_header,chunksize,seq_size):
     @return: Header string
     """
     import datetime
+    import re
+    from trident import FastaError
+    
     header = ">chr"
     if old_header.find("chromosome") != -1:
         species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*chromosome",old_header)
         m = re.findall(r"chromosome\s*(\w*)",old_header)
         if len(m) == 0:
-            error_out("Missing chromosome label")
+            raise FastaError("Missing chromosome label")
         header += m[0] + "|"
     elif old_header.find("mitochondrion"):
         species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*mitochondrion",old_header)
@@ -69,7 +66,7 @@ def create_header(old_header,chunksize,seq_size):
     else:
         header += m[0] + "|"
     if len(species) == 0 or len(species[0]) < 2 or len(species[0][0]) == 0:
-        error_out("Missing species name")
+        raise FastaError("Missing species name")
     species = species[0]
     header += "[%s.%s]" % (species[0][0],species[1])
     return header + "\n"
@@ -91,17 +88,19 @@ def chopper(filename,prefix,chunk_size,overwrite = True):
     @type overwrite: bool
     @return: Number of files produced
     """
-    file = open(filename,"r")
+    from trident import FastaError
+    
+    infile = open(filename,"r")
 
-    header = file.readline()
+    header = infile.readline()
     if len(header) == 0 or header[0] != '>':
-        error_out("Improper Header")
+        raise FastaError("Improper Header")
                 
     nchars = 0
-    for line in file:
+    for line in infile:
         nchars += len(line.strip())
-    file.seek(0)
-    file.readline()
+    infile.seek(0)
+    infile.readline()
         
     header = create_header(header,chunk_size,nchars)
 
@@ -124,7 +123,7 @@ def chopper(filename,prefix,chunk_size,overwrite = True):
     file_counter += 1
     counter = 1
     
-    for line in file:
+    for line in infile:
         if counter > 0 and counter % chunk_size == 0:
             if not inhibit_writing:
                 outfile.write(line)
@@ -146,21 +145,3 @@ def chopper(filename,prefix,chunk_size,overwrite = True):
 
     return file_counter-1
 
-def main():
-    
-    if len(argv) < 4:
-        error_out("Usage: %s <filename> <output prefix> <chunk size>" % argv[0])
-
-    filename = argv[1]
-    prefix = argv[2]
-    chunk_size = int(argv[3])
-    if chunk_size < 2:
-        error_out("Invalid size. Must be a positive integer")
-        chunk_size -= 1 # decrement for use with mod
-
-    num_files = chopper(filename,prefix,chunk_size)
-    print("Divided %s into %d segments" % (filename, num_files))
-
-
-if __name__ == "__main__":
-    main()
