@@ -53,7 +53,9 @@ for (opt,optarg) in opts:
         print("Unknown flag: %s" % opt)
         print(HELP_WARNING)
         exit(1)
-        
+
+hit_map = {}
+
 parser = trident.parser.Parser(infile)
 for hit in parser:
     if not hit:
@@ -67,4 +69,11 @@ for hit in parser:
         
     energy = np.round(float(hit['energy']),decimals=1)
     score = hit['score']
-    outfile.write("%s:%s\t1\n" % (energy,score))
+    key = "{0}:{1}".format(energy,score)
+    if key in hit_map:
+        hit_map[key] += 1
+    else:
+        hit_map[key] = 1
+
+for key in hit_map.keys():
+    outfile.write("{0}\t{1}\n".format(key,hit_map[key]))
