@@ -11,10 +11,10 @@ from getopt import getopt
 from sys import argv
 
 short_opts = "hls:t:"
-long_opts = ["help","log","scale=","title="]
+long_opts = ["help","file_tag=","log","scale=","title="]
 
 def print_usage():
-    print("Usage: energy_score_plots.py [-l] [-s INT] [-t TITLE] <input file>")
+    print("Usage: energy_score_plots.py [-file_tag STRING] [-l] [-s INT] [-t TITLE] <input file>")
 
 def reduce_array(arr, sort_col, freq_col):
     unique_keys = np.unique(arr[:,sort_col])
@@ -31,6 +31,7 @@ def reduce_array(arr, sort_col, freq_col):
 scale_factor = 1
 the_title = "Frequency"
 log_y_axis = False
+file_tag = ""
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -43,7 +44,9 @@ infilename = args[0]
 for (opt,optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
-    if opt in ["h","help"]:
+    if opt == "file_tag":
+         file_tag = optarg
+    elif opt in ["h","help"]:
         print_usage()
         exit(0)
     elif opt in ["l","log"]:
@@ -65,7 +68,7 @@ if scale_factor != 1:
 
 
 # Make plots
-for plot_info in [("Energy (kcal)", 0,"energy_test.png"), ("Score", 1,"score_test.png")]:
+for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag)), ("Score", 1,"score{0}.png".format(file_tag))]:
     reduced_data = reduce_array(data,plot_info[1],2)
     plt.figure()
     if log_y_axis:
