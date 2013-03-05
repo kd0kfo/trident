@@ -24,7 +24,6 @@ def chopper(filename,chunk_size,specific_species = None):
     file_counter = 0
 
     write_seq = True
-
     for line in infile.readlines():
         line = line.strip()
         if len(line) == 0:
@@ -32,8 +31,8 @@ def chopper(filename,chunk_size,specific_species = None):
         new_line = ""
         if line[0] == '>':
             new_line = line
-            species = new_line[1:].split(' ')[0]
-            species = species.split('-')[0]
+            species = " ".join(new_line[1:].split(' ')[2:4])
+            print(species)
             if specific_species != None:
                 if specific_species == species:
                     write_seq = True
@@ -45,7 +44,7 @@ def chopper(filename,chunk_size,specific_species = None):
                     output_file.close()
                 filename = new_line[1:].strip().split(' ')[0]
                 if chunk_size > 1:
-                    filename += "_and_more"
+                    filename += "_{0}".format(file_counter)
                 filename = filename.replace('*','_star')
                 filename += ".fa"
                 output_file = open(filename,'w')
