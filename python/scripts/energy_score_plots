@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 from getopt import getopt
 from sys import argv
 
-short_opts = "hs:t:"
-long_opts = ["help","scale=","title="]
+short_opts = "hls:t:"
+long_opts = ["help","log","scale=","title="]
 
 def print_usage():
-    print("Usage: energy_score_plots.py [-s INT] [-t TITLE] <input file>")
+    print("Usage: energy_score_plots.py [-l] [-s INT] [-t TITLE] <input file>")
 
 def reduce_array(arr, sort_col, freq_col):
     unique_keys = np.unique(arr[:,sort_col])
@@ -30,6 +30,7 @@ def reduce_array(arr, sort_col, freq_col):
 # defaults
 scale_factor = 1
 the_title = "Frequency"
+log_y_axis = False
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -45,6 +46,8 @@ for (opt,optarg) in opts:
     if opt in ["h","help"]:
         print_usage()
         exit(0)
+    elif opt in ["l","log"]:
+        log_y_axis = True
     elif opt in ["s","scale"]:
         scale_factor = float(optarg)
     elif opt in ["t","title"]:
@@ -65,8 +68,14 @@ if scale_factor != 1:
 for plot_info in [("Energy (kcal)", 0,"energy_test.png"), ("Score", 1,"score_test.png")]:
     reduced_data = reduce_array(data,plot_info[1],2)
     plt.figure()
-    plt.bar(reduced_data[:,0],reduced_data[:,1])
+    if log_y_axis:
+        plt.bar(reduced_data[:,0],np.log10(reduced_data[:,1]))
+    else:
+        plt.bar(reduced_data[:,0],reduced_data[:,1])
     plt.title(the_title)
     plt.xlabel(plot_info[0])
-    plt.ylabel("Frequency")
+    if log_y_axis:
+        plt.ylabel("Log Frequency")
+    else:
+        plt.ylabel("Frequency")
     plt.savefig(plot_info[2])
