@@ -14,7 +14,7 @@ short_opts = "hls:t:"
 long_opts = ["help","file_tag=","log","scale=","title="]
 
 def print_usage():
-    print("Usage: energy_score_plots.py [-file_tag STRING] [-l] [-s INT] [-t TITLE] <input file>")
+    print("Usage: energy_score_plots.py [--file_tag STRING] [-l] [-s INT] [-t TITLE] <input file>")
 
 def reduce_array(arr, sort_col, freq_col):
     unique_keys = np.unique(arr[:,sort_col])
