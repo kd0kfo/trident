@@ -44,7 +44,7 @@ def create_header(old_header,chunksize,seq_size):
     
     header = ">chr"
     if old_header.find("chromosome") != -1:
-        species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*chromosome",old_header)
+        species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|chromosome)",old_header)
         m = re.findall(r"chromosome\s*(\w*)",old_header)
         if len(m) == 0:
             raise FastaError("Missing chromosome label")
