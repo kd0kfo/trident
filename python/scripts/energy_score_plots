@@ -68,13 +68,25 @@ if scale_factor != 1:
 
 
 # Make plots
-for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag)), ("Score", 1,"score{0}.png".format(file_tag))]:
+for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag),(-500.,0.)), ("Score", 1,"score{0}.png".format(file_tag),(80,400))]:
     reduced_data = reduce_array(data,plot_info[1],2)
+    
+    xlims = plot_info[3]
+    bins = np.arange(xlims[0],xlims[1],20)
+    binned = np.zeros((1,bins.shape[0]-1))
+    indices = np.digitize(reduced_data[:,0],bins)
+    for i in xrange(len(reduced_data)):
+        index = indices[i]
+        freq = reduced_data[i,1]
+        binned[0,index-1] += freq
+    
     plt.figure()
+    plt.xlim(xlims)
     if log_y_axis:
-        plt.bar(reduced_data[:,0],np.log10(reduced_data[:,1]))
-    else:
-        plt.bar(reduced_data[:,0],reduced_data[:,1])
+        for i in xrange(binned.shape[1]):
+            if binned[0,i] != 0:
+                binned[0,i] = np.log10(binned[0,i])
+    plt.bar(bins[0:binned.shape[1]],binned[0,:],width=20)
     plt.title(the_title)
     plt.xlabel(plot_info[0])
     if log_y_axis:
@@ -82,3 +94,5 @@ for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag)), ("Score
     else:
         plt.ylabel("Frequency")
     plt.savefig(plot_info[2])
+    
+    
