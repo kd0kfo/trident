@@ -94,5 +94,15 @@ for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag),(-500.,0.
     else:
         plt.ylabel("Frequency")
     plt.savefig(plot_info[2])
-    
+   
+plt.figure()
+plt.hold(True)
+for (color, threshold) in [('b',0.5),('y',0.25),('orange',0.125),('r',0.0625)]:
+    subset = data[data[:,5] < threshold]
+    plt.scatter(subset[:,1],subset[:,0],c=color,label=str(threshold))
+plt.legend()
+plt.ylabel("Energy (kcal)")
+plt.xlabel("Score")
+plt.title("Energy-Score Distribution: {0}".format(the_title))
+plt.savefig("distribution{0}.png".format(file_tag))
     
