@@ -132,7 +132,7 @@ for i in xrange(num_ranks):
     total_hits += ranks[i,2]# Frequency
     curr_energy = ranks[i,0]
     curr_score = ranks[i,1]
-    better_list = ranks[np.logical_and(ranks[:,0] < curr_energy, ranks[:,1] > curr_score)]
+    better_list = ranks[np.logical_and(ranks[:,0] <= curr_energy, ranks[:,1] >= curr_score)]
     better_stats[i,better_col_offset] += np.sum(better_list[:,2])# Total frequency of hits better than this one.
     better_stats[i,better_col_offset+1] += better_list.shape[0]# Count of hits better than this one.
     update_progress()
