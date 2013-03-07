@@ -73,7 +73,7 @@ for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag),(-500.,0.
     
     xlims = plot_info[3]
     bins = np.arange(xlims[0],xlims[1],20)
-    binned = np.zeros((1,bins.shape[0]-1))
+    binned = np.zeros((1,bins.shape[0]))
     indices = np.digitize(reduced_data[:,0],bins)
     for i in xrange(len(reduced_data)):
         index = indices[i]
@@ -99,7 +99,7 @@ plt.figure()
 plt.hold(True)
 for (color, threshold) in [('b',0.5),('y',0.25),('orange',0.125),('r',0.0625)]:
     subset = data[data[:,5] < threshold]
-    plt.scatter(subset[:,1],subset[:,0],c=color,label=str(threshold))
+    plt.scatter(subset[:,1],subset[:,0],c=color,label=str(threshold),lw=0,alpha=0.5)
 plt.legend()
 plt.ylabel("Energy (kcal)")
 plt.xlabel("Score")
