@@ -8,6 +8,9 @@ Example:
 would be produced for a score line that indicated -123.4 kcal and a heuristic score of 42.
 
 This may be used as the Map step in a Hadoop Streaming run.
+
+Using the "--list" file, the input file can be a list of file names to be used, one name 
+per line. This allows the user to specify multiple files to be mapped at once.
 """
 
 from sys import argv,stdout,stdin
@@ -17,7 +20,7 @@ import numpy as np
 
 HELP_WARNING = "For help, run energy_score_mapper --help"
 def print_usage():
-    print("Usage: energy_score_mapper [-o output] [-i input]")
+    print("Usage: energy_score_mapper [-o output] [-i input] [--list input list file]")
     print("Options:")
     print("    --hadoop\tIndicates that the process is part of a Hadoop Streaming Run. ")
     print("            \tWill use Standard Error to increment hadoop counters if necessary.")
@@ -26,7 +29,7 @@ def print_usage():
     
 
 short_opts = "hi:o:"
-long_opts = ["hadoop","help","input=","output="]
+long_opts = ["hadoop","help","input=","list=","output="]
 try:
     (opts,args) = getopt(argv[1:],short_opts,long_opts)
 except GetoptError as ge:
@@ -34,7 +37,7 @@ except GetoptError as ge:
     print(HELP_WARNING)
     exit(1)
 
-infile = stdin
+infilenames = []
 outfile = stdout
 is_hadoop = False
 for (opt,optarg) in opts:
@@ -46,7 +49,11 @@ for (opt,optarg) in opts:
         print_usage()
         exit(0)
     elif opt in ["i","input"]:
-        infile = open(optarg,"r")
+        infilenames.append(optarg)
+    elif opt == "list":
+        with open(optarg,"r") as listfile:
+            for filename in listfile:
+                infilenames.append(filename.strip())
     elif opt in ["o","output"]:
         outfile = open(optarg,"w")
     else:
@@ -56,24 +63,30 @@ for (opt,optarg) in opts:
 
 hit_map = {}
 
-parser = trident.parser.Parser(infile)
-for hit in parser:
-    if not hit:
-        if is_hadoop:
-            from sys import stderr
-            stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
-            continue
-        else:
-            from trident.parser import BrokenLine
-            raise BrokenLine("Broken line while parsing score file: %s" % parser.file.name)
-        
-    energy = np.round(float(hit['energy']),decimals=1)
-    score = hit['score']
-    key = "{0}:{1}".format(energy,score)
-    if key in hit_map:
-        hit_map[key] += 1
+for infilename in infilenames:
+    infile = None
+    if infilename == "/dev/stdin":
+        infile = stdin# platform niceness
     else:
-        hit_map[key] = 1
+        infile = open(infilename,"r")
+    parser = trident.parser.Parser(infile)
+    for hit in parser:
+        if not hit:
+            if is_hadoop:
+                from sys import stderr
+                stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
+                continue
+            else:
+                from trident.parser import BrokenLine
+                raise BrokenLine("Broken line while parsing score file: %s" % parser.file.name)
+            
+        energy = np.round(float(hit['energy']),decimals=1)
+        score = hit['score']
+        key = "{0}:{1}".format(energy,score)
+        if key in hit_map:
+            hit_map[key] += 1
+        else:
+            hit_map[key] = 1
 
 for key in hit_map.keys():
     outfile.write("{0}\t{1}\n".format(key,hit_map[key]))
