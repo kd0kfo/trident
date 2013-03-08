@@ -39,7 +39,7 @@ def str2rank(line):
         print("Line: %s" % line)
         exit(1)
     
-    return [float(tokens[0]),float(tokens[1]),freq]
+    return (float(tokens[0]),float(tokens[1]),freq)
 
 def find_file():
     from glob import glob
@@ -97,17 +97,27 @@ if not out_filename:
 if have_header:
     infile.readline() # skip header
 
-ranks = []
+raw_ranks = {}
 for line in infile:
     line = line.strip()
-    val = str2rank(line)
-    ranks.append(val)
+    hit_info = str2rank(line)
+    pair = (hit_info[0],hit_info[1])
+    freq = hit_info[2]
+    if not pair in raw_ranks:
+        raw_ranks[pair] = freq
+    else:
+        raw_ranks[pair] += freq
 infile.close()
 
-ranks = np.array(ranks)
+ranks = np.ndarray((len(raw_ranks),3))
+ranks_idx = 0
+for key in raw_ranks:
+    ranks[ranks_idx,:] = [key[0],key[1],raw_ranks[key]]
+    ranks_idx += 1
 if scale_factor != 1:
     ranks[:,2] /= scale_factor
 num_ranks = len(ranks)
+del(raw_ranks) # free memory
 
 from progressbar import ProgressBar, Percentage, Bar
 progress_length = num_ranks
