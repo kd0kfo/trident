@@ -16,6 +16,7 @@ def print_usage():
     print("    --no_header\t\tOmits print the header line for the output.")
     print("-o, --output FILE\tSpecifiy the output file. Default: INPUTFILE.ordered")
     print("    --scale INT\tDivide all frequencies by the provided integer. Default: 1")
+    print("    --score INT\tMinimum score threshold. Default: 0")
     print("-s, --search\t\tSearches the directory tree for the first file with the suffix \".score_count\"")
     
 
@@ -49,7 +50,7 @@ def find_file():
     return files[0]
 
 short_opts = "hio:s"
-long_opts = ["help","intermediate","header","output=","scale=","search"]
+long_opts = ["help","intermediate","header","output=","scale=","score=","search"]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -58,6 +59,7 @@ have_header = False
 show_intermediate = False
 out_filename = None
 scale_factor = 1
+score_threshold = 0
 for (opt,optarg) in opts:
     while opt[0] == "-":
         opt = opt[1:]
@@ -74,6 +76,8 @@ for (opt,optarg) in opts:
         should_search = True
     elif opt == "scale":
         scale_factor = int(optarg)
+    elif opt == "score":
+        score_threshold = int(optarg)
     else:
         print("Unknown flag: %s" % opt)
         exit(1)
@@ -101,6 +105,9 @@ raw_ranks = {}
 for line in infile:
     line = line.strip()
     hit_info = str2rank(line)
+    # If score is below the threshold, throw it out
+    if hit_info[1] < score_threshold:
+        continue
     pair = (hit_info[0],hit_info[1])
     freq = hit_info[2]
     if not pair in raw_ranks:
