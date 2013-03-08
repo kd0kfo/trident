@@ -156,7 +156,7 @@ sort_indices = np.argsort(better_stats[:,better_col_offset+1])# Sort by better c
 for i in xrange(num_ranks):
     curr_row = better_stats[sort_indices[i],:]# get row
     curr_frac = curr_row[better_col_offset]/total_hits
-    outstring = "%s\t%f\n" % (rank2str(curr_row),curr_frac)
+    outstring = "%s\t%e\n" % (rank2str(curr_row),curr_frac)
     if curr_frac < q:
         top_quartile.write(outstring)
     outfile.write(outstring)
