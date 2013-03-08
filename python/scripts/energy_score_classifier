@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+"""
+Classifies energy-score hits
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from getopt import getopt,GetoptError
+from sys import argv
+from trident import load_energy_score_data
+
+HELP_WARNING = "For help, run 'energy_score_classifier --help'"
+
+short_opts = "hr:"
+long_opts = ["help","random="]
+
+def print_usage():
+    print("Usage: energy_score_classifier [-r <random data>] <input file>")
+    
+try:
+    (opts,args) = getopt(argv[1:],short_opts,long_opts)
+except GetoptError as ge:
+    print(ge.msg)
+    print(HELP_WARNING)
+    exit(1)
+
+if len(args) != 1:
+    print_usage()
+    exit(1)
+
+infilename = args[0]
+random_filename = None
+for (opt,optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+    if opt in ["h","help="]:
+        print_usage()
+        exit(0)
+    elif opt in ["r","random"]:
+        random_filename = optarg
+    else:
+        print("Unknown flag: {0}".format(optarg))
+        print(HELP_WARNING)
+        exit(1)
+
+if not random_filename:
+    print("Need a file of random data")
+    print(HELP_WARNING)
+    exit(1)
+
+good_data = load_energy_score_data(infilename)
+bad_data = load_energy_score_data(random_filename)
+
+def extract_pairs(array):
+    retval = {}
+    for data in array:
+        pair = (data[0],data[1])
+        if pair in retval:
+            raise Exception("Duplicate entry {0} ({1} in energy_score array".format(pair,data[5]))
+        retval[pair] = data[5]
+    return retval
+
+good_pairs = extract_pairs(good_data)
+bad_pairs = extract_pairs(bad_data)
+
+commonality = []
+outside_bad = 0
+for key in good_pairs.keys():
+    if key in bad_pairs:
+        commonality.append(key)
+    else:
+        outside_bad += 1
+print("There were {0} of {1} pairs in the good set not in the bad set.".format(outside_bad,len(good_pairs)))
+
+outside_good = 0
+for key in bad_pairs.keys():
+    if not key in good_pairs:
+        outside_good += 1
+print("There were {0} of {1} pairs in the bad set not in the good set.".format(outside_good,len(bad_pairs)))
+
+good_percent = np.ndarray((len(commonality),))
+bad_percent = np.ndarray((len(commonality),))
+
+percent_idx = 0
+for key in commonality:
+    good_percent[percent_idx] = good_pairs[key]
+    bad_percent[percent_idx] = bad_pairs[key]
+    percent_idx += 1
+    
+plt.figure()
+linear = np.arange(0,1,0.01)
+plt.plot(np.log10(1-good_percent),np.log10(1-bad_percent),'ob')
+plt.hold(True)
+#plt.plot(linear,linear,'--k')
+plt.ylabel("Better Fraction of Real Hits")
+plt.xlabel("Better Fraction of Random Hits")
+plt.savefig("classification.png")
