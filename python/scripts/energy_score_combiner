@@ -45,8 +45,11 @@ for (opt,optarg) in opts:
 hit_map = {}
 
 progress_bar = None
-progress_bar_counter = 0 
+progress_bar_counter = 0
+file_counter = 0
+file_count = len(args)
 for filename in args:
+    file_counter += 1
     file_keys = []
     file_vals = []
     with open(filename,"r") as infile:
@@ -70,7 +73,7 @@ for filename in args:
     
     if output != stdout and not be_quiet:
         from progressbar import ProgressBar,Percentage,Bar
-        print("Parsing %s" % filename)
+        print("Parsing {0} ({1}/{2})".format(filename,file_counter,file_count))
         progress_bar = ProgressBar(widgets = [Percentage(), Bar()], maxval=len(unique_keys)).start()
         progress_bar_counter = 0 
     for key in unique_keys:
