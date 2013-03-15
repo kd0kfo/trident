@@ -8,18 +8,20 @@ from getopt import getopt
 import numpy as np
 
 def print_usage():
-    print("Usage: energy_score_combiner [-q] [-o FILE] FILE1 FILE2 FILE3 ...")
+    print("Usage: energy_score_combiner [-q] [-o FILE] [--scale INT] FILE1 FILE2 FILE3 ...")
     print("Combines multiple frequency files")
     print("Options:")
     print("-o, --output FILE\tWrites the output to the specified file.")
     print("-q, --quiet\t\tRuns without the use of the progress bar.")
+    print("    --scale INT\tScale Frequencies (divide) by NUMBER.")
 
 # defaults
 output = stdout
 be_quiet = False
+scale  = 0
 
 short_opts = "ho:q"
-long_opts = ["help","output=","quiet"]
+long_opts = ["help","output=","quiet","scale="]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -37,6 +39,8 @@ for (opt,optarg) in opts:
         exit(0)
     elif opt in ["q","quiet"]:
         be_quiet = True
+    elif opt == "scale":
+        scale = int(optarg)
     else:
         print("Unknown flag: %s" % opt)
         print_usage()
@@ -58,8 +62,11 @@ for filename in args:
             if not line:
                 continue # empty line
             (key,val) = line.split("\t")
+            val = int(val)
+            if scale:
+                val /= scale
             file_keys.append(key)
-            file_vals.append(int(val))
+            file_vals.append(val)
     if not file_keys and not file_vals:
         continue # Empty file. Continue
     if not file_keys or not file_vals:
