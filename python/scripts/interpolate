@@ -1,0 +1,16 @@
+#!/usr/bin/env python 
+from sys import argv
+import pickle
+import numpy as np
+
+funct_filename = "z.sav"
+data = np.loadtxt('energy_score.22.dat',delimiter='\t',skiprows=1)
+zmask = data[:,5] != 0
+x = data[zmask][:,0]
+y = data[zmask][:,1]
+z = np.log10(data[zmask][:,5])
+
+# Interpolate
+print("Interpolating")
+funct = SI.LinearNDInterpolator((x,y),z)
+pickle.dump(funct,open(funct_filename,"wb"))

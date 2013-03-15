@@ -1,0 +1,128 @@
+#!/usr/bin/env python
+
+from sys import argv,stdin
+from getopt import getopt,GetoptError
+import numpy as np
+from trident.parser import score_str_to_dict
+
+HELP_WARNING = "For help, run energy_score_classifier --help"
+
+def print_usage():
+    print("Usage: energy_score_mapper [-f function file] [-p prefix] [-i input] [--list input list file] [--permissive]")
+    print("Options:")
+    
+def error_out(msg):
+    from sys import stderr
+    stderr.write(msg)
+    stderr.write("\n")
+    exit(1)
+
+short_opts = "c:f:hi:p:"
+long_opts = ["classifications=","function=","help","input=","list=","prefix=","permissive"]
+
+try:
+    (opts,args) = getopt(argv[1:],short_opts,long_opts)
+except GetoptError as ge:
+    error_out("{0}\n{1}".format(ge.msg,HELP_WARNING))
+
+def load_classifications(infile):
+    """
+    Takes a file and each line is a tab delimited list of names and better frequency classification values to be used.
+    
+    Returns a map of classification values as a float to names as strings.
+    """
+    retval = {}
+    _file = infile
+    if isinstance(infile,str):
+        _file = open(infile,"r")
+    for line in _file:
+        line = line.strip()
+        if not line:
+            continue
+        tokens = line.split("\t")
+        if len(tokens) != 2:
+            error_out("Invalid classification file. Must be 2-column, tab delimited file. First column should be the class name. Second column should be the class threshold.")
+        threshold = float(tokens[1])
+        name = tokens[0]
+        if threshold in retval.keys():
+            error_out("Duplicate entry in classification file: '{0}'".format(threshold))
+        retval[threshold] = name
+    return retval
+
+infilenames = []
+file_prefix = "output_"
+classifications = None
+permissive = False
+Pred = None
+for (opt,optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+    if opt in ["c","classification"]:
+        classifications = load_classifications(optarg)
+    elif opt in ["h","help"]:
+        print_usage()
+        exit(0)
+    elif opt in ["f","function"]:
+        import pickle
+        Pred = pickle.load(open(optarg,"rb"))
+    elif opt in ["i","input"]:
+        infilenames.append(optarg)
+    elif opt == "list":
+        with open(optarg,"r") as listfile:
+            for filename in listfile:
+                infilenames.append(filename.strip())
+    elif opt == "permissive":
+        permissive = True
+    elif opt in ["p","prefix"]:
+        file_prefix = optarg
+    else:
+        error_out("Unknown flag: {0}\n{1}".format(opt,HELP_WARNING))
+        
+if not Pred or not hasattr(Pred,"__call__"):
+    error_out("Corrupted Interpolation function.")
+    
+if not classifications:
+    error_out("Missing classification file.")
+    
+
+output_map = {}# Maps rank classifications(float) to their output file (file type)
+bins = np.zeros((len(classifications),))# array of float classifications. Will be used to identify the classification file into which the hit goes using numpy.digitize
+bin_idx = 0# counter
+for class_val in classifications.keys():
+    class_name = classifications[class_val]
+    output_map[class_val] = open(file_prefix + class_name,"w")
+    try:
+        bins[bin_idx] = class_val
+    except IndexError:
+            error_out("Out of bounds.\nBins shape: {0}\noutput_map length: {1}".format(bins.shape,len(output_map)))
+    bin_idx += 1
+bins.sort() # need to be monotonic
+
+for infilename in infilenames:
+    infile = None
+    if infilename == "/dev/stdin":
+        infile = stdin# platform niceness
+    else:
+        infile = open(infilename,"r")
+
+    for line in infile:
+        line = line.strip()
+        hit = score_str_to_dict(line)
+        if not hit:
+            if permissive:
+                from sys import stderr
+                stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
+                continue
+            else:
+                from trident.parser import BrokenLine
+                raise BrokenLine("Broken line while parsing score file: %s" % infilename)
+        energy = np.round(float(hit['energy']),decimals=1)
+        score = hit['score']
+        pred_rank = Pred(energy,score)
+        bin_index = np.digitize([pred_rank],bins)
+        classification = bins[bin_index][0]
+        outfile = output_map[classification]
+        outfile.write(line)
+        outfile.write("\n")
+        
+    
