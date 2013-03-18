@@ -8,17 +8,26 @@ from trident.parser import score_str_to_dict
 HELP_WARNING = "For help, run energy_score_classifier --help"
 
 def print_usage():
-    print("Usage: energy_score_mapper [-f function file] [-p prefix] [-i input] [--list input list file] [--permissive]")
+    print("Usage: energy_score_mapper [-c classification file] [-f function file] [-p prefix] [-i input] [--list input list file] [--permissive] [-s THRESHOLD]")
     print("Options:")
+    print("-c, --classification FILE\tFile to be used to classify energy-score pairs. Tab-delimited. Column 1 contains the label. Column 2 contains the upper limit on better fraction.")
+    print("-f, --function\t\t\tPython pickle file for interpolation function.")
+    print("-i, --input\t\t\tInput file to be classified.")
+    print("    --list\t\t\tFile containing a list of input files. One per line.")
+    print("    --permissive\t\tFlag to indicate that broken lines should not cause the program to exit. Message is printed to standard error.")
+    print("-p, --prefix\t\t\tFile prefix for classified output files.")
+    print("-s, --score_threshold\t\tMinimum score value allowed to be retained.")
     
 def error_out(msg):
     from sys import stderr
     stderr.write(msg)
     stderr.write("\n")
+    stderr.write(HELP_WARNING)
+    stderr.write("\n")
     exit(1)
 
-short_opts = "c:f:hi:p:"
-long_opts = ["classifications=","function=","help","input=","list=","prefix=","permissive"]
+short_opts = "c:f:hi:p:s:"
+long_opts = ["classifications=","function=","help","input=","list=","permissive","prefix=","score_threshold="]
 
 try:
     (opts,args) = getopt(argv[1:],short_opts,long_opts)
@@ -42,7 +51,7 @@ def load_classifications(infile):
         tokens = line.split("\t")
         if len(tokens) != 2:
             error_out("Invalid classification file. Must be 2-column, tab delimited file. First column should be the class name. Second column should be the class threshold.")
-        threshold = float(tokens[1])
+        threshold = np.log10(float(tokens[1]))
         name = tokens[0]
         if threshold in retval.keys():
             error_out("Duplicate entry in classification file: '{0}'".format(threshold))
@@ -54,6 +63,7 @@ file_prefix = "output_"
 classifications = None
 permissive = False
 Pred = None
+score_threshold = 0
 for (opt,optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
@@ -75,11 +85,13 @@ for (opt,optarg) in opts:
         permissive = True
     elif opt in ["p","prefix"]:
         file_prefix = optarg
+    elif opt in ["s","score_threshold"]:
+        score_threshold = int(optarg)
     else:
         error_out("Unknown flag: {0}\n{1}".format(opt,HELP_WARNING))
         
 if not Pred or not hasattr(Pred,"__call__"):
-    error_out("Corrupted Interpolation function.")
+    error_out("Missing or Corrupted Interpolation function.")
     
 if not classifications:
     error_out("Missing classification file.")
@@ -107,17 +119,23 @@ for infilename in infilenames:
 
     for line in infile:
         line = line.strip()
+        if not line:
+            continue
         hit = score_str_to_dict(line)
         if not hit:
             if permissive:
                 from sys import stderr
                 stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
+                stderr.write(line)
+                stderr.write("\n")
                 continue
             else:
                 from trident.parser import BrokenLine
-                raise BrokenLine("Broken line while parsing score file: %s" % infilename)
+                raise BrokenLine("Broken line while parsing score file: {0}\n{1}".format(infilename,line))
         energy = np.round(float(hit['energy']),decimals=1)
         score = hit['score']
+        if score < score_threshold:
+            continue
         pred_rank = Pred(energy,score)
         bin_index = np.digitize([pred_rank],bins)
         classification = bins[bin_index][0]
