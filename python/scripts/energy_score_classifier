@@ -8,7 +8,7 @@ from trident.parser import score_str_to_dict
 HELP_WARNING = "For help, run energy_score_classifier --help"
 
 def print_usage():
-    print("Usage: energy_score_mapper [-c classification file] [-f function file] [-p prefix] [-i input] [--list input list file] [--permissive] [-s THRESHOLD]")
+    print("Usage: energy_score_classifier [-c classification file] [-f function file] [-p prefix] [-i input] [--list input list file] [--permissive] [-s THRESHOLD]")
     print("Options:")
     print("-c, --classification FILE\tFile to be used to classify energy-score pairs. Tab-delimited. Column 1 contains the label. Column 2 contains the upper limit on better fraction.")
     print("-f, --function\t\t\tPython pickle file for interpolation function.")
