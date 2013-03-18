@@ -4,8 +4,12 @@ from sys import argv,stdin
 from getopt import getopt,GetoptError
 import numpy as np
 from trident.parser import score_str_to_dict
+from trident import TridentException
 
 HELP_WARNING = "For help, run energy_score_classifier --help"
+
+class OutsideClassBounds(TridentException):
+    pass
 
 def print_usage():
     print("Usage: energy_score_classifier [-c classification file] [-f function file] [-p prefix] [-i input] [--list input list file] [--permissive] [-s THRESHOLD]")
@@ -109,6 +113,7 @@ for class_val in classifications.keys():
             error_out("Out of bounds.\nBins shape: {0}\noutput_map length: {1}".format(bins.shape,len(output_map)))
     bin_idx += 1
 bins.sort() # need to be monotonic
+num_bins = len(bins)
 
 for infilename in infilenames:
     infile = None
@@ -136,8 +141,25 @@ for infilename in infilenames:
         score = hit['score']
         if score < score_threshold:
             continue
+        
         pred_rank = Pred(energy,score)
         bin_index = np.digitize([pred_rank],bins)
+        if np.isnan(pred_rank) or np.isinf(pred_rank):
+            if permissive:
+                bin_index = [-1]
+            else:
+                raise OutsideClassBounds("The following score is NAN: {0}".format(line))
+
+        if bin_index[0] >= num_bins:
+            if permissive:
+                from sys import stderr
+                stderr.write("reporter:counter:TridentErrors,OutsideClassificationBounds,1\n")
+                stderr.write(line)
+                stderr.write("\n")
+                raise Exception("RANK: {0} {1}".format(pred_rank,bin_index))
+                continue
+            else:
+                raise OutsideClassBounds("The following score is outside of classification boundaries\n{0}".format(line))
         classification = bins[bin_index][0]
         outfile = output_map[classification]
         outfile.write(line)
