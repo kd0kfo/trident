@@ -98,8 +98,8 @@ for plot_info in [("Energy (kcal)", 0,"energy{0}.png".format(file_tag),(-500.,0.
    
 plt.figure()
 plt.hold(True)
-for (color, threshold) in [('k',1),('b',1e-2),('r',1e-4)]:
-    subset = data[data[:,5] < threshold]
+for (color, threshold) in [('k',1),('b',1e-2),('g',1e-3),('orange',1e-4),('r',1e-5)]:
+    subset = data[data[:,5] <= threshold]
     if threshold == 1:
         plt.scatter(subset[:,1],subset[:,0],c=color,lw=0,alpha=0.5)
     else:
