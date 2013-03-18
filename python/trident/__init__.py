@@ -1,6 +1,10 @@
 __all__ = ['parser','chromosome_chopper','mirna_chopper','validate_energies','core']
 
-class FastaError(Exception):
+class TridentException(Exception):
+    """
+    Base Class for Trident Exceptions
+    """
+class FastaError(TridentException):
     """
     Exception for errors in a fasta file.
     """
