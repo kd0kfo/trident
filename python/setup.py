@@ -11,7 +11,10 @@ for i in ["fold_vars.c", "energy_par.c", "utils.c", "fold.c", "params.c"]:
 
 mod_core = Extension('core', sources = extension_sources, include_dirs=['..','../src',"../RNAlib","../RNAlib/H"], define_macros=[("USE_PYTHON","1"),("HAVE_CONFIG_H","1")])
 
-the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots','scripts/energy_score_ranker','scripts/energy_score_mapper']
+the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
+               'scripts/energy_score_ranker','scripts/energy_score_mapper',
+               'scripts/chromosome_chopper','scripts/mirna_chopper',
+               'scripts/energy_score_classifier']
 
 setup (name ='trident',
        version = '0.3',
