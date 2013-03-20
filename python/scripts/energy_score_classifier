@@ -156,7 +156,6 @@ for infilename in infilenames:
                 stderr.write("reporter:counter:TridentErrors,OutsideClassificationBounds,1\n")
                 stderr.write(line)
                 stderr.write("\n")
-                raise Exception("RANK: {0} {1}".format(pred_rank,bin_index))
                 continue
             else:
                 raise OutsideClassBounds("The following score is outside of classification boundaries\n{0}".format(line))
