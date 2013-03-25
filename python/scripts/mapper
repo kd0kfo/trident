@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+
+"""
+Parses a Trident output file and produces a tab-delimited list of hit frequencies based on
+the specified column of data in the Trident score line (one-indexed)
+
+This may be used as the Map step in a Hadoop Streaming run.
+
+Using the "--list" file, the input file can be a list of file names to be used, one name 
+per line. This allows the user to specify multiple files to be mapped at once.
+"""
+
+from sys import argv,stdout
+from getopt import getopt,GetoptError
+from trident.parser import map_input_files
+import numpy as np
+
+HELP_WARNING = "For help, run mapper --help"
+def print_usage():
+    print("Usage: mapper [-c INT] [-f FILE] [-o output] [-i input] [--list input list file]")
+    print("Options:")
+    print("-c, --column\tColumn of data to be used as the key when counting the frequency.")
+    print("-f, --Function\tFile containing the Pickled Python Function used to generate the frequency key.")
+    print("              \tFunction must take a hit dict and return a string used as a key.")
+    print("    --hadoop\tIndicates that the process is part of a Hadoop Streaming Run. ")
+    print("            \tWill use Standard Error to increment hadoop counters if necessary.")
+    print("-i, --input\tSpecify input file. Default: Standard Input")
+    print("-o, --output\tSpecify output file. Default: Standard Output")
+
+def error_out(msg):
+    from sys import stderr
+    stderr.write(msg)
+    stderr.write("\n")
+    stderr.write(HELP_WARNING)
+    stderr.write("\n")
+    exit(1)    
+
+short_opts = "c:f:hi:o:"
+long_opts = ["column","function","hadoop","help","input=","list=","output="]
+try:
+    (opts,args) = getopt(argv[1:],short_opts,long_opts)
+except GetoptError as ge:
+    print(ge.msg)
+    print(HELP_WARNING)
+    exit(1)
+
+infilenames = []
+outfile = stdout
+is_hadoop = False
+column = None
+key_gen_function = None
+for (opt,optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+    if opt in ["c","column"]:
+        column = int(optarg)
+        if column <= 0:
+            error_out("Column must be a positive integer")
+        column -= 1
+    elif opt in ["f","function"]:
+        import pickle
+        key_gen_function = pickle.loads(open(optarg,"r").read())
+    elif opt == "hadoop":
+        is_hadoop = True
+    elif opt in ["h","help"]:
+        print_usage()
+        exit(0)
+    elif opt in ["i","input"]:
+        infilenames.append(optarg)
+    elif opt == "list":
+        with open(optarg,"r") as listfile:
+            for filename in listfile:
+                infilenames.append(filename.strip())
+    elif opt in ["o","output"]:
+        outfile = open(optarg,"w")
+    else:
+        print("Unknown flag: %s" % opt)
+        print(HELP_WARNING)
+        exit(1)
+        
+if not key_gen_function:
+    def new_function(hit):
+        from trident.parser import score_keys
+        if column == None:
+            raise Exception("Missing column number")
+        return str(hit[score_keys[column]])
+    key_gen_function = new_function
+        
+if not hasattr(key_gen_function,"__call__"):
+    error_out("Missing or Corrupted classification function.")
+    
+hit_map = map_input_files(infilenames,key_gen_function,is_hadoop)
+
+for hit in hit_map:
+    print("{0}\t{1}".format(hit,hit_map[hit]))
