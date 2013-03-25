@@ -157,6 +157,32 @@ class Parser:
         retval = parse_file(self.file)
         return retval
 
+def map_input_files(infilenames,key_gen_function,is_hadoop = False):
+    from sys import stdin
+    
+    hit_map = {}
+    for infilename in infilenames:
+        infile = None
+        if infilename == "/dev/stdin":
+            infile = stdin# platform niceness
+        else:
+            infile = open(infilename,"r")
+        parser = Parser(infile)
+        for hit in parser:
+            if not hit:
+                if is_hadoop:
+                    from sys import stderr
+                    stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
+                    continue
+                else:
+                    raise BrokenLine("Broken line while parsing score file: %s" % parser.file.name)
+                
+            key = key_gen_function(hit)
+            if key in hit_map:
+                hit_map[key] += 1
+            else:
+                hit_map[key] = 1
+    return hit_map
 
 def main():
     from getopt import getopt

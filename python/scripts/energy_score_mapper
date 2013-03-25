@@ -13,9 +13,9 @@ Using the "--list" file, the input file can be a list of file names to be used, 
 per line. This allows the user to specify multiple files to be mapped at once.
 """
 
-from sys import argv,stdout,stdin
+from sys import argv,stdout
 from getopt import getopt,GetoptError
-import trident.parser
+from trident.parser import map_input_files
 import numpy as np
 
 HELP_WARNING = "For help, run energy_score_mapper --help"
@@ -61,32 +61,12 @@ for (opt,optarg) in opts:
         print(HELP_WARNING)
         exit(1)
 
-hit_map = {}
+def key_gen_function(hit):
+    energy = np.round(float(hit['energy']),decimals=1)
+    score = hit['score']
+    return "{0}:{1}".format(energy,score)
 
-for infilename in infilenames:
-    infile = None
-    if infilename == "/dev/stdin":
-        infile = stdin# platform niceness
-    else:
-        infile = open(infilename,"r")
-    parser = trident.parser.Parser(infile)
-    for hit in parser:
-        if not hit:
-            if is_hadoop:
-                from sys import stderr
-                stderr.write("reporter:counter:TridentErrors,BrokenLines,1\n")
-                continue
-            else:
-                from trident.parser import BrokenLine
-                raise BrokenLine("Broken line while parsing score file: %s" % parser.file.name)
-            
-        energy = np.round(float(hit['energy']),decimals=1)
-        score = hit['score']
-        key = "{0}:{1}".format(energy,score)
-        if key in hit_map:
-            hit_map[key] += 1
-        else:
-            hit_map[key] = 1
+hit_map = map_input_files(infilenames,key_gen_function,is_hadoop)
 
 for key in hit_map.keys():
     outfile.write("{0}\t{1}\n".format(key,hit_map[key]))
