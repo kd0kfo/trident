@@ -27,6 +27,19 @@ def rank2str(rank_row):
 def get_header():
     return "Energy\tScore\tFrequency\tBetter_Frequency\tBetter_Count\tBetter_Fraction"
 
+def get_netcdf_file(filename,length):
+    import pupynere as nc
+    import time
+    netcdf_file = nc.netcdf_file(out_filename,"w")
+    header = get_header()
+    dims = header.split("\t")
+    netcdf_file.createDimension("rows",length)
+    netcdf_file.createDimension("columns",len(dims))
+    v = netcdf_file.createVariable("ranks","f",["rows","columns"])
+    v.header = header
+    v.timestamp = int(time.time())
+    return netcdf_file
+
 def str2rank(line):
     tokens = line.split("\t")
     if len(tokens) < 2:
@@ -49,11 +62,12 @@ def find_file():
         return None
     return files[0]
 
-short_opts = "hio:s"
-long_opts = ["help","intermediate","header","output=","scale=","score=","search"]
+short_opts = "hino:s"
+long_opts = ["help","intermediate","header","netcdf","output=","scale=","score=","search"]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
+use_netcdf = False
 should_search = False
 have_header = False
 show_intermediate = False
@@ -72,6 +86,13 @@ for (opt,optarg) in opts:
         have_header = True
     elif opt in ["o","output"]:
         out_filename = optarg
+    elif opt in ["n","netcdf"]:
+        try:
+            import pupynere
+        except ImportError:
+            print("NetCDF requires the pupynere package")
+            exit(1)
+        use_netcdf = True
     elif opt in ["s","search"]:
         should_search = True
     elif opt == "scale":
@@ -161,21 +182,31 @@ if show_intermediate:
     print(get_header())
     for i in xrange(num_ranks):
         print(rank2str(better_stats[i,:]))
-
-outfile = open(out_filename,"w")
-top_quartile = open("top_25-percent.dat","w")
-for f in [outfile,top_quartile]:
-    f.write(get_header())
-    f.write("\n")
+if use_netcdf:
+    netcdf_file = get_netcdf_file(out_filename,num_ranks)
+    netcdf_variable = netcdf_file.variables["ranks"]
+else:
+    outfile = open(out_filename,"w")
+    top_quartile = open("top_25-percent.dat","w")
+    for f in [outfile,top_quartile]:
+        f.write(get_header())
+        f.write("\n")
 
 q = 0.25
 print("Generating Output")
 sort_indices = np.argsort(better_stats[:,better_col_offset+1])# Sort by better count. Will put best at "top" (i.e. smaller row index)
+better_stats_width = better_stats.shape[1]
 for i in xrange(num_ranks):
     curr_row = better_stats[sort_indices[i],:]# get row
     curr_frac = curr_row[better_col_offset]/total_hits
-    outstring = "%s\t%e\n" % (rank2str(curr_row),curr_frac)
-    if curr_frac < q:
-        top_quartile.write(outstring)
-    outfile.write(outstring)
+    if use_netcdf:
+        curr_row[better_col_offset+2] = curr_frac
+        netcdf_variable.data[i] = curr_row
+    else:
+        outstring = "%s\t%e\n" % (rank2str(curr_row),curr_frac)
+        if curr_frac < q:
+            top_quartile.write(outstring)
+        outfile.write(outstring)
 
+if use_netcdf:
+    netcdf_file.flush()
