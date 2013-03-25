@@ -158,6 +158,17 @@ class Parser:
         return retval
 
 def map_input_files(infilenames,key_gen_function,is_hadoop = False):
+    """
+    Takes a list of input files and uses a key function to count hit frequencies.
+    
+    @param infilenames: List of file names to be mapped
+    @type infilenames: List
+    @param key_gen_function: Function that is used to produce a key for a given hit.
+    @type key_gen_function: Callable Function
+    @param is_hadoop: Optional boolean indicating whether or not errors should be ignored (with error message). Default: False
+    @type is_hadoop: bool
+    @return: Dict maping keys to frequencies 
+    """
     from sys import stdin
     
     hit_map = {}
