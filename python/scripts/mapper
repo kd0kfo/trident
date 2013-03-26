@@ -92,4 +92,4 @@ if not hasattr(key_gen_function,"__call__"):
 hit_map = map_input_files(infilenames,key_gen_function,is_hadoop)
 
 for hit in hit_map:
-    print("{0}\t{1}".format(hit,hit_map[hit]))
+    outfile.write("{0}\t{1}\n".format(hit,hit_map[hit]))
