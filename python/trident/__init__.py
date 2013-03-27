@@ -12,6 +12,19 @@ class FastaError(TridentException):
 
 
 def load_energy_score_data(fname, dtype=float, comments="""#""", delimiter="\t", converters=None, skiprows=1, usecols=None, unpack=False, ndmin=0):
+    """
+    Reads a data file and returns a Numpy Array containing the data. 
+    
+    Two input file types are allowed, tab-delimited data and NetCDF files. 
+    
+    For tab-delimited data, the function parameters are passed along to numpy.loadtxt
+    
+    For NetCDF data, the function arguments, except for fname, are ignored. Data is assumed to be in the \"ranks\" variable. Loading NetCDF data requires the pupynere module.
+    
+    @param fname: Input file name
+    @type fname: str
+    @return: Numpy Array 
+    """
     use_netcdf = False
     with open(fname,"r") as infile:
         magic_number = infile.read(3)

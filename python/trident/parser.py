@@ -98,8 +98,8 @@ def parse_file(infile):
     Reads the next line in the file and converts it to a Trident Score Dict using score_str_to_dict
     
     @see: score_str_to_dict
-    @param file: File Object
-    @type file: file
+    @param infile: File Object
+    @type infile: file
     @return: Score dict
     """
     line = infile.readline()
