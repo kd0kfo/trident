@@ -13,7 +13,6 @@ per line. This allows the user to specify multiple files to be mapped at once.
 from sys import argv,stdout
 from getopt import getopt,GetoptError
 from trident.parser import map_input_files
-import numpy as np
 
 HELP_WARNING = "For help, run mapper --help"
 def print_usage():
@@ -43,6 +42,9 @@ except GetoptError as ge:
     print(ge.msg)
     print(HELP_WARNING)
     exit(1)
+
+if not opts or args:
+    error_out("Input flags are required. No arguments are used.")    
 
 infilenames = []
 outfile = stdout
@@ -77,7 +79,7 @@ for (opt,optarg) in opts:
         print("Unknown flag: %s" % opt)
         print(HELP_WARNING)
         exit(1)
-        
+              
 if not key_gen_function:
     def new_function(hit):
         from trident.parser import score_keys
