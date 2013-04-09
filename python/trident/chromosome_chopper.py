@@ -50,7 +50,7 @@ def create_header(old_header,chunksize,seq_size):
             raise FastaError("Missing chromosome label")
         header += m[0] + "|"
     elif old_header.find("mitochondrion"):
-        species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*mitochondrion",old_header)
+        species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|mitochondrion)",old_header)
         header += "mitochondrion|";
     else:
         header+= "Unknown Sequence Type|"
@@ -65,8 +65,8 @@ def create_header(old_header,chunksize,seq_size):
         header += "Unknown Assembly|"
     else:
         header += m[0] + "|"
-    if len(species) == 0 or len(species[0]) < 2 or len(species[0][0]) == 0:
-        raise FastaError("Missing species name")
+    if not species or len(species[0]) < 2:
+        raise FastaError("Missing species name. Received '{0}'".format(species))
     species = species[0]
     header += "[%s.%s]" % (species[0][0],species[1])
     return header + "\n"
