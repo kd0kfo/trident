@@ -11,27 +11,49 @@ chunk size (number of 70-character lines).
 def error_out(msg):
     print(msg)
     exit(1)
+def prog_name():
+    from sys import argv
+    from os.path import basename
+    return basename(argv[0])
+
+HELP_WARNING = "For help, run {0} --help".format(prog_name())
+
+def print_usage():
+    print("Usage: {0} [options] <input fasta filename> <max number of mirna per file>".format(prog_name()))
+    print("Options")
+    print("-s, --species STRING\tName of specific species, as used in fasta file. Enclose in quotation marks. Without this flag, the fasta file is simply segmented.")
 
 def main():
-    from getopt import getopt
+    from getopt import getopt,GetoptError
     from sys import argv
     from trident.mirna_chopper import chopper
     
-    (optlist, args) = getopt(argv[1:],'s:',['species='])
+    try:
+        (optlist, args) = getopt(argv[1:],'hs:',["help",'species='])
+    except GetoptError as ge:
+            print(ge.msg)
+            error_out(HELP_WARNING)
+    
     specific_species = None
 
     for (opt, val) in optlist:
         while opt[0] == '-':
             opt = opt[1:]
-        if opt in ['s', 'species']:
+        if opt in ["h","help"]:
+            print_usage()
+            exit(0)
+        elif opt in ['s', 'species']:
             specific_species = val
         else:
             print("Unknown option: '%s'" % opt)
-
+            error_out(HELP_WARNING)
+            
     if len(args) < 2:
-        error_out("Usage: %s <filename> <number of mirna's>" % argv[0])
+        error_out(HELP_WARNING)
 
     filename = args[0]
+    if not args[1].isdigit():
+        error_out("Number required for number of microrna. Received: {0}".format(args[1]))
     mirna_count = int(args[1])
     if mirna_count < 0:
         error_out("Invalid size. Must be a positive integer")
