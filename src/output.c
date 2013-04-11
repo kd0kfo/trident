@@ -348,6 +348,12 @@ void print_hit_structure(FILE *fpout, hit_struct *hit, int query_length, int ref
 
 }
 
+void print_scoreline(FILE *fpout, const char *query_id, const char *reference_id, double score, double energy, int query_start, int query_end, int ref_start, int ref_end, int alignment_length, double identity, double similarity)
+{
+	if(fpout)
+		fprintf(fpout, ">%s,%s,%2.2f,%2.2f,%d %d,%d %d,%d,%3.2f%%,%3.2f%%", query_id, reference_id, score, energy, query_start, query_end,ref_start, ref_end, alignment_length, identity, similarity);
+}
+
 
 /** 
  * Function to print hit
@@ -408,7 +414,7 @@ void printhit(char* query_id, int query_length, int reference_length, char* refe
 	  }
 	  if(!brief_output)
 	    fprintf(fpout, "\nScores for this hit:\n");
-	  fprintf(fpout, ">%s,%s,%2.2f,%2.2f,%d %d,%d %d,%d,%3.2f%%,%3.2f%%", query_id, reference_id, hit->score, energy, (query_length - hit->query_end + 1), (query_length - hit->query_start),ref_start, ref_end, alignment_length, identity, similarity);
+	  print_scoreline(fpout, query_id, reference_id, hit->score, energy, (query_length - hit->query_end + 1), (query_length - hit->query_start),ref_start, ref_end, alignment_length, identity, similarity);
 	  
 	  // append structure to hit line
 	  fprintf(fpout,",%s%s%s", hit->rest[0], hit->alignment[0], hit->rest[3]);
