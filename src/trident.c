@@ -176,6 +176,7 @@ int main (int argc, char* argv[]) {
 	if (outfile) fclose(fpout);
 	if (scaninfo_file != stdout && scaninfo_file != stderr && scaninfo_file != NULL)
 	  fclose(scaninfo_file);
+	json_close();
 	fclose(query_fp);
 	return 0;
 }

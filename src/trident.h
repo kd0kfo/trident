@@ -133,3 +133,7 @@ void full_assert(int condition,const char *format,...);
 const char* str_match_type(int index);
 void scaninfo_print(const char *format, ...);
 void scaninfo_dump_matrix(int **a_nt_nt,int query_length,int reference_length);
+
+FILE* json_open(const char *filename);
+void json_score();
+void json_close();

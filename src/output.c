@@ -177,6 +177,12 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 				i++;
 				continue;
 			}
+			if (!strcmp(argv[i], "-json") && argc > i + 1) {
+				FILE* retval = json_open(argv[i+1]);
+				full_assert(retval != NULL, "Could not open json file for writing.\n");
+				i++;
+				continue;
+			}
 			if (!strcmp(argv[i], "-scaninfo") && argc > i + 1) {
 			  extern FILE *scaninfo_file;
 			  scaninfo_file = fopen(argv[i+1],"w");
@@ -255,6 +261,49 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 		exit(0);
 	}
 	return 1;
+}
+
+static bool json_started = false;
+static FILE *json_file = NULL;
+FILE* json_open(const char *filename)
+{
+	if(filename == NULL)
+		return NULL;
+	json_file = fopen(filename,"w");
+	return json_file;
+}
+
+void json_score(const char *query_id, const char *reference_id, double score, double energy, int query_start, int query_end, int ref_start, int ref_end, int alignment_length, double identity, double similarity)
+{
+	if(json_file == NULL)
+		return;
+	if(!json_started)
+		fprintf(json_file,"[\n");
+	if(json_started)
+		fprintf(json_file,",\n");
+	fprintf(json_file,"{\n");
+	fprintf(json_file, "\t\"query_id\": \"%s\",\n",query_id);
+	fprintf(json_file, "\t\"reference_id\": \"%s\",\n", reference_id);
+	fprintf(json_file, "\t\"score\": %2.2f,\n",score);
+	fprintf(json_file, "\t\"energy\": %2.2f,\n", energy);
+	fprintf(json_file, "\t\"query_start\": %d,\n", query_start);
+	fprintf(json_file, "\t\"query_end\": %d,\n", query_end);
+	fprintf(json_file, "\t\"ref_start\": %d,\n", ref_start);
+	fprintf(json_file, "\t\"ref_end\": %d,\n", ref_start);
+	fprintf(json_file, "\t\"alignment_length\": %d,\n", alignment_length);
+	fprintf(json_file, "\t\"identity\": %2.2f,\n", identity);
+	fprintf(json_file, "\t\"similarity\": %2.2f\n", similarity);
+	fprintf(json_file, "}\n");
+	json_started = true;
+}
+
+void json_close()
+{
+	if(json_file != NULL)
+		{
+			fprintf(json_file,"]\n");
+			fclose(json_file);
+		}
 }
 
 /** 
@@ -352,6 +401,8 @@ void print_scoreline(FILE *fpout, const char *query_id, const char *reference_id
 {
 	if(fpout)
 		fprintf(fpout, ">%s,%s,%2.2f,%2.2f,%d %d,%d %d,%d,%3.2f%%,%3.2f%%", query_id, reference_id, score, energy, query_start, query_end,ref_start, ref_end, alignment_length, identity, similarity);
+	if(json_file)
+		json_score(query_id, reference_id, score, energy, query_start, query_end,ref_start, ref_end, alignment_length, identity, similarity);
 }
 
 
