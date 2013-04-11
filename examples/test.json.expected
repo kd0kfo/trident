@@ -1,0 +1,29 @@
+[
+{
+	"query_id": "mir1",
+	"reference_id": "mir1idealizedpurinestrand5to3",
+	"score": 156.00,
+	"energy": -185.88,
+	"query_start": 3,
+	"query_end": 21,
+	"ref_start": 12,
+	"ref_end": 12,
+	"alignment_length": 19,
+	"identity": 63.16,
+	"similarity": 63.16
+}
+,
+{
+	"query_id": "mir1",
+	"reference_id": "mir1idealizedpurinestrand5to3",
+	"score": 240.00,
+	"energy": -249.51,
+	"query_start": 2,
+	"query_end": 21,
+	"ref_start": 13,
+	"ref_end": 13,
+	"alignment_length": 20,
+	"identity": 75.00,
+	"similarity": 75.00
+}
+]
