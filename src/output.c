@@ -270,6 +270,9 @@ FILE* json_open(const char *filename)
 	if(filename == NULL)
 		return NULL;
 	json_file = fopen(filename,"w");
+	fprintf(json_file,"{\n");
+	fprintf(json_file,"\"run_info\": {\"version\": \"%s\", \"build_time\": \"%s\", \"build_sha\": \"%s\"}",VERSION,build_git_time,build_git_sha);
+
 	return json_file;
 }
 
@@ -278,7 +281,7 @@ void json_score(const char *query_id, const char *reference_id, double score, do
 	if(json_file == NULL)
 		return;
 	if(!json_started)
-		fprintf(json_file,"[\n");
+		fprintf(json_file,",\n\"data\": [\n");
 	if(json_started)
 		fprintf(json_file,",\n");
 	fprintf(json_file,"{\n");
@@ -301,7 +304,8 @@ void json_close()
 {
 	if(json_file != NULL)
 		{
-			fprintf(json_file,"]\n");
+			if(json_started)// Terminate data object
+				fprintf(json_file,"] }\n");
 			fclose(json_file);
 		}
 }
