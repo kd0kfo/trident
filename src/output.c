@@ -12,6 +12,8 @@
 #include <math.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
+#include <string.h>
 
 #include "version.h"
 #include "trident.h"
@@ -267,11 +269,38 @@ static bool json_started = false;
 static FILE *json_file = NULL;
 FILE* json_open(const char *filename)
 {
+	time_t the_time;
+	char *run_time_str = NULL;
+	char buffer[256];
+
 	if(filename == NULL)
 		return NULL;
+
+	time ( &the_time );
+	run_time_str = ctime(&the_time);
+
 	json_file = fopen(filename,"w");
 	fprintf(json_file,"{\n");
-	fprintf(json_file,"\"run_info\": {\"version\": \"%s\", \"build_time\": \"%s\", \"build_sha\": \"%s\"}",VERSION,build_git_time,build_git_sha);
+	fprintf(json_file,"\"run_info\": {\"version\": \"%s\", \"build_time\": \"%s\", \"build_sha\": \"%s\"",VERSION,build_git_time,build_git_sha);
+	if(run_time_str != NULL)
+	{
+		int i;
+		memset(buffer,0,sizeof(char)*256);
+		strncpy(buffer,run_time_str,255);
+		i = 0;
+		// Strip LF
+		for(;i< 256;i++)
+		{
+			if(buffer[i] == '\n')
+			{
+				buffer[i] = 0;
+				break;
+			}
+		}
+		fprintf(json_file,", \"run_time\": \"%s\"", buffer);
+	}
+	fprintf(json_file,"}");
+
 
 	return json_file;
 }
