@@ -13,8 +13,9 @@ mod_core = Extension('core', sources = extension_sources, include_dirs=['..','..
 
 the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/energy_score_ranker','scripts/energy_score_mapper',
-               'scripts/chromosome_chopper','scripts/mirna_chopper',
-               'scripts/energy_score_classifier', 'scripts/mapper']
+               'scripts/chromosome_chopper',
+               'scripts/energy_score_classifier', 'scripts/mapper',
+               'scripts/mirna_chopper','scripts/score_converter']
 
 setup (name ='trident',
        version = '0.3',
