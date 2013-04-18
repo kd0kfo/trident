@@ -15,8 +15,12 @@ score_keys = ['query_id','reference_id','score','energy','query_coords','ref_coo
 # Keys to the reference sequence description, which is delimited by the '|' character
 reference_keys = ["chromosome","chunk","seg_offset","seq_size","chunk_size","iso_date","assembly","species"]
  
-class BrokenLine(TridentException):
+class BrokenScore(TridentException):
     pass
+
+class BrokenLine(BrokenScore):
+    pass
+
 
 def parser_usage():
     """
@@ -25,6 +29,52 @@ def parser_usage():
     from sys import argv
     print("Usage: %s <filename>" % argv[0])
     print("Parses the output of trident")
+
+def get_reference(score):
+    """
+    Parses the reference data (see reference_keys) from a score dict.
+    
+    @param score: Trident Score dict
+    @ptype score: dict
+    @return dict
+    """
+    if not score:
+        return None
+    if len(score) != len(score_keys):
+        raise BrokenScore("Invalid number of fields in Trident Score. Expected {0} but received {1}".format(len(score_keys),len(score)))
+    if not "reference_id" in score:
+        raise BrokenScore("Missing reference section in score")
+    if not "|" in score['reference_id']:
+        raise BrokenScore("Broken reference section in score.")
+    references = score['reference_id'].split('|')
+    if len(references) != len(reference_keys):
+        raise BrokenScore("Invalid number of fields in Reference Section of Trident Score. Expected {0} but received {1}".format(len(reference_keys),len(references)))
+    
+    return dict(zip(reference_keys,references))
+
+def score_dict_to_gff(score):
+    if not score:
+        return None
+    if len(score) != len(score_keys):
+        raise BrokenScore("Invalid number of fields in Trident Score. Expected {0} but received {1}".format(len(score_keys),len(score)))
+    
+    ref = get_reference(score)
+    
+    genomic_offset = int(ref["seg_offset"])
+    (genomic_start, genomic_end) = (genomic_offset + int(score["ref_start"]), genomic_offset + int(score["ref_end"]))
+    retval = "%s\t" % ref["chromosome"]
+    retval += ".\t"
+    retval += "%s\t" % score["base_type"]
+    retval += "%d\t%d\t" % (genomic_start,genomic_end)
+    retval += "%d\t" % float(score["score"])
+    if score["match_type"] == "indirect":
+        retval += "-\t"
+    else:
+        retval += "+\t"
+    retval += ".\t"# phase. Has no meaning in this context.
+    retval += "Name=%s;Energy=%f;Chr=%s;GenomeStartPos=%s" % (score["query_id"], float(score["energy"]), ref["chromosome"], genomic_start)
+
+    return retval
 
 def score_dict_to_str(score):
     """
