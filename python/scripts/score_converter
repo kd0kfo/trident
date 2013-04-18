@@ -4,7 +4,7 @@ from sys import argv,stdout
 from getopt import getopt,GetoptError
 from trident.parser import Parser
 
-HELP_WARNING = "For help, run energy_score_classifier --help"
+HELP_WARNING = "For help, run score_converter --help"
 
 ALLOWED_FORMATS = ["gff"]
 def print_usage():
@@ -21,8 +21,8 @@ def error_out(msg):
     stderr.write("\n")
     exit(1)
 
-short_opts = "c:f:hi:p:s:"
-long_opts = ["classifications=","function=","help","input=","list=","permissive","prefix=","score_threshold="]
+short_opts = "ho:"
+long_opts = ["help","output="]
 
 try:
     (opts,args) = getopt(argv[1:],short_opts,long_opts)
@@ -35,7 +35,10 @@ outfile = stdout
 for (opt, optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
-    if opt in ["o","output"]:
+    if opt in ["h","help"]:
+        print_usage()
+        exit(0)
+    elif opt in ["o","output"]:
         outfile = open(optarg,"w")
 
 if not args or len(args) != 2:
