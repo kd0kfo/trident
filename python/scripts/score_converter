@@ -2,7 +2,8 @@
 
 from sys import argv,stdout
 from getopt import getopt,GetoptError
-from trident.parser import Parser
+from trident.parser import Parser,str_score
+from hashlib import md5
 
 HELP_WARNING = "For help, run score_converter --help"
 
@@ -29,6 +30,7 @@ try:
 except GetoptError as ge:
     error_out("{0}\n{1}".format(ge.msg,HELP_WARNING))
 
+verbose = False
 infile = None
 outfile = stdout
 
@@ -58,10 +60,25 @@ if outfmt == "gff":
 if not callable(hit2str_funct):
     error_out("{0} is not a valid function.".format(getattr(hit2str_funct,"name")))
 
+ignore_counter = 0
+result_hashes = []
 parser = Parser(infile)
 for hit in parser:
+    s = str_score(hit)
+    s_hash = md5(s).digest()
+    if s_hash in result_hashes:
+        if verbose:
+            print("Ignoring duplicate entry: {0}".format(s))
+        ignore_counter += 1
+        continue
+    else:
+        result_hashes.append(s_hash)
+    
     outfile.write(hit2str_funct(hit))
     outfile.write("\n")
 
+if ignore_counter:
+    from sys import stderr
+    stderr.write("Ignored {0} duplicate entries.".format(ignore_counter))
     
 
