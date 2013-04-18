@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+from sys import argv,stdout
+from getopt import getopt,GetoptError
+from trident.parser import Parser
+
+HELP_WARNING = "For help, run energy_score_classifier --help"
+
+ALLOWED_FORMATS = ["gff"]
+def print_usage():
+    print("Usage: score_converter [-o output file] <format> <input file>")
+    print("Formats include: {0}".format(",".join(ALLOWED_FORMATS)))
+    print("Options:")
+    print("-o, --output FILE\tSpecify output file. Default: Standard Output")
+    
+def error_out(msg):
+    from sys import stderr
+    stderr.write(msg)
+    stderr.write("\n")
+    stderr.write(HELP_WARNING)
+    stderr.write("\n")
+    exit(1)
+
+short_opts = "c:f:hi:p:s:"
+long_opts = ["classifications=","function=","help","input=","list=","permissive","prefix=","score_threshold="]
+
+try:
+    (opts,args) = getopt(argv[1:],short_opts,long_opts)
+except GetoptError as ge:
+    error_out("{0}\n{1}".format(ge.msg,HELP_WARNING))
+
+infile = None
+outfile = stdout
+
+for (opt, optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+    if opt in ["o","output"]:
+        outfile = open(optarg,"w")
+
+if not args or len(args) != 2:
+    error_out("An output format and an input file are required.\n{0}".format(HELP_WARNING))
+
+outfmt = args[0]
+infile = open(args[1],"r")
+
+if not outfmt.lower() in ALLOWED_FORMATS:
+    error_out("{0} is not an allowed output format. For a list of formats run 'score_converter --help'".format(outfmt))
+
+hit2str_funct = None
+if outfmt == "gff":
+    from trident.parser import score_dict_to_gff
+    hit2str_funct = score_dict_to_gff
+
+if not callable(hit2str_funct):
+    error_out("{0} is not a valid function.".format(getattr(hit2str_funct,"name")))
+
+parser = Parser(infile)
+for hit in parser:
+    outfile.write(hit2str_funct(hit))
+    outfile.write("\n")
+
+    
+
