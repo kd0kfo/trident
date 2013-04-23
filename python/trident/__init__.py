@@ -1,4 +1,4 @@
-__all__ = ['parser','chromosome_chopper','mirna_chopper','validate_energies','core']
+__all__ = ['parser','chromosome_chopper','mirna_chopper','validate_energies','core','classify']
 
 class TridentException(Exception):
     """

@@ -4,9 +4,7 @@ Reads an energy-score summary table and generates a Linear Piecewise Interpolato
 """
 from sys import argv
 import pickle
-import numpy as np
-from trident import load_energy_score_data
-import scipy.interpolate as SI
+from trident.classify import create_linear_interpolator
 from getopt import getopt
 
 def print_usage():
@@ -30,13 +28,7 @@ if len(args) != 1:
     raise Exception("Invalid number of arguments. Only need an input filename")
 infilename = args[0]
 
-data = load_energy_score_data(infilename)
-zmask = data[:,5] != 0
-x = data[zmask][:,0]
-y = data[zmask][:,1]
-z = np.log10(data[zmask][:,5])
-
 # Interpolate
 print("Interpolating")
-funct = SI.LinearNDInterpolator((x,y),z)
-pickle.dump(funct,open(funct_filename,"wb"))
+interpolator = create_linear_interpolator(infilename)
+interpolator.save(funct_filename)
