@@ -66,10 +66,10 @@ def score_dict_to_gff(score):
     retval += "%s\t" % score["base_type"]
     retval += "%d\t%d\t" % (score["ref_start"],score["ref_end"])
     retval += "%d\t" % float(score["score"])
-    if score["match_type"] == "indirect":
-        retval += "-\t"
-    else:
+    if score["orientation"] == "parallel":
         retval += "+\t"
+    else:
+        retval += "-\t"
     retval += ".\t"# phase. Has no meaning in this context.
     retval += "Name=%s;Energy=%f;Chr=%s;GenomeStartPos=%s" % (score["query_id"], float(score["energy"]), ref["chromosome"], score["ref_start"])
 
