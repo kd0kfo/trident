@@ -2,17 +2,21 @@
 
 from sys import argv,stdout
 from getopt import getopt,GetoptError
-from trident.parser import Parser,str_score
+from trident.parser import Parser,str_score,score_keys,reference_keys,get_reference
 from hashlib import md5
 
 HELP_WARNING = "For help, run score_converter --help"
 
 ALLOWED_FORMATS = ["gff"]
 def print_usage():
-    print("Usage: score_converter [-o output file] <format> <input file>")
+    print("Usage: score_converter [-o output file ] [-s SORT CATEGORY] <format> <input file>")
     print("Formats include: {0}".format(",".join(ALLOWED_FORMATS)))
     print("Options:")
     print("-o, --output FILE\tSpecify output file. Default: Standard Output")
+    print("-s, --sort LABEL\tPlace output in different files based on score data type.")
+    print("")
+    print("Sort types:")
+    print(", ".join(score_keys + reference_keys))
     
 def error_out(msg):
     from sys import stderr
@@ -21,9 +25,32 @@ def error_out(msg):
     stderr.write(HELP_WARNING)
     stderr.write("\n")
     exit(1)
+    
+def get_outfile(output_map, sort_type, score):
+    """
+    Gets the proper file for the given sort type in the score. Returns a file type. If the file is not yet opened, it is opened in append mode.
+    
+    @param output_map: Map of sort types to files
+    @ptype output_map: dict
+    @param sort_type: Score token to be used when sorting output.
+    @ptype sort_type: str
+    @param score: Trident Score
+    @ptype score: dict
+    @return: file
+    """
+    if not sort_type in score_keys and not sort_type in score_keys:
+        raise Exception("Invalid sort type. Allowed sorting criteria are: {0}".format(", ".join(score_keys + reference_keys)))
+    if sort_type in score:
+        key = score[sort_type]
+    else:
+        refs = get_reference(score)
+        key = refs[sort_type]
+    if not key in output_map:
+        output_map[key] = open(key,"a")
+    return output_map[key]
 
-short_opts = "ho:"
-long_opts = ["help","output="]
+short_opts = "ho:s:"
+long_opts = ["help","output=","sort="]
 
 try:
     (opts,args) = getopt(argv[1:],short_opts,long_opts)
@@ -34,6 +61,9 @@ verbose = False
 infile = None
 outfile = stdout
 
+output_map = {}
+sort_type = ""
+
 for (opt, optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
@@ -42,6 +72,8 @@ for (opt, optarg) in opts:
         exit(0)
     elif opt in ["o","output"]:
         outfile = open(optarg,"w")
+    elif opt in ["s","sort"]:
+        sort_type = optarg
 
 if not args or len(args) != 2:
     error_out("An output format and an input file are required.\n{0}".format(HELP_WARNING))
@@ -73,6 +105,9 @@ for hit in parser:
         continue
     else:
         result_hashes.append(s_hash)
+    
+    if sort_type:
+        outfile = get_outfile(output_map,sort_type,hit)
     
     outfile.write(hit2str_funct(hit))
     outfile.write("\n")
