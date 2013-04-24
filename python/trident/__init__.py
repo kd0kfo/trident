@@ -38,7 +38,7 @@ def load_energy_score_data(fname, dtype=float, comments="""#""", delimiter="\t",
         from numpy import loadtxt
         return loadtxt(fname, dtype, comments, delimiter, converters, skiprows, usecols, unpack, ndmin)
     
-def get_gc_content(seq):
+def get_content(seq,query):
     """
     Returns the fraction of occurances of "G" and "C" in a sequence. Only "A", "T"/"U", "G" and "C" are counted, i.e. "N" is ignored.
     
@@ -46,12 +46,20 @@ def get_gc_content(seq):
     @ptype seq: str
     @return: float
     """
-    gc = 0
-    ta = 0
+    total = 0.0
+    qcount = 0.0
+    q = query.lower()
     for l in seq.lower():
-        if l in ["g","c"]:
-            gc += 1
-        elif l in ["a","t","u"]:
-            ta += 1
-            
-    return gc/(ta + gc)
+        if l in q:
+            qcount += 1
+        if l in "agctu":
+            total += 1
+         
+    return qcount/total
+
+def get_gc_content(seq):
+    return get_content(seq,"gc")
+
+def get_ag_content(seq):
+    return get_content(seq,"ag")
+
