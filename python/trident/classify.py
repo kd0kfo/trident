@@ -33,6 +33,16 @@ class Interpolator:
         """
         raise InterpolatorNotDefined("Interpolation function is not defined.")
     
+    def __call__(self,score):
+        """
+        Calls interpolate and allows the object to be callable.
+        
+        @param score: Trident score dict
+        @ptype score: dict
+        @return: float
+        """
+        return self.interpolate(score)
+    
     def save(self,filename):
         """
         Saves an Interpolator object using the pickle module.
