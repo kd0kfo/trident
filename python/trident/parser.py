@@ -10,6 +10,7 @@ from trident import TridentException
 
 # Keys to score lines, which begin with the '>' character and are delimited by commas
 # Pig column field: (query_id:chararray,ref_id:chararray,score:int,energy:double,query_coord:chararray,ref_coords:chararray,length:int,identity:chararray,similarity:chararray,query_seq:chararray,match_seq:chararray,ref_seq:chararray,orientation:chararray,match_type:chararray,base_type:chararray)
+# Hive value fields: (query_id STRING,ref_id STRING,score INT,energy DOUBLE,query_coord STRING,ref_coords STRING,length INT,identity STRING,similarity STRING,query_seq STRING,match_seq STRING,ref_seq STRING,orientation STRING,match_type STRING,base_type STRING)
 score_keys = ['query_id','reference_id','score','energy','query_coords','ref_coords','length','identity','similarity','query_seq','match_seq','reference_seq','orientation','match_type', 'base_type','query_start', 'query_end', 'ref_start', 'ref_end']
 
 # Keys to the reference sequence description, which is delimited by the '|' character
