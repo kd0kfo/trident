@@ -94,7 +94,7 @@ for (opt,optarg) in opts:
     else:
         error_out("Unknown flag: {0}\n{1}".format(opt,HELP_WARNING))
         
-if not Pred or not hasattr(Pred,"interpolate"):
+if not Pred or not hasattr(Pred,"__call__"):
     error_out("Missing or Corrupted Interpolation function.")
     
 if not classifications:
@@ -142,7 +142,7 @@ for infilename in infilenames:
         if score < score_threshold:
             continue
         
-        pred_rank = Pred.interpolate(hit)
+        pred_rank = Pred(hit)
         bin_index = np.digitize([pred_rank],bins)
         if np.isnan(pred_rank) or np.isinf(pred_rank):
             if permissive:
