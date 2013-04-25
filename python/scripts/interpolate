@@ -11,8 +11,8 @@ def print_usage():
     print("Usage: interpolate [-o output] <input file>")
     print("-o, --output\tOutput file in which the interpolator function is saved.")
     
-short_opts = "o:"
-long_opts = ["output="]
+short_opts = "ho:"
+long_opts = ["help","output="]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -21,7 +21,10 @@ infilename = None
 for (opt,optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
-    if opt in ["o","output"]:
+    if opt in ["h","help"]:
+        print_usage()
+        exit(0)
+    elif opt in ["o","output"]:
         funct_filename = optarg
         
 if len(args) != 1:
