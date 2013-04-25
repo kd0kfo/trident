@@ -77,8 +77,8 @@ for (opt,optarg) in opts:
         print_usage()
         exit(0)
     elif opt in ["f","function"]:
-        import pickle
-        Pred = pickle.load(open(optarg,"rb"))
+        import trident.classify as TC
+        Pred = TC.load(optarg)
     elif opt in ["i","input"]:
         infilenames.append(optarg)
     elif opt == "list":
@@ -94,7 +94,7 @@ for (opt,optarg) in opts:
     else:
         error_out("Unknown flag: {0}\n{1}".format(opt,HELP_WARNING))
         
-if not Pred or not hasattr(Pred,"__call__"):
+if not Pred or not hasattr(Pred,"interpolate"):
     error_out("Missing or Corrupted Interpolation function.")
     
 if not classifications:
@@ -142,7 +142,7 @@ for infilename in infilenames:
         if score < score_threshold:
             continue
         
-        pred_rank = Pred(energy,score)
+        pred_rank = Pred.interpolate(hit)
         bin_index = np.digitize([pred_rank],bins)
         if np.isnan(pred_rank) or np.isinf(pred_rank):
             if permissive:
