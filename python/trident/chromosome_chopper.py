@@ -26,7 +26,7 @@ def outfile_exists(prefix,file_counter):
 def open_outfile(prefix,file_counter):
     return open(create_outfile_name(prefix,file_counter) ,"w")
 
-def create_header(old_header,chunksize,seq_size):
+def create_header(old_header,chunksize,seq_size,header_map = {}):
     """
     Creates a fasta header line that contains information about the chromosome segment.
     
@@ -36,21 +36,36 @@ def create_header(old_header,chunksize,seq_size):
     @type chunksize: int
     @param seq_size: Total size of sequence
     @type seq_size: int
+    @param header_map: Optional list of user defined header values. These override the values in the original fasta header.
+    @type header_map: dict
     @return: Header string
     """
     import datetime
     import re
     from trident import FastaError
     
+    
     header = ">chr"
+    species = None
+    if "species" in header_map:
+        species = header_map['species']
+    assembly = None
+    if "assembly" in header_map:
+        assembly = header_map['assembly']   
+        
+    
     if old_header.find("chromosome") != -1:
-        species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|chromosome)",old_header)
+        if not species:
+            species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|chromosome)",old_header)
+            species = species[0]
         m = re.findall(r"chromosome\s*(\w*)",old_header)
         if len(m) == 0:
             raise FastaError("Missing chromosome label")
         header += m[0] + "|"
     elif old_header.find("mitochondrion"):
-        species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|mitochondrion)",old_header)
+        if not species:
+            species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|mitochondrion)",old_header)
+            species = species[0]
         header += "mitochondrion|";
     else:
         header+= "Unknown Sequence Type|"
@@ -60,18 +75,19 @@ def create_header(old_header,chunksize,seq_size):
     header += str(chunksize) + "|"
     rightnow = datetime.date.today()
     header += rightnow.isoformat().replace('-','') + "|"
-    m = re.findall(r"\s*(\S*) Primary Assembly",old_header)
-    if len(m) == 0:
-        header += "Unknown Assembly|"
-    else:
-        header += m[0] + "|"
+    if not assembly:
+        m = re.findall(r"\s*(\S*) Primary Assembly",old_header)
+        if len(m) == 0:
+            assembly = "Unknown Assembly"
+        else:
+            assembly = m[0]
+    header += assembly + "|"
     if not species or len(species[0]) < 2:
         raise FastaError("Missing species name. Received '{0}'".format(species))
-    species = species[0]
     header += "[%s.%s]" % (species[0][0],species[1])
     return header + "\n"
     
-def chopper(filename,prefix,chunk_size,overwrite = True):
+def chopper(filename,prefix,chunk_size,overwrite = True, header_map = {}):
     """
     Opens the specified file and breaks it into 'chunk_size' number of lines.
     The results are placed in files, using the filename scheme prefix-index,
@@ -102,7 +118,7 @@ def chopper(filename,prefix,chunk_size,overwrite = True):
     infile.seek(0)
     infile.readline()
         
-    header = create_header(header,chunk_size,nchars)
+    header = create_header(header,chunk_size,nchars,header_map)
 
     file_counter = 1
     seq_offset = 0
