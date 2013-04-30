@@ -5,28 +5,48 @@ Breaks up chromosome files into arbitrarily smaller sizes
 Requires an input sequence, an output file prefix and a 
 chunk size (number of 70-character lines).
 """
+from sys import argv
+from trident.chromosome_chopper import chopper
+from getopt import getopt, GetoptError
+
+def print_usage():
+    print("Usage: chromosome_chopper [-s \"Genus Species\"] <filename> <output prefix> <chunk size>")
+    print("Options:")
+    print("-s, --species\tSpecify the species. If this flag is omitted, the program will try to find the species in the fasta header.")
 
 def error_out(msg):
     print(msg)
+    print("For help, run chromosome_chopper --help")
     exit(1)
 
-def main():
-    from sys import argv
-    from trident.chromosome_chopper import chopper
-    
-    if len(argv) < 4:
-        error_out("Usage: %s <filename> <output prefix> <chunk size>" % argv[0])
 
-    filename = argv[1]
-    prefix = argv[2]
-    chunk_size = int(argv[3])
-    if chunk_size < 2:
-        error_out("Invalid size. Must be a positive integer")
-        chunk_size -= 1 # decrement for use with mod
+short_opts = "a:s:"
+long_opts = ["assembly=","help","species="]
 
-    num_files = chopper(filename,prefix,chunk_size)
-    print("Divided %s into %d segments" % (filename, num_files))
+(opts, args) = getopt(argv[1:],short_opts,long_opts)
 
+header_map = {}
+for (opt,optarg) in opts:
+    while opt[0] == "-":
+        opt = opt[1:]
+        if opt in ["a","assembly"]:
+            header_map['assembly'] = optarg
+        elif opt in ["h","help"]:
+            print_usage()
+            exit(0)
+        elif opt in ["s", "species"]:
+            header_map['species'] = optarg.split()
 
-if __name__ == "__main__":
-    main()
+if len(args) < 3:
+    error_out("Missing arguments.")
+
+filename = args[0]
+prefix = args[1]
+chunk_size = int(args[2])
+if chunk_size < 2:
+    error_out("Invalid size. Must be a positive integer")
+    chunk_size -= 1 # decrement for use with mod
+
+num_files = chopper(filename,prefix,chunk_size,header_map = header_map)
+print("Divided %s into %d segments" % (filename, num_files))
+
