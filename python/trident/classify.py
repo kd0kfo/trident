@@ -111,3 +111,22 @@ def load(filename):
     """
     import pickle
     return pickle.load(open(filename,"rb"))
+
+def get_grade(log_value):
+    """
+    Used to generate a Trident 'Grade' for scores. Argument expect to be the value of an Interpolator function, e.g. Interpolator.interpolate or Interplator.__call__
+    
+    @param log_value: Data returned from an interpolator
+    @type log_value: float
+    @return: Trident score grade
+    @rtype: int
+    """
+    if log_value <= -5:
+        return 1
+    elif log_value <= -4:
+        return 2
+    elif log_value <= -3:
+        return 3
+    elif log_value <= -2:
+        return 4
+    return 5
