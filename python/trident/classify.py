@@ -79,6 +79,9 @@ class MultiSpeciesInterpolator(Interpolator):
             raise InterpolatorNotDefined("Interpolation function is not defined for species '{0}'".format(species))
         return self.species_map[species].interpolate(score)
     
+    def species(self):
+        return self.species_map.keys()
+    
 
 def create_linear_interpolator(infilename):
     """
