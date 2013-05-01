@@ -80,6 +80,12 @@ class MultiSpeciesInterpolator(Interpolator):
         return self.species_map[species].interpolate(score)
     
     def species(self):
+        """
+        Returns a list of species included in the interpolator.
+        
+        @return: Species List
+        @rtype: list
+        """
         return self.species_map.keys()
     
 
