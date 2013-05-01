@@ -50,7 +50,8 @@ class Interpolator:
         @param filename: Output filename
         @ptype filename: str
         """
-        import pickle
+        import pickle,time
+        self.ctime = time.strftime("%Y%m%d%H%M")
         pickle.dump(self,open(filename,"wb"))
         
 
