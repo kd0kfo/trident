@@ -8,7 +8,7 @@ from trident.classify import create_linear_interpolator
 from getopt import getopt
 
 def print_usage():
-    print("Usage: interpolate [-o output] <input file>")
+    print("Usage: energy_score_interpolator [-o output] <input file>")
     print("-o, --output\tOutput file in which the interpolator function is saved.")
     
 short_opts = "ho:"
