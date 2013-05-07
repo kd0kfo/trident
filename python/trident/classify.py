@@ -79,7 +79,7 @@ class MultiSpeciesInterpolator(Interpolator):
             raise InterpolatorNotDefined("Interpolation function is not defined for species '{0}'".format(species))
         return self.species_map[species].interpolate(score)
     
-    def species(self):
+    def species_list(self):
         """
         Returns a list of species included in the interpolator.
         
@@ -88,6 +88,31 @@ class MultiSpeciesInterpolator(Interpolator):
         """
         return self.species_map.keys()
     
+    def add_species(self,name,interpolator):
+        """
+        Adds a species to the interpolator. 
+        
+        The input parameter, interpolator, must be callable and take a trident score dict as a parameter.
+        
+        @param name: Species name
+        @type name: str
+        @param interpolator: Callable function that interpolates a trident score dict
+        @type interpolator: Callable function
+        """
+        self.species_map[name] = interpolator
+        
+    def get_species(self, name):
+        """
+        Returns the interpolator for the species.
+        
+        @param name: Species name
+        @type name: str
+        @return: Interpolator for the specified species
+        @type: Callable function
+        """
+        if not name in self.species_map:
+            raise InterpolatorNotDefined("No interpolator for {0}".format(name))
+        return self.species_map[name]
 
 def create_linear_interpolator(infilename):
     """
