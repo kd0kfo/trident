@@ -7,31 +7,54 @@ import pickle
 from trident.classify import create_linear_interpolator
 from getopt import getopt
 
+def combine_interpolators(name_filename_pairs):
+    from trident.classify import load,MultiSpeciesInterpolator
+    if len(name_filename_pairs) % 2 != 0:
+        raise Exception("Invalid number of Species Name - File Name pairs.")
+    zipped_list = zip(name_filename_pairs[0::2],name_filename_pairs[1::2])
+    retval = MultiSpeciesInterpolator()
+    for (name, filename) in zipped_list:
+        interp = load(filename)
+        retval.add_species(name,interp)
+    return retval
+        
+
 def print_usage():
     print("Usage: energy_score_interpolator [-o output] <input file>")
+    print("Usage: energy_score_interpolator [-o output] --combine SPECIES1 FILE1 SPECIES2 FILE2 ... ")
     print("-o, --output\tOutput file in which the interpolator function is saved.")
+    print("--combine\tIf combine is specified, a list of species/file pairs are used to create a MultiSpeciesInterpolator function.")
     
 short_opts = "ho:"
-long_opts = ["help","output="]
+long_opts = ["help","combine","output="]
 
 (opts,args) = getopt(argv[1:],short_opts,long_opts)
 
 funct_filename = "interpolator.sav"
 infilename = None
+should_combine = False
 for (opt,optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
-    if opt in ["h","help"]:
+    if opt == "combine":
+        should_combine = True
+    elif opt in ["h","help"]:
         print_usage()
         exit(0)
     elif opt in ["o","output"]:
         funct_filename = optarg
         
-if len(args) != 1:
-    raise Exception("Invalid number of arguments. Only need an input filename")
+if not args:
+    if not should_combine:
+        raise Exception("Invalid number of arguments. Only need an input filename")
+    else:
+        raise Exception("Species names and input files are required.")
 infilename = args[0]
 
 # Interpolate
-print("Interpolating")
-interpolator = create_linear_interpolator(infilename)
+if should_combine:
+    interpolator = combine_interpolators(args)
+else:
+    print("Interpolating")
+    interpolator = create_linear_interpolator(infilename)
 interpolator.save(funct_filename)
