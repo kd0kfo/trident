@@ -1,4 +1,5 @@
-[
+{
+"data":[
 {
 	"query_id": "mir1",
 	"reference_id": "mir1idealizedpurinestrand5to3",
@@ -27,3 +28,4 @@
 	"similarity": 75.00
 }
 ]
+}
