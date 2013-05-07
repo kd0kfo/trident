@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from setuptools import setup,Extension
 
 extension_sources = ['trident.py.c']
 for i in ["output.c", "scan.c", "seqio.c", "swat.c", "pairs.c", "thermo.c", "utils.c", "ExpString.c", "version.c"]:
@@ -18,10 +18,11 @@ the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/mirna_chopper','scripts/score_converter']
 
 setup (name ='trident',
-       version = '0.3',
+       version = '0.4.4',
        url = 'http://trident.stjude.org',
        license = 'GPL v3',
-       description = 'Utility functions for analyzing microrna binding to DNA',
+       description = 'Utility functions for analyzing Trident Results.',
+       author='David Coss',
        author_email='David.Coss@stjude.org',
        packages = ['trident'],
        scripts = the_scripts,
