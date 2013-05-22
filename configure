@@ -1380,7 +1380,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
-  --enable-static         Enable building of effercio statically. Default:
+  --enable-static         Enable building of trident statically. Default:
                           disabled. To link against shared libraries, use
                           --disable-static
   --enable-debug          Enable debug data logging. Default: no

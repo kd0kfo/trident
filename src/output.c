@@ -43,7 +43,13 @@ void print_banner(FILE* fpout) {
  *
  */
 void print_license(FILE* fpout) {
-	fprintf(fpout, "\n\n");
+	if(fpout == NULL)
+		return;
+	fprintf(fpout, "Trident is released for use under the terms of the GNU General Public License version 3.\n");
+	fprintf(fpout, "You are free to use, modify and distribute trident in both binary and source formats \n");
+	fprintf(fpout, "as long as the derivative copies comply with this license. For details, see the \"License\" file \n");
+	fprintf(fpout, "distributed with the source code or go to http://www.gnu.org/licenses/gpl.html");
+	fprintf(fpout,"\n\n");
 }
 
 /** 
@@ -51,6 +57,9 @@ void print_license(FILE* fpout) {
  *
  */
 void print_small_license(FILE* fpout) {
+	if(fpout == NULL)
+		return;
+	fprintf(fpout,"License: GPLv3\n");
 }
 
 /** 
