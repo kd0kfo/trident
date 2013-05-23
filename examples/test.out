@@ -4,7 +4,7 @@
    / \| | |X| | |/ \| | |X| | |/ \| | |X|   
       `-!-' `-!-'   `-!-' `-!-'   `-!-' `-     
 
-   Trident 0.4.4 microRNA dsDNA triplex algorithm
+   Trident 0.4.5 microRNA dsDNA triplex algorithm
 
                 ,-*-.         ,-*-.            
                / | | \       / | | \         
@@ -12,6 +12,7 @@
          `-!-'         `-!-'         `-!       
 
 
+License: GPLv3
 Query Filename: 	mir1.fasta
 Reference Filename:	mir1idealizedpurinestrand5to3.fasta
 Read Sequence:mir1 (22 nt)
