@@ -76,7 +76,7 @@ for (opt, optarg) in opts:
         sort_type = optarg
 
 if not args or len(args) != 2:
-    error_out("An output format and an input file are required.\n{0}".format(HELP_WARNING))
+    error_out("An output format and an input file are required.")
 
 outfmt = args[0]
 infile = open(args[1],"r")
