@@ -78,7 +78,7 @@ def create_header(old_header,chunksize,seq_size,header_map = {}):
     if not assembly:
         m = re.findall(r"\s*(\S*) Primary Assembly",old_header)
         if len(m) == 0:
-            assembly = "Unknown Assembly"
+            assembly = "UnknownAssembly"
         else:
             assembly = m[0]
     header += assembly + "|"
