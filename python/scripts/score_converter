@@ -38,8 +38,8 @@ def get_outfile(output_map, sort_type, score):
     @ptype score: dict
     @return: file
     """
-    if not sort_type in score_keys and not sort_type in score_keys:
-        raise Exception("Invalid sort type. Allowed sorting criteria are: {0}".format(", ".join(score_keys + reference_keys)))
+    if not sort_type in score_keys and not sort_type in reference_keys:
+        raise Exception("Invalid sort type '{1}'. Allowed sorting criteria are: {0}".format(", ".join(score_keys + reference_keys),sort_type))
     if sort_type in score:
         key = score[sort_type]
     else:

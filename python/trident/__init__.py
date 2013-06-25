@@ -58,8 +58,25 @@ def get_content(seq,query):
     return qcount/total
 
 def get_gc_content(seq):
+    """
+    Returns the fractional content of GC in a sequence.
+    
+    @param seq: Sequence to be counted
+    @type seq: str
+    @return: Fractional content of GC
+    @rtype: float
+    """
     return get_content(seq,"gc")
 
 def get_ag_content(seq):
+    """
+    Returns the fractional content of AG in a sequence.
+    
+    @param seq: Sequence to be counted
+    @type seq: str
+    @return: Fractional content of AG
+    @rtype: float
+    """
+    
     return get_content(seq,"ag")
 
