@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+#
+# This script iterates through scores and counts the number of hits in each gene location. 
+# The resulting count is returned as a tab delimited count of gene names and number of trident hits.
+
+from sys import argv,stderr,stdout
+from trident.parser import Parser, BrokenLine
+
+gene_data = argv[1]
+trident_data = argv[2]
+output = stdout
+
+running_hadoop = True
+
+def get_query_coords(coord_str, delim = ' '):
+    if not coord_str:
+        return None
+    coord_tokens = coord_str.split(delim)
+    if len(coord_tokens) != 2:
+        if running_hadoop:
+            stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
+        return None
+    return (int(coord_tokens[0]),int(coord_tokens[1]))
+    
+
+chr_gene_loci = {} # Maps chromosome names (e.g. chr1) to a dict of gene names and coordinate tuples.
+with open(gene_data,"r") as gene_file:
+    for line in gene_file:
+        data = line.strip().split()
+        if len(data) < 3:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
+            else:
+                raise Exception("Broken Gene Data: {0}".format(line.strip()))
+            continue
+        (chromosome, gene_name, coord_str) = data[0:3]
+        if coord_str[0] != '(' or coord_str[-1] != ')' or ',' not in coord_str:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
+            else:
+                raise Exception("Broken Gene Data: {0}".format(line.strip()))
+            continue
+        coord_str = coord_str[1:-1]
+        coords = get_query_coords(coord_str, ',')
+        if not coords:
+            continue
+        
+        if chromosome in chr_gene_loci:
+            chr_gene_loci[chromosome][gene_name] = coords
+        else:
+            chr_gene_loci[chromosome] = {gene_name: coords}
+            
+
+gene_hits = {}
+with open(trident_data, "r") as trident_file:
+    p = Parser(trident_file)
+    for score in p:
+        refid = score['reference_id']
+        reftokens = refid.split('|')
+        if not reftokens:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenLine,1\n")
+            else:
+                raise BrokenLine("Broken score: {0}".format(score))
+            continue
+        chr = reftokens[0]
+        if not chr in chr_gene_loci:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,MissingGeneData,1\n")
+            else:
+                raise Exception("Missing gene data for chromosome: {0}".format(chr))
+            continue
+        genes = chr_gene_loci[chr]
+        coords = get_query_coords(score['ref_coords'])
+        if not coords:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenLine,1\n")
+            else:
+                raise BrokenLine("Missing reference coordinates: {0}".format(score))
+            continue
+        
+        for gene in genes:
+            locus = genes[gene]
+            for pos in coords:
+                if pos >= locus[0] and pos <= locus[1]: # If true, the hit is within the gene.
+                    if gene in gene_hits:
+                        gene_hits[gene] += 1
+                    else:
+                        gene_hits[gene] = 1
+                    break
+
+for gene in gene_hits:
+    output.write("{0}\t{1}\n".format(gene,gene_hits[gene]))
+                    
+        
