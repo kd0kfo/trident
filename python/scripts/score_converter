@@ -1,23 +1,29 @@
 #!/usr/bin/env python
 
-from sys import argv,stdout
-from getopt import getopt,GetoptError
-from trident.parser import Parser,str_score,score_keys,reference_keys,get_reference
+from sys import argv, stdout
+from getopt import getopt, GetoptError
+from trident.parser import Parser, str_score, score_keys
+from trident.parser import reference_keys, get_reference
 from hashlib import md5
 
 HELP_WARNING = "For help, run score_converter --help"
 
 ALLOWED_FORMATS = ["gff"]
+
+
 def print_usage():
-    print("Usage: score_converter [-o output file ] [-s SORT CATEGORY] <format> <input file>")
+    print("Usage: score_converter [-o output file ] [-s SORT CATEGORY]"
+          " <format> <input file>")
     print("Formats include: {0}".format(",".join(ALLOWED_FORMATS)))
     print("Options:")
     print("-o, --output FILE\tSpecify output file. Default: Standard Output")
-    print("-s, --sort LABEL\tPlace output in different files based on score data type.")
+    print("-s, --sort LABEL\tPlace output in different files based on score"
+          " data type.")
     print("")
     print("Sort types:")
     print(", ".join(score_keys + reference_keys))
-    
+
+
 def error_out(msg):
     from sys import stderr
     stderr.write(msg)
@@ -25,11 +31,14 @@ def error_out(msg):
     stderr.write(HELP_WARNING)
     stderr.write("\n")
     exit(1)
-    
+
+
 def get_outfile(output_map, sort_type, score):
     """
-    Gets the proper file for the given sort type in the score. Returns a file type. If the file is not yet opened, it is opened in append mode.
-    
+    Gets the proper file for the given sort type in the score.
+    Returns a file type. If the file is not yet opened, it is opened
+    in append mode.
+
     @param output_map: Map of sort types to files
     @ptype output_map: dict
     @param sort_type: Score token to be used when sorting output.
@@ -38,10 +47,13 @@ def get_outfile(output_map, sort_type, score):
     @ptype score: dict
     @return: file
     """
-    
+
     if not sort_type in score_keys and not sort_type in reference_keys:
-        raise Exception("Invalid sort type '{1}'. Allowed sorting criteria are: {0}".format(", ".join(score_keys + reference_keys),sort_type))
-    
+        raise Exception("Invalid sort type '{1}'. Allowed sorting"
+                        " criteria are: {0}"
+                        .format(", ".join(score_keys + reference_keys),
+                                sort_type))
+
     if sort_type in score:
         key = score[sort_type]
     else:
@@ -53,16 +65,16 @@ def get_outfile(output_map, sort_type, score):
         key = key.replace("*", "STAR")
 
     if not key in output_map:
-        output_map[key] = open(key,"a")
+        output_map[key] = open(key, "a")
     return output_map[key]
 
 short_opts = "ho:s:"
-long_opts = ["help","output=","sort="]
+long_opts = ["help", "output=", "sort="]
 
 try:
-    (opts,args) = getopt(argv[1:],short_opts,long_opts)
+    (opts, args) = getopt(argv[1:], short_opts, long_opts)
 except GetoptError as ge:
-    error_out("{0}\n{1}".format(ge.msg,HELP_WARNING))
+    error_out("{0}\n{1}".format(ge.msg, HELP_WARNING))
 
 verbose = False
 infile = None
@@ -74,22 +86,23 @@ sort_type = ""
 for (opt, optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
-    if opt in ["h","help"]:
+    if opt in ["h", "help"]:
         print_usage()
         exit(0)
-    elif opt in ["o","output"]:
-        outfile = open(optarg,"w")
-    elif opt in ["s","sort"]:
+    elif opt in ["o", "output"]:
+        outfile = open(optarg, "w")
+    elif opt in ["s", "sort"]:
         sort_type = optarg
 
 if not args or len(args) != 2:
     error_out("An output format and an input file are required.")
 
 outfmt = args[0]
-infile = open(args[1],"r")
+infile = open(args[1], "r")
 
 if not outfmt.lower() in ALLOWED_FORMATS:
-    error_out("{0} is not an allowed output format. For a list of formats run 'score_converter --help'".format(outfmt))
+    error_out("{0} is not an allowed output format. For a list of formats"
+              " run 'score_converter --help'".format(outfmt))
 
 hit2str_funct = None
 if outfmt == "gff":
@@ -97,7 +110,8 @@ if outfmt == "gff":
     hit2str_funct = score_dict_to_gff
 
 if not callable(hit2str_funct):
-    error_out("{0} is not a valid function.".format(getattr(hit2str_funct,"name")))
+    error_out("{0} is not a valid function."
+              .format(getattr(hit2str_funct, "name")))
 
 ignore_counter = 0
 result_hashes = []
@@ -112,20 +126,19 @@ for hit in parser:
         continue
     else:
         result_hashes.append(s_hash)
-    
+
     if sort_type:
         try:
-            outfile = get_outfile(output_map,sort_type,hit)
+            outfile = get_outfile(output_map, sort_type, hit)
         except Exception as e:
-            from sys import stderr 
-            stderr.write("Cannot get output file name for score {0}\n".format(hit))
+            from sys import stderr
+            stderr.write("Cannot get output file name for score {0}\n"
+                         .format(hit))
             raise e
-    
+
     outfile.write(hit2str_funct(hit))
     outfile.write("\n")
 
 if ignore_counter:
     from sys import stderr
     stderr.write("Ignored {0} duplicate entries.".format(ignore_counter))
-    
-
