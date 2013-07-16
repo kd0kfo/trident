@@ -38,13 +38,20 @@ def get_outfile(output_map, sort_type, score):
     @ptype score: dict
     @return: file
     """
+    
     if not sort_type in score_keys and not sort_type in reference_keys:
         raise Exception("Invalid sort type '{1}'. Allowed sorting criteria are: {0}".format(", ".join(score_keys + reference_keys),sort_type))
+    
     if sort_type in score:
         key = score[sort_type]
     else:
         refs = get_reference(score)
         key = refs[sort_type]
+
+    # Validate as a file name
+    if "*" in key:
+        key = key.replace("*", "STAR")
+
     if not key in output_map:
         output_map[key] = open(key,"a")
     return output_map[key]
@@ -107,7 +114,12 @@ for hit in parser:
         result_hashes.append(s_hash)
     
     if sort_type:
-        outfile = get_outfile(output_map,sort_type,hit)
+        try:
+            outfile = get_outfile(output_map,sort_type,hit)
+        except Exception as e:
+            from sys import stderr 
+            stderr.write("Cannot get output file name for score {0}\n".format(hit))
+            raise e
     
     outfile.write(hit2str_funct(hit))
     outfile.write("\n")
