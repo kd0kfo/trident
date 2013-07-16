@@ -6,6 +6,9 @@
 from sys import argv,stderr,stdout
 from trident.parser import Parser, BrokenLine
 
+BUFFER = 5000
+SCORE_THRESHOLD = 140
+
 gene_data = argv[1]
 trident_data = argv[2]
 output = stdout
@@ -20,7 +23,7 @@ def get_query_coords(coord_str, delim = ' '):
         if running_hadoop:
             stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
         return None
-    return (int(coord_tokens[0]),int(coord_tokens[1]))
+    return [int(coord_tokens[0]),int(coord_tokens[1])]
     
 
 chr_gene_loci = {} # Maps chromosome names (e.g. chr1) to a dict of gene names and coordinate tuples.
@@ -44,6 +47,14 @@ with open(gene_data,"r") as gene_file:
         coords = get_query_coords(coord_str, ',')
         if not coords:
             continue
+
+        # Add BUFFER to each end of gene coordinate
+        if coords[0] < BUFFER:
+            coords[0] = 0
+        else:
+            coords[0] -= BUFFER
+        coords[1] += BUFFER
+        
         
         if chromosome in chr_gene_loci:
             chr_gene_loci[chromosome][gene_name] = coords
@@ -55,6 +66,8 @@ gene_hits = {}
 with open(trident_data, "r") as trident_file:
     p = Parser(trident_file)
     for score in p:
+        if score["score"] < SCORE_THRESHOLD:
+            continue
         refid = score['reference_id']
         reftokens = refid.split('|')
         if not reftokens:
@@ -71,7 +84,7 @@ with open(trident_data, "r") as trident_file:
                 raise Exception("Missing gene data for chromosome: {0}".format(chr))
             continue
         genes = chr_gene_loci[chr]
-        coords = get_query_coords(score['ref_coords'])
+        coords = (score['ref_start'], score['ref_end'])
         if not coords:
             if running_hadoop:
                 stderr.write("reporter:counter:TridentErrors,BrokenLine,1\n")
@@ -83,10 +96,11 @@ with open(trident_data, "r") as trident_file:
             locus = genes[gene]
             for pos in coords:
                 if pos >= locus[0] and pos <= locus[1]: # If true, the hit is within the gene.
-                    if gene in gene_hits:
-                        gene_hits[gene] += 1
+                    gene_mirna_pair = "{0}:{1}".format(gene,score['query_id'])
+                    if gene_mirna_pair in gene_hits:
+                        gene_hits[gene_mirna_pair] += 1
                     else:
-                        gene_hits[gene] = 1
+                        gene_hits[gene_mirna_pair] = 1
                     break
 
 for gene in gene_hits:
