@@ -10,8 +10,10 @@ from trident.chromosome_chopper import chopper
 from getopt import getopt, GetoptError
 
 def print_usage():
-    print("Usage: chromosome_chopper [-s \"Genus Species\"] <filename> <output prefix> <chunk size>")
+    print("Usage: chromosome_chopper [-s \"Genus Species\"]"
+          "[-l SEQUENCE LABEL] <filename> <output prefix> <chunk size>")
     print("Options:")
+    print("-l, --label\tSequence label, e.g. chr3")
     print("-s, --species\tSpecify the species. If this flag is omitted, the program will try to find the species in the fasta header.")
 
 def error_out(msg):
@@ -20,8 +22,8 @@ def error_out(msg):
     exit(1)
 
 
-short_opts = "a:s:"
-long_opts = ["assembly=","help","species="]
+short_opts = "a:l:s:"
+long_opts = ["assembly=","label=","help","species="]
 
 (opts, args) = getopt(argv[1:],short_opts,long_opts)
 
@@ -34,6 +36,8 @@ for (opt,optarg) in opts:
         elif opt in ["h","help"]:
             print_usage()
             exit(0)
+        elif opt in ["l", "label"]:
+            header_map['chromosome'] = optarg
         elif opt in ["s", "species"]:
             header_map['species'] = optarg.split()
 

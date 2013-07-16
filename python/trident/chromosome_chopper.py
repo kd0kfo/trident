@@ -45,30 +45,40 @@ def create_header(old_header,chunksize,seq_size,header_map = {}):
     from trident import FastaError
     
     
-    header = ">chr"
+    header = ">"
     species = None
     if "species" in header_map:
         species = header_map['species']
     assembly = None
     if "assembly" in header_map:
         assembly = header_map['assembly']   
-        
-    
-    if old_header.find("chromosome") != -1:
+
+    # Construct the chromosome reference tag.
+    # First, if the user provided it in the header_map dict, use that.
+    # Otherwise, if "chromosome" is found in the header followed by a
+    #    word characters, use that
+    # Otherwise, if mitochondrion is found, use that.
+    # Otherwise, label it as "UnknownSequenceType"
+    if "chromosome" in header_map:
+        header += "{0}|".format(header_map['chromosome'])
+    elif "chromosome" in old_header:
         if not species:
             species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|chromosome)",old_header)
+            if not species:
+                raise FastaError("Could not determine species name based"
+                                 " on header. Try using the -s flag")
             species = species[0]
         m = re.findall(r"chromosome\s*(\w*)",old_header)
-        if len(m) == 0:
+        if not m:
             raise FastaError("Missing chromosome label")
-        header += m[0] + "|"
+        header += "chr{0}|".format(m[0])
     elif old_header.find("mitochondrion"):
         if not species:
             species = re.findall(r"\|\s*(\S*)\s*(\S*)\s*(strain|mitochondrion)",old_header)
             species = species[0]
         header += "mitochondrion|";
     else:
-        header+= "Unknown Sequence Type|"
+        header+= "UnknownSequenceType|"
     header += "%s|" # to be filled in at file write
     header += r"%d|" # offset of segment in sequence, zero indexed
     header += "%d|" % seq_size # total sequence length
