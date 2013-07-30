@@ -5,7 +5,7 @@ trident
 Heuristic microRNA-DNA binding site search algorithm
 ----------------------------------------------------
 
-:Author: David.Coss@stjude.org
+:Author: David Coss, Steven Paugh
 :Date:   2013-07-30
 :Copyright: GPLv3.0
 :Version: 0.4.3
