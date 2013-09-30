@@ -18,7 +18,7 @@ the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/mirna_chopper','scripts/score_converter']
 
 setup (name ='trident',
-       version = '0.5.0',
+       version = '0.4.6',
        url = 'http://trident.stjude.org',
        license = 'GPL v3',
        description = 'Utility functions for analyzing Trident Results.',

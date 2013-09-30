@@ -1,5 +1,5 @@
 AC_PREREQ(2.60)
-AC_INIT(Trident, 0.4.5, trident {at} stjude.org)
+AC_INIT(Trident, 0.4.6, trident {at} stjude.org)
 AC_CONFIG_SRCDIR([RNAlib])
 AC_CONFIG_HEADER([config.h])
 AC_SUBST(VERSION)
