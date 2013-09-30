@@ -48,6 +48,59 @@ def parser_usage():
     print("Parses the output of trident")
 
 
+def zip_reference(score):
+    references = score['reference_id'].split('|')
+    return dict(zip(reference_keys, references))
+
+
+def validate_reference(score):
+    """
+    Takes a score and verifies that
+        1.) it has a "reference_id" value
+        2.) the "reference_id" value is valid
+
+    If the reference data is found to be invalid, an exception is raised.
+     Otherwise, the function returns with no return value.
+
+    @param score: Trident Score dict
+    @ptye score: dict
+    """
+    if len(score) != len(score_keys):
+        raise BrokenScore("Invalid number of fields in Trident Score. "
+                          "Expected {0} but received {1}"
+                          .format(len(score_keys), len(score)))
+    if not "reference_id" in score:
+        raise BrokenScore("Missing reference section in score")
+    if not "|" in score['reference_id']:
+        raise BrokenScore("Broken reference section in score.")
+    references = zip_reference(score)
+    if len(references) != len(reference_keys):
+        raise BrokenScore("Invalid number of fields in Reference Section "
+                          "of Trident Score. Expected {0} but received {1}"
+                          .format(len(reference_keys), len(references)))
+
+    # Check math of chunck offset
+    chunk_number = int(references["chunk"])
+    chunk_size = int(references["chunk_size"])
+    expected_segment_offset = int(references["seg_offset"])
+
+    # 70 bases per line.
+    # Chunk size is the number of lines with one line (70) being subtracted
+    #  as an overlap between chunks.
+    # chunk_number is decremented by one because chunk_number is
+    #  one-indexed.
+    actual_segment_offset = 70 * chunk_size * (chunk_number - 1) - 70
+    if actual_segment_offset == -70:
+        # In this case, we have the first chunk. Offset is zero.
+        actual_segment_offset = 0
+
+    if actual_segment_offset != expected_segment_offset:
+        raise BrokenScore("Segment offset is not the expected value.\n"
+                          "Expected: {0}\n"
+                          "Computed: {1}".format(expected_segment_offset,
+                                                 actual_segment_offset))
+
+
 def get_reference(score):
     """
     Parses the reference data (see reference_keys) from a score dict.
@@ -58,21 +111,9 @@ def get_reference(score):
     """
     if not score:
         return None
-    if len(score) != len(score_keys):
-        raise BrokenScore("Invalid number of fields in Trident Score. "
-                          "Expected {0} but received {1}"
-                          .format(len(score_keys), len(score)))
-    if not "reference_id" in score:
-        raise BrokenScore("Missing reference section in score")
-    if not "|" in score['reference_id']:
-        raise BrokenScore("Broken reference section in score.")
-    references = score['reference_id'].split('|')
-    if len(references) != len(reference_keys):
-        raise BrokenScore("Invalid number of fields in Reference Section "
-                          "of Trident Score. Expected {0} but received {1}"
-                          .format(len(reference_keys), len(references)))
 
-    return dict(zip(reference_keys, references))
+    validate_reference(score)
+    return zip_reference(score)
 
 
 def score_dict_to_gff(score):
@@ -187,7 +228,7 @@ def parse_file(infile):
     if not line:  # EOF
         raise StopIteration
     line = line.strip()
-    return score_str_to_dict(line)
+    return (score_str_to_dict(line), line)
 
 
 def str_score(score):
@@ -231,6 +272,7 @@ class Parser:
         @type infile: file
         """
         self.file = infile
+        self.last_line = None
 
     def __iter__(self):
         return self
@@ -242,8 +284,9 @@ class Parser:
         @return: Next score in the file being parsed. If there is an empty line
          in the file, None is returned.
         """
-        retval = parse_file(self.file)
-        return retval
+        (score, line_str) = parse_file(self.file)
+        self.last_line = line_str
+        return score
 
 
 def map_input_files(infilenames, key_gen_function, is_hadoop=False):
