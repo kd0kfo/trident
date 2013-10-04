@@ -56,8 +56,10 @@ def zip_reference(score):
 def validate_reference(score):
     """
     Takes a score and verifies that
-        1.) it has a "reference_id" value
-        2.) the "reference_id" value is valid
+        0.) the score has the correct number of fields
+        1.) the score has a "reference_id" value
+        2.) the "reference_id" is delimited by '|' characters
+        3.) the math of the genome offset is correct
 
     If the reference data is found to be invalid, an exception is raised.
      Otherwise, the function returns with no return value.
@@ -74,10 +76,6 @@ def validate_reference(score):
     if not "|" in score['reference_id']:
         raise BrokenScore("Broken reference section in score.")
     references = zip_reference(score)
-    if len(references) != len(reference_keys):
-        raise BrokenScore("Invalid number of fields in Reference Section "
-                          "of Trident Score. Expected {0} but received {1}"
-                          .format(len(reference_keys), len(references)))
 
     # Check math of chunck offset
     chunk_number = int(references["chunk"])
