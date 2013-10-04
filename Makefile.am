@@ -1,4 +1,4 @@
 
-SUBDIRS = man RNAlib src
-DIST_SUBDIRS = man RNAlib src
+SUBDIRS = RNAlib src
+DIST_SUBDIRS = RNAlib src
 EXTRA_DIST = LICENSE VERSION makebindist.sh examples
