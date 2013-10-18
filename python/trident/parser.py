@@ -152,7 +152,7 @@ def score_dict_to_str(score):
     return ">" + ",".join([score[i] for i in printed_keys])
 
 
-def score_str_to_dict(line):
+def score_str_to_dict(line, ignore_offset=False):
     """
     Converts a trident score line to a dict mapping the score data type
      to its value.
@@ -162,6 +162,9 @@ def score_str_to_dict(line):
     @see: reference_keys
     @param line: Score line
     @type line: str
+    @param ignore_offset: Whether or not to use an offset
+     with the reference coordinates (Default: False)
+    @type ignore_offset: bool
     @return: Score data as a dict
     """
     from sys import stderr
@@ -183,7 +186,7 @@ def score_str_to_dict(line):
 
     score = dict(zip(score_keys, tokens))
     ref_id = score['reference_id']
-    if "|" in ref_id:
+    if not ignore_offset and "|" in ref_id:
         tokens = ref_id.split('|')
         if len(tokens) < 3:
             stderr.write("Missing sequence offset.\nSequence: %s" % line)
@@ -212,7 +215,7 @@ def score_str_to_dict(line):
     return score  # End of score_str_to_dict
 
 
-def parse_file(infile):
+def parse_file(infile, ignore_offset=False):
     """
     Reads the next line in the file and converts it to a Trident Score Dict
      using score_str_to_dict
@@ -220,13 +223,16 @@ def parse_file(infile):
     @see: score_str_to_dict
     @param infile: File Object
     @type infile: file
+    @param ignore_offset: Whether or not to use an offset
+     with the reference coordinates (Default: False)
+    @type ignore_offset: bool
     @return: Score dict
     """
     line = infile.readline()
     if not line:  # EOF
         raise StopIteration
     line = line.strip()
-    return (score_str_to_dict(line), line)
+    return (score_str_to_dict(line, ignore_offset), line)
 
 
 def str_score(score):
@@ -262,15 +268,19 @@ class Parser:
     Takes a file object as in its constructor and can iterate through scores
      in the file.
     """
-    def __init__(self, infile):
+    def __init__(self, infile, ignore_offset=False):
         """
         Parser constructor.
 
         @param infile: Score file.
         @type infile: file
+        @param ignore_offset: Whether or not to use an offset
+         with the reference coordinates (Default: False)
+        @type ignore_offset: bool
         """
         self.file = infile
         self.last_line = None
+        self.ignore_offset = ignore_offset
 
     def __iter__(self):
         return self
@@ -282,7 +292,7 @@ class Parser:
         @return: Next score in the file being parsed. If there is an empty line
          in the file, None is returned.
         """
-        (score, line_str) = parse_file(self.file)
+        (score, line_str) = parse_file(self.file, self.ignore_offset)
         self.last_line = line_str
         return score
 
