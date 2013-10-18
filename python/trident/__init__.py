@@ -1,3 +1,6 @@
+import pkg_resources
+__version__ = pkg_resources.require("trident")[0].version
+
 __all__ = ['parser','chromosome_chopper','mirna_chopper','validate_energies','core','classify']
 
 class TridentException(Exception):
