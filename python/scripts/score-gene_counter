@@ -4,16 +4,16 @@
 # The resulting count is returned as a tab delimited count of gene names and number of trident hits.
 
 from sys import argv,stderr,stdout
+from getopt import getopt
 from trident.parser import Parser, BrokenLine
 
-BUFFER = 5000
-SCORE_THRESHOLD = 140
 
-gene_data = argv[1]
-trident_data = argv[2]
-output = stdout
+def print_usage():
+    print("Usage: score-gene_counter [--ignore-reference] <gene data> <trident data>")
+    print("Options:")
+    print("--ignore-reference\tIgnore the reference tag in trident score,"
+          " most notably the sequence offset. (Default: not ignore)")
 
-running_hadoop = True
 
 def get_query_coords(coord_str, delim = ' '):
     if not coord_str:
@@ -25,6 +25,40 @@ def get_query_coords(coord_str, delim = ' '):
         return None
     return [int(coord_tokens[0]),int(coord_tokens[1])]
     
+
+BUFFER = 5000
+SCORE_THRESHOLD = 140
+
+output = stdout
+running_hadoop = True
+ignore_offset = False
+
+short_opts = "h"
+long_opts = ["help", "ignore-reference"]
+
+try:
+    (opts, args) = getopt(argv[1:], short_opts, long_opts)
+except GetoptError as ge:
+    stderr.write(ge.msg)
+    stderr.write("\n")
+    stderr.write("For help, run score-gene_counter -h\n")
+    exit(1)
+
+for (opt, optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+
+    if opt == "ignore-reference":
+        ignore_offset = True
+
+if len(args) != 2:
+    stderr.write("Missing argument.\n")
+    stderr.write("For help, run score-gene_counter -h\n")
+    exit(1)
+
+gene_data = args[0]
+trident_data = args[1]
+
 
 chr_gene_loci = {} # Maps chromosome names (e.g. chr1) to a dict of gene names and coordinate tuples.
 with open(gene_data,"r") as gene_file:
@@ -64,7 +98,7 @@ with open(gene_data,"r") as gene_file:
 
 gene_hits = {}
 with open(trident_data, "r") as trident_file:
-    p = Parser(trident_file)
+    p = Parser(trident_file, ignore_offset)
     for score in p:
         if score["score"] < SCORE_THRESHOLD:
             continue
