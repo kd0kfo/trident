@@ -30,11 +30,11 @@ BUFFER = 5000
 SCORE_THRESHOLD = 140
 
 output = stdout
-running_hadoop = True
+running_hadoop = False
 ignore_offset = False
 
 short_opts = "h"
-long_opts = ["help", "ignore-reference"]
+long_opts = ["hadoop", "help", "ignore-reference"]
 
 try:
     (opts, args) = getopt(argv[1:], short_opts, long_opts)
@@ -48,7 +48,9 @@ for (opt, optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
 
-    if opt in ["h", "help"]:
+    if opt == "hadoop":
+        running_hadoop = True
+    elif opt in ["h", "help"]:
         print_usage()
         exit(0)
     elif opt == "ignore-reference":
