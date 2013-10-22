@@ -15,10 +15,11 @@ the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/energy_score_ranker','scripts/energy_score_mapper',
                'scripts/chromosome_chopper', 'scripts/energy_score_interpolator',
                'scripts/energy_score_classifier', 'scripts/mapper',
-               'scripts/mirna_chopper','scripts/score_converter']
+               'scripts/mirna_chopper','scripts/score_converter',
+               'scripts/score-gene_counter']
 
 setup (name ='trident',
-       version = '0.4.8',
+       version = '0.4.8.1',
        url = 'http://trident.stjude.org',
        license = 'GPL v3',
        description = 'Utility functions for analyzing Trident Results.',
