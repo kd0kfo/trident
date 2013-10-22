@@ -1,0 +1,146 @@
+#!/usr/bin/env python
+#
+# This script iterates through scores and 
+# TODO: Add documentation
+
+from sys import argv,stderr,stdout
+from getopt import getopt
+from trident.parser import Parser, BrokenLine
+
+
+def print_usage():
+    print("Usage: score-gene_distance [--ignore-reference] <gene data> <trident data>")
+    print("Options:")
+    print("--ignore-reference\tIgnore the reference tag in trident score,"
+          " most notably the sequence offset. (Default: not ignore)")
+
+
+def get_query_coords(coord_str, delim = ' '):
+    if not coord_str:
+        return None
+    coord_tokens = coord_str.split(delim)
+    if len(coord_tokens) != 2:
+        if running_hadoop:
+            stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
+        return None
+    return [int(coord_tokens[0]),int(coord_tokens[1])]
+    
+
+SCORE_THRESHOLD = 140
+
+output = stdout
+running_hadoop = False
+ignore_offset = False
+
+short_opts = "h"
+long_opts = ["hadoop", "help", "ignore-reference"]
+
+try:
+    (opts, args) = getopt(argv[1:], short_opts, long_opts)
+except GetoptError as ge:
+    stderr.write(ge.msg)
+    stderr.write("\n")
+    stderr.write("For help, run score-gene_distance -h\n")
+    exit(1)
+
+for (opt, optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+
+    if opt == "hadoop":
+        running_hadoop = True
+    elif opt in ["h", "help"]:
+        print_usage()
+        exit(0)
+    elif opt == "ignore-reference":
+        ignore_offset = True
+
+if len(args) != 2:
+    stderr.write("Missing argument.\n")
+    stderr.write("For help, run score-gene_distance -h\n")
+    exit(1)
+
+gene_data = args[0]
+trident_data = args[1]
+
+
+chr_gene_loci = {} # Maps chromosome names (e.g. chr1) to a dict of gene names and coordinate tuples.
+with open(gene_data,"r") as gene_file:
+    for line in gene_file:
+        data = line.strip().split()
+        if len(data) < 3:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
+            else:
+                raise Exception("Broken Gene Data: {0}".format(line.strip()))
+            continue
+        (chromosome, gene_name, coord_str) = data[0:3]
+        if coord_str[0] != '(' or coord_str[-1] != ')' or ',' not in coord_str:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenGeneData,1\n")
+            else:
+                raise Exception("Broken Gene Data: {0}".format(line.strip()))
+            continue
+        coord_str = coord_str[1:-1]
+        coords = get_query_coords(coord_str, ',')
+        if not coords:
+            continue
+
+        if chromosome in chr_gene_loci:
+            chr_gene_loci[chromosome][gene_name] = coords
+        else:
+            chr_gene_loci[chromosome] = {gene_name: coords}
+            
+
+gene_hits = {}
+with open(trident_data, "r") as trident_file:
+    p = Parser(trident_file, ignore_offset)
+    for score in p:
+        if score["score"] < SCORE_THRESHOLD:
+            continue
+        refid = score['reference_id']
+        reftokens = refid.split('|')
+        if not reftokens:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenLine,1\n")
+            else:
+                raise BrokenLine("Broken score: {0}".format(score))
+            continue
+        chr = reftokens[0]
+        if not chr in chr_gene_loci:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,MissingGeneData,1\n")
+            else:
+                raise Exception("Missing gene data for chromosome: {0}".format(chr))
+            continue
+        genes = chr_gene_loci[chr]
+        coords = (score['ref_start'], score['ref_end'])
+        if not coords:
+            if running_hadoop:
+                stderr.write("reporter:counter:TridentErrors,BrokenLine,1\n")
+            else:
+                raise BrokenLine("Missing reference coordinates: {0}".format(score))
+            continue
+        
+        min_distance = None
+        for gene in genes:
+            locus = genes[gene]
+            for pos in coords:
+                if pos >= locus[0] and pos <= locus[1]: # If true, the hit is within the gene.
+                    min_distance = 0
+                    break
+            if min_distance == 0:
+                break
+            
+            start_distance = locus[0] - coords[1]
+            stop_distance = coords[0] - locus[1]
+
+            if start_distance > 0:
+                distance = start_distance
+            else:
+                distance = stop_distance
+            if min_distance is None or distance < min_distance:
+                min_distance = distance
+            
+        output.write("{0}\t1\n".format(min_distance))
+

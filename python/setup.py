@@ -19,7 +19,7 @@ the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/score-gene_counter']
 
 setup (name ='trident',
-       version = '0.4.8.1',
+       version = '0.4.9',
        url = 'http://trident.stjude.org',
        license = 'GPL v3',
        description = 'Utility functions for analyzing Trident Results.',
