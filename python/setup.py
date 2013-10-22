@@ -16,7 +16,7 @@ the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/chromosome_chopper', 'scripts/energy_score_interpolator',
                'scripts/energy_score_classifier', 'scripts/mapper',
                'scripts/mirna_chopper','scripts/score_converter',
-               'scripts/score-gene_counter']
+               'scripts/score-gene_counter', 'scripts/score-gene_distance']
 
 setup (name ='trident',
        version = '0.4.9',
