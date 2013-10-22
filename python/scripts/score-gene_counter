@@ -48,7 +48,10 @@ for (opt, optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
 
-    if opt == "ignore-reference":
+    if opt in ["h", "help"]:
+        print_usage()
+        exit(0)
+    elif opt == "ignore-reference":
         ignore_offset = True
 
 if len(args) != 2:
