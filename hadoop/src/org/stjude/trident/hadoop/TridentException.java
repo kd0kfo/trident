@@ -11,7 +11,8 @@ public class TridentException extends Exception
 	static enum ErrorTypes{BROKEN_LINE,EMPTY_LINE};
     public TridentException(String msg){super(msg);}
 
-    public static void bad_score(String score, Context context)
+    @SuppressWarnings("unchecked")
+	public static void bad_score(String score, Context context)
     {
     	System.err.println("Invalid score: " + score);
     	if(score.length() == 0)
