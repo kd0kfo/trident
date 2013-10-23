@@ -46,7 +46,7 @@ def get_content(seq,query):
     Returns the fraction of occurances of "G" and "C" in a sequence. Only "A", "T"/"U", "G" and "C" are counted, i.e. "N" is ignored.
     
     @param seq: Sequence
-    @ptype seq: str
+    @type seq: str
     @return: float
     """
     total = 0.0

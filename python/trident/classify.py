@@ -38,7 +38,7 @@ class Interpolator:
         Calls interpolate and allows the object to be callable.
         
         @param score: Trident score dict
-        @ptype score: dict
+        @type score: dict
         @return: float
         """
         return self.interpolate(score)
@@ -48,7 +48,7 @@ class Interpolator:
         Saves an Interpolator object using the pickle module.
         
         @param filename: Output filename
-        @ptype filename: str
+        @type filename: str
         """
         import pickle,time
         self.ctime = time.strftime("%Y%m%d%H%M")
@@ -108,7 +108,7 @@ class MultiSpeciesInterpolator(Interpolator):
         @param name: Species name
         @type name: str
         @return: Interpolator for the specified species
-        @type: Callable function
+        @rtype: Callable function
         """
         if not name in self.species_map:
             raise InterpolatorNotDefined("No interpolator for {0}".format(name))
@@ -121,7 +121,7 @@ def create_linear_interpolator(infilename):
     Requires scipy
     
     @param infilename: Input file name
-    @ptype infile: str
+    @type infilename: str
     @return: LinearInterpolator
     """
     from trident import load_energy_score_data
@@ -141,7 +141,7 @@ def load(filename):
     Loads an interpolator object.
     
     @param filename: Input file name
-    @ptype filename: str
+    @type filename: str
     @return: Interpolator instance
     """
     import pickle

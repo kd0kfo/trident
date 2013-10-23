@@ -56,16 +56,16 @@ def zip_reference(score):
 def validate_reference(score):
     """
     Takes a score and verifies that
-        0.) the score has the correct number of fields
-        1.) the score has a "reference_id" value
-        2.) the "reference_id" is delimited by '|' characters
-        3.) the math of the genome offset is correct
+    0.) the score has the correct number of fields
+    1.) the score has a "reference_id" value
+    2.) the "reference_id" is delimited by '|' characters
+    3.) the math of the genome offset is correct
 
     If the reference data is found to be invalid, an exception is raised.
-     Otherwise, the function returns with no return value.
+    Otherwise, the function returns with no return value.
 
     @param score: Trident Score dict
-    @ptye score: dict
+    @type score: dict
     """
     if len(score) != len(score_keys):
         raise BrokenScore("Invalid number of fields in Trident Score. "
@@ -104,7 +104,7 @@ def get_reference(score):
     Parses the reference data (see reference_keys) from a score dict.
 
     @param score: Trident Score dict
-    @ptype score: dict
+    @type score: dict
     @return dict
     """
     if not score:
@@ -155,7 +155,7 @@ def score_dict_to_str(score):
 def score_str_to_dict(line, ignore_offset=False):
     """
     Converts a trident score line to a dict mapping the score data type
-     to its value.
+    to its value.
     Keys are contained in the trident.parser.score_keys list.
 
     @see: score_keys
@@ -218,7 +218,7 @@ def score_str_to_dict(line, ignore_offset=False):
 def parse_file(infile, ignore_offset=False):
     """
     Reads the next line in the file and converts it to a Trident Score Dict
-     using score_str_to_dict
+    using score_str_to_dict
 
     @see: score_str_to_dict
     @param infile: File Object
@@ -238,7 +238,7 @@ def parse_file(infile, ignore_offset=False):
 def str_score(score):
     """
     Creates a human readable score string. Each data type has its own line
-     with the format:
+    with the format:
     DATA TYPE: DATA VALUE
 
     @param score: Score to be rendered to a string
@@ -266,7 +266,7 @@ class Parser:
     Iterable Trident Output Parser.
 
     Takes a file object as in its constructor and can iterate through scores
-     in the file.
+    in the file.
     """
     def __init__(self, infile, ignore_offset=False):
         """
@@ -300,7 +300,7 @@ class Parser:
 def map_input_files(infilenames, key_gen_function, is_hadoop=False):
     """
     Takes a list of input files and uses a key function
-     to count hit frequencies.
+    to count hit frequencies.
 
     @param infilenames: List of file names to be mapped
     @type infilenames: List
