@@ -31,6 +31,7 @@ SCORE_THRESHOLD = 140
 output = stdout
 running_hadoop = False
 ignore_offset = False
+distance_map = {}
 
 short_opts = "h"
 long_opts = ["hadoop", "help", "ignore-reference"]
@@ -141,6 +142,12 @@ with open(trident_data, "r") as trident_file:
                 distance = stop_distance
             if min_distance is None or distance < min_distance:
                 min_distance = distance
-            
-        output.write("{0}\t1\n".format(min_distance))
+        
+        if min_distance in distance_map:
+            distance_map[min_distance] += 1
+        else:
+            distance_map[min_distance] = 1
+
+for min_distance in distance_map:
+    output.write("{0}\t{1}\n".format(min_distance, distance_map[min_distance]))
 
