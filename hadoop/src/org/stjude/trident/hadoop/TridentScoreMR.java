@@ -1,3 +1,4 @@
+package org.stjude.trident.hadoop;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package TridentHadoop;
+package org.stjude.trident.hadoop;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 
 public class TridentException extends Exception

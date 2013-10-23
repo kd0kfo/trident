@@ -1,3 +1,4 @@
+package org.stjude.trident.hadoop;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
@@ -8,7 +9,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 
-import TridentHadoop.TridentException;
 
 public class TridentGenericMapper extends
 		Mapper<LongWritable, Text, Text, IntWritable> {
