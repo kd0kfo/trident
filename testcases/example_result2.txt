@@ -1,4 +1,0 @@
-                         mir1:               3' UAUGUAUGAAGAAAUGUAAGGU 5'
-                                                $$$$$$$$$$$$$$$$$$$$$$ 
-mir1idealizedpurinestrand5to3:   5' TCATCGATCGTCAAAGAAAGAAGAAAAGAAAGGATCATCGATCGTC 3'
-
