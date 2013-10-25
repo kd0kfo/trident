@@ -4,7 +4,7 @@
    / \| | |X| | |/ \| | |X| | |/ \| | |X|   
       `-!-' `-!-'   `-!-' `-!-'   `-!-' `-     
 
-   Trident 0.4.5 microRNA dsDNA triplex algorithm
+   Trident 0.4.8 microRNA dsDNA triplex algorithm
 
                 ,-*-.         ,-*-.            
                / | | \       / | | \         
@@ -13,94 +13,94 @@
 
 
 License: GPLv3
-Query Filename: 	mir1.fasta
-Reference Filename:	mir1idealizedpurinestrand5to3.fasta
-Read Sequence:mir1 (22 nt)
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+Query Filename: 	hsa-miR-483-5p.fasta
+Reference Filename:	dna_segment.fasta
+Read Sequence:hsa-miR-483-5p MIMAT0004761 Homo sapiens miR-483-5p(22 nt)
+Read Sequence:DNA Segment from KDM6B(45 nt)
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-   Forward:	Score: 156.000000  Q:3 to 21  R:12 to 33 Align Len (19) (63.16%) (63.16%)
-
-   Query:    3' uAUGUAUGAAGAAAUGUAAGgu 5'
-                 $ $ $ $$$ $ $ $ $$$  
-   Ref:      5' tAGGAAAGAAAAGAAGAAAGaa 3'
-             3' aTCCTTTCTTTTCTTCTTTCtt 5'
-
-   Energy:  -185.880000 kCal/Mol
-
-Scores for this hit:
->mir1,mir1idealizedpurinestrand5to3,156.00,-185.88,3 21,12 33,19,63.16%,63.16%,uAUGUAUGAAGAAAUGUAAGgu, $ $ $ $$$ $ $ $ $$$  ,tAGGAAAGAAAAGAAGAAAGaa,antiparallel,direct,purine
-Score for this Scan:
-Seq1,Seq2,Tot Score,Tot Energy,Max Score,Max Energy,Strand,Len1,Len2,Positions
->>mir1	mir1idealizedpurinestrand5to3	156.00	-185.88	156.00	-185.88	1	22	46	 12
-Complete
-
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+Performing Scan: hsa-miR-483-5p vs DNA
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-   Forward:	Score: 240.000000  Q:2 to 21  R:13 to 34 Align Len (20) (75.00%) (75.00%)
+   Forward:	Score: 260.000000  Q:2 to 22  R:12 to 33 Align Len (21) (76.19%) (76.19%)
 
-   Query:    3' uAUGUAUGAAGAAAUGUAAGGu 5'
-                 $ $ $ $$$$$$$ $ $$$$ 
-   Ref:      3' aAAGAAAGAAGAAAAGAAAGGa 5'
-             5' tTTCTTTCTTCTTTTCTTTCCt 3'
+   Query:    3' GAGGGAAGAAAGGAGGGCAGAa 5'
+                $ $$$$$$$$  $ $$$ $$$ 
+   Ref:      5' GGGGGAAGAAGAGGGGGCAGAg 3'
+             3' CCCCCTTCTTCTCCCCCGTCTc 5'
 
-   Energy:  -249.510000 kCal/Mol
+   Energy:  -327.920000 kCal/Mol
 
 Scores for this hit:
->mir1,mir1idealizedpurinestrand5to3,240.00,-249.51,2 21,13 34,20,75.00%,75.00%,uAUGUAUGAAGAAAUGUAAGGu, $ $ $ $$$$$$$ $ $$$$ ,aAAGAAAGAAGAAAAGAAAGGa,parallel,direct,purine
+>hsa-miR-483-5p,DNA,260.00,-327.92,2 22,12 33,21,76.19%,76.19%,GAGGGAAGAAAGGAGGGCAGAa,$ $$$$$$$$  $ $$$ $$$ ,GGGGGAAGAAGAGGGGGCAGAg,antiparallel,direct,purine
 Score for this Scan:
 Seq1,Seq2,Tot Score,Tot Energy,Max Score,Max Energy,Strand,Len1,Len2,Positions
->>mir1	mir1idealizedpurinestrand5to3	240.00	-249.51	240.00	-249.51	2	22	46	 13
+>>hsa-miR-483-5p	DNA	260.00	-327.92	260.00	-327.92	1	22	45	 12
 Complete
 
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+Read Sequence:DNA Segment from KDM6B(45 nt)
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+   Forward:	Score: 176.000000  Q:6 to 22  R:9 to 31 Align Len (18) (72.22%) (72.22%)
+
+   Query:    3' GAGGGAAGA-AAGGAGGGcagaa 5'
+                $$ $$  $$ $$$ $$$$     
+   Ref:      3' GACGGGGGAGAAGAAGGGggtca 5'
+             5' CTGCCCCCTCTTCTTCCCccagt 3'
+
+   Energy:  -264.290000 kCal/Mol
+
+Scores for this hit:
+>hsa-miR-483-5p,DNA,176.00,-264.29,6 22,9 31,18,72.22%,72.22%,GAGGGAAGA-AAGGAGGGcagaa,$$ $$  $$ $$$ $$$$     ,GACGGGGGAGAAGAAGGGggtca,parallel,direct,purine
+Score for this Scan:
+Seq1,Seq2,Tot Score,Tot Energy,Max Score,Max Energy,Strand,Len1,Len2,Positions
+>>hsa-miR-483-5p	DNA	176.00	-264.29	176.00	-264.29	2	22	45	 15
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Score for this Scan:
 No Hits Found above Threshold
 Complete
 
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+Read Sequence:DNA Segment from KDM6B(45 nt)
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Score for this Scan:
-No Hits Found above Threshold
-Complete
-
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+Performing Scan: hsa-miR-483-5p vs DNA
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Score for this Scan:
 No Hits Found above Threshold
 Complete
 
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+Read Sequence:DNA Segment from KDM6B(45 nt)
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Score for this Scan:
-No Hits Found above Threshold
-Complete
-
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+Performing Scan: hsa-miR-483-5p vs DNA
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Score for this Scan:
 No Hits Found above Threshold
 Complete
 
-Read Sequence:mir1idealizedpurinestrand5to3 (46 nt)
+Read Sequence:DNA Segment from KDM6B(45 nt)
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Performing Scan: mir1 vs mir1idealizedpurinestrand5to3
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Score for this Scan:
 No Hits Found above Threshold

@@ -1,31 +1,31 @@
 {
-"data":[
+"run_info": {"version": "0.4.8", "build_time": "Fri Oct 25 10:24:12 CDT 2013", "build_sha": "70fe6cc55dd9e77eeff33f9cd907a7e4fe02eb20", "run_time": "Fri Oct 25 10:24:33 2013"},
+"data": [
 {
-	"query_id": "mir1",
-	"reference_id": "mir1idealizedpurinestrand5to3",
-	"score": 156.00,
-	"energy": -185.88,
-	"query_start": 3,
-	"query_end": 21,
+	"query_id": "hsa-miR-483-5p",
+	"reference_id": "DNA",
+	"score": 260.00,
+	"energy": -327.92,
+	"query_start": 2,
+	"query_end": 22,
 	"ref_start": 12,
 	"ref_end": 12,
-	"alignment_length": 19,
-	"identity": 63.16,
-	"similarity": 63.16
+	"alignment_length": 21,
+	"identity": 76.19,
+	"similarity": 76.19
 }
 ,
 {
-	"query_id": "mir1",
-	"reference_id": "mir1idealizedpurinestrand5to3",
-	"score": 240.00,
-	"energy": -249.51,
-	"query_start": 2,
-	"query_end": 21,
-	"ref_start": 13,
-	"ref_end": 13,
-	"alignment_length": 20,
-	"identity": 75.00,
-	"similarity": 75.00
+	"query_id": "hsa-miR-483-5p",
+	"reference_id": "DNA",
+	"score": 176.00,
+	"energy": -264.29,
+	"query_start": 6,
+	"query_end": 22,
+	"ref_start": 9,
+	"ref_end": 9,
+	"alignment_length": 18,
+	"identity": 72.22,
+	"similarity": 72.22
 }
-]
-}
+] }
