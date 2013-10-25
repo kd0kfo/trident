@@ -1,6 +1,11 @@
 #!/bin/sh
 
-set -e
+function error_out() {
+	echo Testing Failed on line $1.
+	exit 1
+}
+
+trap 'error_out ${LINENO}' ERR
 
 if [ ! -f ./compile ];then 
 	sh setup.sh
@@ -12,7 +17,7 @@ make
 
 cd examples
 
-../src/trident mir1.fasta mir1idealizedpurinestrand5to3.fasta -out test -json test.json
+../src/trident hsa-miR-483-5p.fasta dna_segment.fasta -out test -json test.json
 diff test test.out
 python test_json.py test.json test.json.expected
 
