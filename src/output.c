@@ -484,7 +484,7 @@ void printhit(char* query_id, int query_length, int reference_length, char* refe
 	revstring(hit->alignment[1]);
 	revstring(hit->alignment[2]);
 	if (no_energy){
-		energy=0.0;
+		energy=NAN;
 	}
 
 	ref_start = hit->ref_start + 1;
