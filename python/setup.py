@@ -28,5 +28,6 @@ setup (name ='trident',
        packages = ['trident'],
        scripts = the_scripts,
        ext_package = 'trident',
-       ext_modules = [mod_core])
+       ext_modules = [mod_core],
+       depends = ['../config.h'])
 
