@@ -68,11 +68,10 @@ int ali_score[NUM_SCORED_BASES][NUM_SCORED_BASES];
 int ali_score5p[NUM_SCORED_BASES][NUM_SCORED_BASES];
 char ali_rep[NUM_SCORED_BASES][NUM_SCORED_BASES];
 
-// Verify: nt1 may be the DNA. nt2 may be the miRNA
-// SWP: pretty sure nt1 is miRNA, nt2 is DNA/mRNA
-// not sure how "T" is handled, maybe need to be coded as U instead, U not DNA, but make sense for miRNA/mRNA interactions
 
 int bases_are_complementary(char nt1, char nt2, int match_type) {
+	// nt1 is miRNA, nt2 is DNA/mRNA
+	// not sure how "T" is handled, maybe need to be coded as U instead, U not DNA, but make sense for miRNA/mRNA interactions
 
   switch(match_type)
     {
@@ -83,13 +82,15 @@ int bases_are_complementary(char nt1, char nt2, int match_type) {
       if (nt1 == 'U') return (nt2 == 'A' || nt2 == 'G');
       return 0;
     case MATCH_DIRECT_REVERSE_HOOGSTEEN:case MATCH_INDIRECT_REVERSE_HOOGSTEEN:
-      if (nt1 == 'G') return nt2 == 'G';
+      if (nt1 == 'G') return (nt2 == 'G' || nt2 == 'A');
       if (nt1 == 'A') return nt2 == 'A';
+      if (nt1 == 'U') return nt2 == 'A';
       return 0;
       break;
     case MATCH_DIRECT_HOOGSTEEN:case MATCH_INDIRECT_HOOGSTEEN:
       if (nt1 == 'C') return nt2 == 'G';
-      if (nt1 == 'U') return nt2 == 'A';
+      if (nt1 == 'U') return (nt2 == 'A' || nt2 == 'G');
+      if (nt1 == 'G') return nt2 == 'G';
       return 0;
       break;
       

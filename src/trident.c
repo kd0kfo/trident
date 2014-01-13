@@ -111,7 +111,7 @@ int main (int argc, char* argv[]) {
 	rusage_output = 0; 	                /* rusage output off by default */
 	outfile = 0;			/* Dump to file on/off*/
 	truncated = 0;			/* Truncate sequences on/off*/
-	no_energy = 0;			/* Turn off Vienna Energy Calcs - FASTER*/
+	no_energy = 1;			/* Turn off Energy Calcs - FASTER*/
 	restricted = 0;			/* Perform restricted search space*/
 	parse_command_line(argc, argv, filename1, filename2, fileout, pairs_file);
 	if (gap_open > 0.0 || gap_extend > 0.0) {

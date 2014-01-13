@@ -93,7 +93,7 @@ void print_options() {
 	printf(" --license\tDisplay license information\n");
 	printf("\nCore algorithm parameters:\n");
 	printf(" -sc S\t\tSet score threshold to S\t\t[DEFAULT: %3.1f]\n", score_threshold);
-	printf(" -ceil S\t\tSet upper limit to score equal to S\t\t[DEFAULT: off]");
+	printf(" -ceil S\tSet upper limit to score equal to S\t[DEFAULT: off]\n");
 	printf(" -en -E\t\tSet energy threshold to -E kcal/mol\t[DEFAULT: %3.1f]\n", energy_threshold);
 	printf(" -scale Z\tSet scaling parameter to Z\t\t[DEFAULT: %3.1f]\n", scale);
 	printf(" -strict\tDemand strict 5' seed pairing\t\t[DEFAULT: %s]\n", (char*)inttobool[strict]);
@@ -105,9 +105,9 @@ void print_options() {
 	printf(" -scaninfo file\tOutput results to file\t\t\t[DEFAULT: off]\n");
 	printf(" -quiet\t\tOutput fewer event notifications\t[DEFAULT: %s]\n", (char*)inttoboolr[verbosity]);
 	printf(" -brief\t\tOutput only data\t\t\t[DEFAULT: %s]\n",(char*)inttoboolr[brief_output]);
-	printf(" -rusage\t\tReport Usage Data\t\t\t[DEFAULT: %s]\n",(char*)inttoboolr[rusage_output]);
+	printf(" -rusage\tReport Usage Data\t\t\t[DEFAULT: %s]\n",(char*)inttoboolr[rusage_output]);
 	printf(" -trim T\tTrim reference sequences to T nt\t[DEFAULT: %s]\n", (char*)inttobool[truncated]);
-	printf(" -noenergy\tDo not perform thermodynamics\t\t[DEFAULT: %s]\n", (char*)inttobool[no_energy]);
+	printf(" -calc_energy\tPerform thermodynamics\t\t\t[DEFAULT: %s]\n", (char*)inttobool[!no_energy]);
 	printf("\n -restrict file\tRestricts scans to those between\n");
 	printf("             \tspecific miRNAs and UTRs\n");
 	printf("             \tprovided in a pairwise\n");
@@ -166,8 +166,8 @@ int parse_command_line(int argc, char* argv[], char* filename1, char* filename2,
 				i++;
 				continue;
 			}
-			if (!strcmp(argv[i], "-noenergy") || !strcmp(argv[i], "--noenergy")) {
-				no_energy = 1;
+			if (!strcmp(argv[i], "-calc_energy") || !strcmp(argv[i], "--calc_energy")) {
+				no_energy = 0;
 				continue;
 			}
 			if (!strcmp(argv[i], "-debug")) {
