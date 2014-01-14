@@ -26,6 +26,9 @@ cd python
 
 python setup.py build
 
+PYTHONPATH=$PWD scripts/kmer_counter -k 3 -o test/kmertest.out test/kmertest.fa
+diff test/kmertest.out test/kmertest.out.expected
+
 PYTHONPATH=$PWD scripts/energy_score_ranker -o test/ranked.out test/score_count.raw
 diff test/ranked.out test/ranked.out.expected
 diff top_25-percent.dat test/top_25-percent.dat.expected

@@ -1,0 +1,114 @@
+#!/usr/bin/env python
+
+from sys import argv
+from getopt import getopt, GetoptError
+
+DEFAULT_ORDER = 1
+
+HELP_WARNING = "For help, run kmer_counter --help"
+
+
+def print_usage():
+    print("Usage: kmer_counter [-c] [-k ORDER]")
+    print("Options:")
+    print("-c, --stdin\tUse standard input")
+    print("-k\t\tSpecify Order to Use. Example: to count 2 bases,"
+          " use '-k 2' (Default: %d)" % DEFAULT_ORDER)
+    print("-o, --output FILE\tWrite output to FILE (Default: standard output)")
+
+
+def error_out(msg):
+    from sys import stderr
+    stderr.write(msg)
+    stderr.write("\n")
+    stderr.write(HELP_WARNING)
+    stderr.write("\n")
+    exit(1)
+
+
+class KMerWalker(object):
+    def __init__(self, infile, order=DEFAULT_ORDER):
+        self.infile = infile
+        self.buffer = ""
+        self.order = order
+
+    def __iter__(self):
+        return self
+
+    def get_next_line(self):
+        for line in self.infile:
+            if not line:
+                return None
+            line = line.strip()
+            if not line or line[0] == '>':
+                continue
+            return line
+
+    def next(self):
+        if len(self.buffer) < self.order:
+            nextline = self.get_next_line()
+            if nextline is None:
+                raise StopIteration
+            self.buffer += nextline
+        retval = self.buffer[0:self.order]
+        self.buffer = self.buffer[1:]
+
+        return retval
+
+    def set_order(self, neworder):
+        self.order = neworder
+
+short_opts = "chk:o:"
+long_opts = ["help", "output", "stdin"]
+try:
+    (opts, args) = getopt(argv[1:], short_opts, long_opts)
+except GetoptError as ge:
+    print(ge.msg)
+    print(HELP_WARNING)
+    exit(1)
+
+parser = None
+order = 1
+output = None
+for (opt, optarg) in opts:
+    while opt[0] == '-':
+        opt = opt[1:]
+
+    if opt in ["c", "stdin"]:
+        from sys import stdin
+        parser = KMerWalker(stdin)
+    elif opt in ["h", "help"]:
+        print_usage()
+        exit(0)
+    elif opt == "k":
+        order = int(optarg)
+    elif opt in ["o", "output"]:
+        output = open(optarg, "w")
+
+if output is None:
+    from sys import stdout
+    output = stdout
+
+if not args and parser is None:
+    from sys import stderr
+    stderr.write("Missing input file.")
+    stderr.write(HELP_WARNING)
+    stderr.write("\n")
+    exit(1)
+
+if args:
+    parser = KMerWalker(open(args[0], "r"))
+
+parser.set_order(order)
+
+frequencies = {}
+for kmer in parser:
+    if 'N' in kmer:
+        continue
+    if not kmer in frequencies:
+        frequencies[kmer] = 1
+    else:
+        frequencies[kmer] += 1
+
+for pair in frequencies.items():
+    output.write("%s\t%s\n" % pair)
