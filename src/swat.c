@@ -82,14 +82,14 @@ int bases_are_complementary(char nt1, char nt2, int match_type) {
       if (nt1 == 'U') return (nt2 == 'A' || nt2 == 'G');
       return 0;
     case MATCH_DIRECT_REVERSE_HOOGSTEEN:case MATCH_INDIRECT_REVERSE_HOOGSTEEN:
-      if (nt1 == 'G') return (nt2 == 'G' || nt2 == 'A');
+      if (nt1 == 'G') return nt2 == 'G';
       if (nt1 == 'A') return nt2 == 'A';
       if (nt1 == 'U') return nt2 == 'A';
       return 0;
       break;
     case MATCH_DIRECT_HOOGSTEEN:case MATCH_INDIRECT_HOOGSTEEN:
       if (nt1 == 'C') return nt2 == 'G';
-      if (nt1 == 'U') return (nt2 == 'A' || nt2 == 'G');
+      if (nt1 == 'U') return nt2 == 'A' ;
       if (nt1 == 'G') return nt2 == 'G';
       return 0;
       break;
