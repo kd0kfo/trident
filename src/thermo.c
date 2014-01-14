@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "fold_vars.h"
 #include "utils.h"
@@ -133,5 +134,8 @@ double get_energy(hit_struct* hit) {
   if(current_match_type == MATCH_MIRANDA)
     return get_miranda_energy(hit);
   
+  if(no_energy)
+  	return NAN;
   return sequence_energy(hit);
+
 }

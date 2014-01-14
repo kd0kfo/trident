@@ -190,27 +190,24 @@ double do_alignment(int** best, int*** track, int** a_nt_nt, int** b_gap_nt, int
 	}
       }
       /*printf("Model Analysis: %d %d %d %d\n", count1, count2, count3, count4);*/
-      if (!no_energy) {
-	energy = get_energy(hit);
-      } else {
-	energy = -1000000;
-      }
-      if (energy < energy_threshold) {
-	/* good_call, a good alignment that passes score, energy, etc. requirements*/
-	if (good_call) {
-	  scan_score += (energy * -1);
-	  hit_summary->no_hits++;
-	  append_char_ExpString(hit_summary->position_list,' ');
-	  append_int_ExpString(hit_summary->position_list,hit->ref_start + 1);
-	  if (energy < hit_summary->max_hit) {
-	    hit_summary->max_hit = energy;
-	  }
-	  hit_summary->total_score += hit->score;
-	  if (hit->score > hit_summary->max_score) {
-	    hit_summary->max_score = hit->score;
-	  }
-	  printhit(query_id, query_length, reference_length, reference_id, hit, energy, key_value_pairs, parallel_antiparallel, fpout);
-	}
+      energy = get_energy(hit);
+
+      if (no_energy || energy < energy_threshold) {
+				/* good_call, a good alignment that passes score, energy, etc. requirements*/
+				if (good_call) {
+					scan_score += (energy * -1);
+					hit_summary->no_hits++;
+					append_char_ExpString(hit_summary->position_list,' ');
+					append_int_ExpString(hit_summary->position_list,hit->ref_start + 1);
+					if (energy < hit_summary->max_hit) {
+						hit_summary->max_hit = energy;
+					}
+					hit_summary->total_score += hit->score;
+					if (hit->score > hit_summary->max_score) {
+						hit_summary->max_score = hit->score;
+					}
+					printhit(query_id, query_length, reference_length, reference_id, hit, energy, key_value_pairs, parallel_antiparallel, fpout);
+				}
       }
     }
     scores[i].score = 0;

@@ -326,7 +326,10 @@ void json_score(const char *query_id, const char *reference_id, double score, do
 	fprintf(json_file, "\t\"query_id\": \"%s\",\n",query_id);
 	fprintf(json_file, "\t\"reference_id\": \"%s\",\n", reference_id);
 	fprintf(json_file, "\t\"score\": %2.2f,\n",score);
-	fprintf(json_file, "\t\"energy\": %2.2f,\n", energy);
+	if(no_energy)
+		fprintf(json_file, "\t\"energy\": null,\n");
+	else
+		fprintf(json_file, "\t\"energy\": %2.2f,\n", energy);
 	fprintf(json_file, "\t\"query_start\": %d,\n", query_start);
 	fprintf(json_file, "\t\"query_end\": %d,\n", query_end);
 	fprintf(json_file, "\t\"ref_start\": %d,\n", ref_start);
@@ -483,9 +486,6 @@ void printhit(char* query_id, int query_length, int reference_length, char* refe
 	revstring(hit->alignment[0]);
 	revstring(hit->alignment[1]);
 	revstring(hit->alignment[2]);
-	if (no_energy){
-		energy=NAN;
-	}
 
 	ref_start = hit->ref_start + 1;
 	ref_end = hit->ref_end+1;
