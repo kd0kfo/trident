@@ -4,6 +4,7 @@ from sys import argv
 from getopt import getopt, GetoptError
 
 DEFAULT_ORDER = 1
+DEFAULT_STATUS_INTERVAL = 1000000
 
 HELP_WARNING = "For help, run kmer_counter --help"
 
@@ -11,10 +12,11 @@ HELP_WARNING = "For help, run kmer_counter --help"
 def print_usage():
     print("Usage: kmer_counter [-c] [-k ORDER]")
     print("Options:")
-    print("-c, --stdin\tUse standard input")
-    print("-k\t\tSpecify Order to Use. Example: to count 2 bases,"
+    print("-c, --stdin\t\tUse standard input")
+    print("-k\t\t\tSpecify Order to Use. Example: to count 2 bases,"
           " use '-k 2' (Default: %d)" % DEFAULT_ORDER)
     print("-o, --output FILE\tWrite output to FILE (Default: standard output)")
+    print("    --status\t\tOutput how many characters have been read")
 
 
 def error_out(msg):
@@ -31,6 +33,9 @@ class KMerWalker(object):
         self.infile = infile
         self.buffer = ""
         self.order = order
+        self.dump_status = False
+        self.amount_read = 0
+        self.dump_counter = 0
 
     def __iter__(self):
         return self
@@ -42,7 +47,15 @@ class KMerWalker(object):
             line = line.strip()
             if not line or line[0] == '>':
                 continue
+            if self.dump_status:
+                self.amount_read += len(line)
+                if self.amount_read - self.dump_counter  >= DEFAULT_STATUS_INTERVAL:
+                    self.dump_counter = self.amount_read
+                    print("Read %d characters." % self.amount_read)
             return line
+
+    def show_status(self, should_show_status):
+        self.dump_status = should_show_status
 
     def next(self):
         if len(self.buffer) < self.order:
@@ -59,7 +72,7 @@ class KMerWalker(object):
         self.order = neworder
 
 short_opts = "chk:o:"
-long_opts = ["help", "output", "stdin"]
+long_opts = ["help", "output", "status", "stdin"]
 try:
     (opts, args) = getopt(argv[1:], short_opts, long_opts)
 except GetoptError as ge:
@@ -70,6 +83,7 @@ except GetoptError as ge:
 parser = None
 order = 1
 output = None
+show_status = False
 for (opt, optarg) in opts:
     while opt[0] == '-':
         opt = opt[1:]
@@ -84,6 +98,8 @@ for (opt, optarg) in opts:
         order = int(optarg)
     elif opt in ["o", "output"]:
         output = open(optarg, "w")
+    elif opt == "status":
+        show_status = True
 
 if output is None:
     from sys import stdout
@@ -100,6 +116,7 @@ if args:
     parser = KMerWalker(open(args[0], "r"))
 
 parser.set_order(order)
+parser.show_status(show_status)
 
 frequencies = {}
 for kmer in parser:
