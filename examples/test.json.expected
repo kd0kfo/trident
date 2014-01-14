@@ -1,11 +1,11 @@
 {
-"run_info": {"version": "0.4.8", "build_time": "Fri Oct 25 10:24:12 CDT 2013", "build_sha": "70fe6cc55dd9e77eeff33f9cd907a7e4fe02eb20", "run_time": "Fri Oct 25 10:24:33 2013"},
+"run_info": {"version": "0.4.8", "build_time": "Tue Jan 14 15:15:02 CST 2014", "build_sha": "73e3cc089e5ca7f8bbbb78b724bbd738bb438704", "run_time": "Tue Jan 14 15:15:02 2014"},
 "data": [
 {
 	"query_id": "hsa-miR-483-5p",
 	"reference_id": "DNA",
 	"score": 260.00,
-	"energy": -327.92,
+	"energy": null,
 	"query_start": 2,
 	"query_end": 22,
 	"ref_start": 12,
@@ -19,7 +19,7 @@
 	"query_id": "hsa-miR-483-5p",
 	"reference_id": "DNA",
 	"score": 176.00,
-	"energy": -264.29,
+	"energy": null,
 	"query_start": 6,
 	"query_end": 22,
 	"ref_start": 9,

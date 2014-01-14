@@ -1,0 +1,106 @@
+
+   \ ,-*-.   ,-*-. ,-*-.   ,-*-. ,-*-.   ,    
+    X | | \ / | | X | | \ / | | X | | \ /   
+   / \| | |X| | |/ \| | |X| | |/ \| | |X|   
+      `-!-' `-!-'   `-!-' `-!-'   `-!-' `-     
+
+   Trident 0.4.8 microRNA dsDNA triplex algorithm
+
+                ,-*-.         ,-*-.            
+               / | | \       / | | \         
+         | | |/       \| | |/       \| |     
+         `-!-'         `-!-'         `-!       
+
+
+License: GPLv3
+Query Filename: 	hsa-miR-483-5p.fasta
+Reference Filename:	dna_segment.fasta
+Read Sequence:hsa-miR-483-5p MIMAT0004761 Homo sapiens miR-483-5p(22 nt)
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+   Forward:	Score: 260.000000  Q:2 to 22  R:12 to 33 Align Len (21) (76.19%) (76.19%)
+
+   Query:    3' GAGGGAAGAAAGGAGGGCAGAa 5'
+                $ $$$$$$$$  $ $$$ $$$ 
+   Ref:      5' GGGGGAAGAAGAGGGGGCAGAg 3'
+             3' CCCCCTTCTTCTCCCCCGTCTc 5'
+
+
+Scores for this hit:
+>hsa-miR-483-5p,DNA,260.00,nan,2 22,12 33,21,76.19%,76.19%,GAGGGAAGAAAGGAGGGCAGAa,$ $$$$$$$$  $ $$$ $$$ ,GGGGGAAGAAGAGGGGGCAGAg,antiparallel,direct,purine
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+   Forward:	Score: 176.000000  Q:6 to 22  R:9 to 31 Align Len (18) (72.22%) (72.22%)
+
+   Query:    3' GAGGGAAGA-AAGGAGGGcagaa 5'
+                $$ $$  $$ $$$ $$$$     
+   Ref:      3' GACGGGGGAGAAGAAGGGggtca 5'
+             5' CTGCCCCCTCTTCTTCCCccagt 3'
+
+
+Scores for this hit:
+>hsa-miR-483-5p,DNA,176.00,nan,6 22,9 31,18,72.22%,72.22%,GAGGGAAGA-AAGGAGGGcagaa,$$ $$  $$ $$$ $$$$     ,GACGGGGGAGAAGAAGGGggtca,parallel,direct,purine
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Read Sequence:DNA Segment from KDM6B(45 nt)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Performing Scan: hsa-miR-483-5p vs DNA
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Score for this Scan:
+No Hits Found above Threshold
+Complete
+
+Scan Complete
+
