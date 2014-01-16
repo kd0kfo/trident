@@ -42,4 +42,4 @@ for i in 1 2 3 4 5;do
 	diff test/class_$i test/class_${i}.expected
 done
 
-
+echo "Test Passed!"
