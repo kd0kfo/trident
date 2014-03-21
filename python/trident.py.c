@@ -141,12 +141,15 @@ PyInit_core(void)
 {
 #if PY_MAJOR_VERSION >= 3
   PyObject* module = PyModule_Create(&tridentmodule);
-#else
-  PyObject* module = Py_InitModule("core",trident_methods);
-#endif
+
   if(module == NULL)
     return module;
+#else
+  PyObject* module = Py_InitModule("core",trident_methods);
 
+  if(module == NULL)
+    return;
+#endif
   initialize_bases();  
 
   PyModule_AddIntConstant(module,"MATCH_MIRANDA",MATCH_MIRANDA);
@@ -155,7 +158,9 @@ PyInit_core(void)
   PyModule_AddIntConstant(module,"MATCH_DIRECT_HOOGSTEEN",MATCH_DIRECT_HOOGSTEEN);
   PyModule_AddIntConstant(module,"MATCH_INDIRECT_HOOGSTEEN",MATCH_INDIRECT_HOOGSTEEN);
 
+#if PY_MAJOR_VERSION >= 3
   return module;
+#endif
 }
 
 #if PY_MAJOR_VERSION == 2

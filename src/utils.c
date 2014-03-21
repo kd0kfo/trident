@@ -7,6 +7,7 @@
 #include <ctype.h>
 
 #include "trident.h"
+#include "H/pair_mat.h"
 
 int cmpscores(const void* p1, const void* p2) {
 	score_struct* s1 = (score_struct*)p1;
@@ -252,7 +253,6 @@ void scaninfo_dump_matrix(int **a_nt_nt,int query_length,int reference_length)
     }
 }
 
-#include "H/pair_mat.h"
 void fill_BP_pair()
 {
   memset(BP_pair,0,NBASES*NBASES*sizeof(int)); 

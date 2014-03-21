@@ -23,6 +23,33 @@
 #include "trident.h"
 
 /**
+ * Static Memory Definitions
+ */
+int bases[256];
+int current_match_type;
+double scale;
+int strict;
+int debug;
+double gap_open;
+double gap_extend;
+double score_threshold;/*!< Defines the threshold for hit scores, hits with score values greater than this will be reported */
+double score_ceiling;
+double energy_threshold;/*!< Defines the threshold for hit energies, hits with energy values less than this will be reported */
+int length_5p_for_weighting;
+int length_3p_for_weighting;
+int key_value_pairs;
+/*! If true, energy values are not calculated for hits */
+int no_energy;
+int outfile;
+int truncated;
+int restricted;
+int verbosity, brief_output, rusage_output;// verbosity = quite verbose, brief = short form of output, without lose of information, rusage = report usage info
+
+int global_match_types[NUM_MATCH_TYPES];
+int alignment_match_scores[NUM_MATCH_TYPES];
+char alignment_match_representations[NUM_MATCH_TYPES];
+
+/**
  * Defines the character representations of the nucleotide base pairing types 
  *
  * Traditional Watson-Crick base pairings are represented by |

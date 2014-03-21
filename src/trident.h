@@ -28,31 +28,31 @@ static char* match_type_name[] = {"Miranda","Direct Reverse Hoogsteen","Indirect
  *  See initialize_bases() in swat.c
  *
  */
-int bases[256];
+extern int bases[];
 
 /* Adjustable Algorithm Parameters*/
-double scale;
-int strict;
-int debug;
-double gap_open;
-double gap_extend;
-double score_threshold;/*!< Defines the threshold for hit scores, hits with score values greater than this will be reported */
-double score_ceiling;
-double energy_threshold;/*!< Defines the threshold for hit energies, hits with energy values less than this will be reported */
-int length_5p_for_weighting;
-int length_3p_for_weighting;
-int key_value_pairs;
+extern double scale;
+extern int strict;
+extern int debug;
+extern double gap_open;
+extern double gap_extend;
+extern double score_threshold;/*!< Defines the threshold for hit scores, hits with score values greater than this will be reported */
+extern double score_ceiling;
+extern double energy_threshold;/*!< Defines the threshold for hit energies, hits with energy values less than this will be reported */
+extern int length_5p_for_weighting;
+extern int length_3p_for_weighting;
+extern int key_value_pairs;
 /*! If true, energy values are not calculated for hits */
-int no_energy;
-int outfile;
-int truncated;
-int restricted;
-int verbosity, brief_output, rusage_output;// verbosity = quite verbose, brief = short form of output, without lose of information, rusage = report usage info
+extern int no_energy;
+extern int outfile;
+extern int truncated;
+extern int restricted;
+extern int verbosity, brief_output, rusage_output;// verbosity = quite verbose, brief = short form of output, without lose of information, rusage = report usage info
 
-int global_match_types[NUM_MATCH_TYPES];
-int current_match_type;// correspond to match type enum above.
-char alignment_match_representations[NUM_MATCH_TYPES];
-int alignment_match_scores[NUM_MATCH_TYPES];
+extern int global_match_types[NUM_MATCH_TYPES];
+extern int current_match_type;// correspond to match type enum above.
+extern char alignment_match_representations[];
+extern int alignment_match_scores[];
 
 /* Expandable string type (allocates memory as needed) */
 struct ExpStringT;

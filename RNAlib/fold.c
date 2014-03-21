@@ -87,6 +87,9 @@ PRIVATE int cut_in_loop(int i);
 PUBLIC  int cut_point = -1; /* set to first pos of second seq for cofolding */
 PUBLIC int   eos_debug=0;  /* verbose info from energy_of_struct */
 
+PUBLIC int BP_pair[NBASES][NBASES];
+
+
 /*--------------------------------------------------------------------------*/
 
 void initialize_fold(int length)
