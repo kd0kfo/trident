@@ -20,7 +20,7 @@ the_scripts = ['scripts/energy_score_combiner', 'scripts/energy_score_plots',
                'scripts/kmer_counter']
 
 setup (name ='trident',
-       version = '0.5.0',
+       version = '1.0.0',
        url = 'http://trident.stjude.org',
        license = 'GPL v3',
        description = 'Utility functions for analyzing Trident Results.',
