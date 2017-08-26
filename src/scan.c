@@ -294,7 +294,7 @@ int find_targets(FILE* query_fp, FILE* fpout, pair_struct* pairs, int total_pair
 		}
 	      
 	      if (restricted) {
-	      	if (debug && (strlen(query_id) >= MAX_PAIR_SEQ_ID_LEN || strlen(reference_id) >= MAX_PAIR_SEQ_ID_LEN) {
+	      	if (debug && (strlen(query_id) >= MAX_PAIR_SEQ_ID_LEN || strlen(reference_id) >= MAX_PAIR_SEQ_ID_LEN)) {
 	      		fprintf("WARNING: Sequence ID is too large for pair structure. Will truncate.\n");
 	      	}
 	      	if (!find_pair(query_id, reference_id, total_pairs, pairs)) {
