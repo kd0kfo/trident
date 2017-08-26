@@ -52,7 +52,9 @@ int load_pairs(FILE* fp_pairs, pair_struct** pairs) {
 
 int find_pair(char* ident1, char* ident2, int total_pairs, pair_struct* pairs) {
 	pair_struct search_key;
-	strcpy(search_key.identifier1, ident1);
-	strcpy(search_key.identifier2, ident2);
+	strncpy(search_key.identifier1, ident1, MAX_PAIR_SEQ_ID_LEN-1);
+	strncpy(search_key.identifier2, ident2, MAX_PAIR_SEQ_ID_LEN-1);
+	search_key.identifier1[MAX_PAIR_SEQ_ID_LEN-1];
+	search_key.identifier2[MAX_PAIR_SEQ_ID_LEN-1];
 	return bsearch(&search_key, pairs, total_pairs, sizeof(pair_struct), sort_pairs) != 0;
 }

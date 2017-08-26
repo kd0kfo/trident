@@ -293,9 +293,14 @@ int find_targets(FILE* query_fp, FILE* fpout, pair_struct* pairs, int total_pair
 		  revstring(reference_sequence);
 		}
 	      
-	      if (restricted && !find_pair(query_id, reference_id, total_pairs, pairs)) {
-		/* printf("Skipped: %s vs %s (length %d)\n", query_id, reference_id, reference_length);*/
-		continue;
+	      if (restricted) {
+	      	if (debug && (strlen(query_id) >= MAX_PAIR_SEQ_ID_LEN || strlen(reference_id) >= MAX_PAIR_SEQ_ID_LEN) {
+	      		fprintf("WARNING: Sequence ID is too large for pair structure. Will truncate.\n");
+	      	}
+	      	if (!find_pair(query_id, reference_id, total_pairs, pairs)) {
+				/* printf("Skipped: %s vs %s (length %d)\n", query_id, reference_id, reference_length);*/
+				continue;
+			}
 	      }
 	      /* Keep track of the number of sequences scanned so far*/
 	      utr_processed++;

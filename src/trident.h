@@ -88,10 +88,11 @@ typedef struct score_struct
 } score_struct;
 
 /* Structure for pair-wise restriction*/
+#define MAX_PAIR_SEQ_ID_LEN 200
 typedef struct pair_struct
 {
-	char identifier1[200];
-	char identifier2[200];
+	char identifier1[MAX_PAIR_SEQ_ID_LEN];
+	char identifier2[MAX_PAIR_SEQ_ID_LEN];
 } pair_struct;
 
 /* Functions Declarations */
